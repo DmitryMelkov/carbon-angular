@@ -1,8 +1,8 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { HttpClientModule, provideHttpClient } from '@angular/common/http';
-import { Sushilka1Component } from './pages/sushilki/sushilka1/sushilka1.component';
-import { Sushilka2Component } from './pages/sushilki/sushilka2/sushilka2.component';
+import { Sushilka1Component } from './pages/sushilki/sushilka1-current/sushilka1.component';
+import { Sushilka2Component } from './pages/sushilki/sushilka2-current/sushilka2.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
