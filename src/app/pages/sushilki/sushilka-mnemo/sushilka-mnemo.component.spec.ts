@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Sushilka1Component } from './sushilka2.component';
+import { SushilkaMnemoComponent } from './sushilka-mnemo.component';
 
-describe('Sushilka1Component', () => {
-  let component: Sushilka1Component;
-  let fixture: ComponentFixture<Sushilka1Component>;
+describe('SushilkaMnemoComponent', () => {
+  let component: SushilkaMnemoComponent;
+  let fixture: ComponentFixture<SushilkaMnemoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Sushilka1Component]
+      imports: [SushilkaMnemoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Sushilka1Component);
+    fixture = TestBed.createComponent(SushilkaMnemoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

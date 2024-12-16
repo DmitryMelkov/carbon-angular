@@ -1,0 +1,16 @@
+<table class="table">
+  <caption class="table__title">{{ title }}</caption>
+  <thead class="table__thead">
+    <tr class="table__tr">
+      <th class="table__th table__left">Наименование параметра</th>
+      <th class="table__th">Значение{{ unit }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of preparedData | keyvalue" class="table__tr">
+      <td class="table__td table__left">{{ item.key }}</td>
+      <td class="table__td table__right">{{ item.value }}</td>
+    </tr>
+  </tbody>
+
+</table>
