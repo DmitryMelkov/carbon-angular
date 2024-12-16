@@ -1,0 +1,27 @@
+<h1>Сушилка 1</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Параметр</th>
+      <th>Значение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let temp of data?.temperatures | keyvalue">
+      <td>{{ temp.key }}</td>
+      <td>{{ temp.value }}</td>
+    </tr>
+    <tr *ngFor="let vac of data?.vacuums | keyvalue">
+      <td>{{ vac.key }}</td>
+      <td>{{ vac.value }}</td>
+    </tr>
+    <tr *ngFor="let gor of data?.gorelka | keyvalue">
+      <td>{{ gor.key }}</td>
+      <td>{{ gor.value }}</td>
+    </tr>
+    <tr *ngFor="let im of data?.im | keyvalue">
+      <td>{{ im.key }}</td>
+      <td>{{ im.value }}</td>
+    </tr>
+  </tbody>
+</table>
