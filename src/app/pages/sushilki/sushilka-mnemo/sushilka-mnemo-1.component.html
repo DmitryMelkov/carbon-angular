@@ -1,15 +1,18 @@
-<div class="mnemo-container" *ngIf="data; else loading">
-  <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
+<app-loader [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"
+  (loadingComplete)="onLoadingComplete()"></app-loader>
 
+<div class="mnemo-container" *ngIf="data">
+  <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
 
   <div class="mnemo">
     <div class="mnemo__param-box--btns">
-      <button class="mnemo__param-box--btn btn-reset" (click)="toggleTooltips()">
+      <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()">
         {{ isTooltipsEnabled ? 'Выключить всплывающие подсказки' : 'Включить всплывающие подсказки' }}
-      </button>
-      <button class="mnemo__param-box--btn btn-reset" (click)="openDocumentation()">
+      </app-control-button>
+
+      <app-control-button (onClick)="openDocumentation()">
         Документация объекта
-      </button>
+      </app-control-button>
     </div>
 
     <img class="mnemo__img" src="/img/sushilka.jpg">
@@ -62,7 +65,6 @@
     <div class="mnemo__param-descr temper-uhodyashih-gazov-text">Температура уходящих <br> газов</div>
     <div class="mnemo__param-descr topka-text">Топка</div>
     <div class="mnemo__param-descr pluzdh-sbrasyvatel-text">Плужковый сбрасыватель</div>
-
 
     <div class="mnemo__param kamera-smeshenia" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="kameraSmeshenia"
       matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
@@ -122,14 +124,4 @@
     <!-- Кран с индикатором -->
     <app-mnemo-kran [isActive]="data.im['Индикация паротушения']"></app-mnemo-kran>
   </div>
-
-  <div class="mnemo-param">
-    <h3>Последнее обновление</h3>
-    <p>{{ data.lastUpdated || '—' }}</p>
-  </div>
-
 </div>
-
-<ng-template #loading>
-  <p>Загрузка данных...</p>
-</ng-template>

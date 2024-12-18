@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiService } from '../../../common/services/sushilka.service';
@@ -9,6 +9,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { LoaderComponent } from '../../../components/loader/loader.component';
+import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 
 @Component({
   selector: 'app-sushilka-mnemo-1',
@@ -18,14 +20,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     MatTooltipModule,
     MnemoKranComponent,
     MatDialogModule,
+    LoaderComponent,
+    ControlButtonComponent
   ],
   standalone: true,
   templateUrl: './sushilka-mnemo-1.component.html',
-  styleUrl: './sushilka-mnemo-1.component.scss',
+  styleUrls: ['./sushilka-mnemo-1.component.scss'],
 })
 export class SushilkaMnemo1Component implements OnInit, OnDestroy {
   data: SushilkiData | null = null;
   id!: string;
+  isLoading: boolean = true; // Управление прелоудером
   private updateSubscription!: Subscription;
 
   constructor(
@@ -37,6 +42,9 @@ export class SushilkaMnemo1Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
 
+  }
+
+  loadData(): void {
     this.updateSubscription = interval(10000)
       .pipe(switchMap(() => this.sushilkiService.getSushilkaData(this.id)))
       .subscribe((response) => {
@@ -54,7 +62,7 @@ export class SushilkaMnemo1Component implements OnInit, OnDestroy {
     }
   }
 
-  isTooltipsEnabled: boolean = true; // Флаг для управления тултипами
+  isTooltipsEnabled: boolean = true;
 
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
@@ -84,5 +92,9 @@ export class SushilkaMnemo1Component implements OnInit, OnDestroy {
       maxWidth: '90vw',
       data: { content: 'Это тестовый контент для документации объекта.' },
     });
+  }
+
+  onLoadingComplete(): void {
+    this.loadData(); // Загружаем данные после завершения загрузки
   }
 }
