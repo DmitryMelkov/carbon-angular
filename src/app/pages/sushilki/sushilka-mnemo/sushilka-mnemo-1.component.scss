@@ -1,0 +1,242 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
+.mnemo {
+  position: relative;
+  width: 1616px;
+  margin: 0 auto;
+  margin-top: 10px;
+
+  &__param-box--btns {
+    position: absolute;
+    top: 27%;
+    left: 31%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+  }
+  &__param-box--btn {
+    padding: 5px;
+    @include mixins.text-style(16px, 23px, 600, vars.$hulk);
+    border: 1px solid vars.$hulk;
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  }
+  &__param-box--btn:first-child {
+    border-right: 1px solid transparent;
+  }
+  &__param-box--btn:hover {
+    color: vars.$white;
+    background-color: vars.$hulk;
+  }
+  &__param-box--btn:active {
+    color: vars.$white;
+    background-color: vars.$hulk;
+  }
+  &__img {
+    width: 1616px;
+    opacity: 0.8;
+  }
+  &__gif {
+    position: absolute;
+    top: 46%;
+    left: 33%;
+    z-index: 1;
+  }
+  &__gif-1 {
+    top: 51.6%;
+    left: 12.3%;
+  }
+  &__gif-2 {
+    top: 7%;
+    left: 95.7%;
+  }
+  &__gif-2 img {
+    width: 40px;
+    height: 90px;
+  }
+  &__gif-3 {
+    top: 64.4%;
+    left: 88.1%;
+  }
+  &__gif-3 img {
+    width: 65px;
+    height: 60px;
+    animation: rotate 1s infinite linear;
+    animation-play-state: paused;
+  }
+  &__gif-4 {
+    top: 71.2%;
+    left: 11.33%;
+  }
+  &__gif-4 img {
+    width: 35px;
+    height: 30px;
+    animation: rotate 1s infinite linear;
+    animation-play-state: paused;
+  }
+  &__gif-5 {
+    top: 18%;
+    left: 18%;
+  }
+  &__gif-5 img {
+    transform: rotate(-65deg);
+  }
+  &__gif-6 {
+    top: 11.4%;
+    left: 21.7%;
+  }
+  &__gif-6 img {
+    transform: rotate(-63deg);
+  }
+  &__gif-7 {
+    top: 70.5%;
+    left: 72.5%;
+  }
+  &__gif-8 {
+    top: 11.1%;
+    left: 28.4%;
+  }
+  &__gif-8 img {
+    transform: rotate(-63deg);
+  }
+  &__param-descr {
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    @include mixins.text-style(15px, 14px, 600, vars.$hunter-green);
+  }
+  &__param-text {
+    @include mixins.text-style(16px, 16px, 600, vars.$blue);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// text
+.kamera-smeshenia-text {
+  text-align: center;
+  top: 38%;
+  left: 19.1%;
+}
+
+.mosh-gorelki-text {
+  text-align: left;
+  top: 18%;
+  left: 20px;
+}
+
+.zadanie-temper-text {
+  text-align: left;
+  top: 26%;
+  left: 20px;
+}
+
+.vosduh-na-razbavl-text {
+  text-align: left;
+  top: 65%;
+  left: 20px;
+}
+
+.liniya-parotush-text {
+  top: 4%;
+  left: 30%;
+}
+
+.kamera-vigruzki-text {
+  text-align: center;
+  top: 38%;
+  right: 22.8%;
+}
+
+.baraban-text {
+  top: 46%;
+  right: 50%;
+}
+
+.dymosos-text {
+  top: 60%;
+  right: 8%;
+}
+
+.temper-uhodyashih-gazov-text {
+  top: 6%;
+  right: 17%;
+}
+
+.topka-text {
+  top: 40.5%;
+  left: 20px;
+}
+
+.pluzdh-sbrasyvatel-text {
+  top: 13%;
+  left: 25%;
+}
+
+.gaz-text {
+  text-align: left;
+  top: 52%;
+  left: 1%;
+}
+
+// position params
+.kamera-smeshenia {
+  top: 45%;
+  left: 20%;
+}
+
+// tooltip
+.kamera-smeshenia-clue {
+  width: 225px;
+  top: -102px;
+  left: -94px;
+}
+
+.topka-temper {
+  top: 36.5%;
+  left: 6%;
+}
+
+.topka-davl {
+  top: 42%;
+  left: 6%;
+}
+
+.mosh-gorelki {
+	top: 18%;
+	left: 130px;
+}
+
+.zadanie-temper {
+	top: 26%;
+	left: 130px;
+}
+
+.vosduh-na-razbavl {
+	top: 65%;
+	left: 9.5%;
+}
+
+.kamera-vigruzki {
+	top: 45%;
+	right: 22.9%;
+}
+
+.temper-uhodyashih-gazov {
+	top: 12%;
+	right: 21%;
+}
+
+
+::ng-deep .custom-tooltip {
+  white-space: pre-line; /* Поддержка переносов строк */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,51 @@
+<div class="documentation-modal">
+  <div class="documentation-modal__header">
+    <app-modal-header [title]="'Документация объекта'" (close)="close()">
+    </app-modal-header>
+  </div>
+
+  <div class="documentation-modal__body">
+    <mat-accordion multi>
+      <!-- Схемы проекта -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h3 class="modal__accordion-title title-reset">
+              Схемы проекта
+            </h3>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul class="modal__accordion-content">
+          <li class="modal__accordion-content-item" *ngFor="let scheme of schemes">
+            <div class="modal__content-link">{{ scheme.title }}</div>
+            <div class="modal__content-link-container">
+              <a class="modal__content-link-download" [href]="scheme.dwg" download>Скачать DWG</a>
+              <a class="modal__content-link-download" [href]="scheme.pdf" download>Скачать PDF</a>
+            </div>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+
+      <!-- Программы проекта -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h3 class="modal__accordion-title title-reset">
+            Программы проекта
+            </h3>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul class="modal__accordion-content">
+          <li class="modal__accordion-content-item" *ngFor="let program of programs">
+            <div class="modal__content-link">{{ program.title }}</div>
+            <div class="modal__content-link-container">
+              <a class="modal__content-link-download-solo" [href]="program.file" download>Скачать</a>
+            </div>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+
+</div>

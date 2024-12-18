@@ -1,0 +1,86 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+mat-dialog-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+mat-dialog-actions {
+  margin-top: 10px;
+}
+
+.documentation-modal {
+  padding: 10px 20px;
+  &__body {
+    margin-top: 10px;
+    padding: 5px;
+    overflow-y: auto;
+    max-height: 400px
+  }
+}
+
+.modal {
+  &__accordion-title {
+    @include mixins.text-style(18px, 22px, 500, vars.$hulk);
+  }
+  &__accordion-content {
+    margin: 0;
+    padding: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    list-style-type: none;
+  }
+  &__accordion-content-item {
+    margin-bottom: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__content-link {
+    margin-right: 30px;
+  }
+  &__accordion-content-item {
+    margin-bottom: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__content-link {
+    @include mixins.text-style(16px, 22px, 500, vars.$black);
+    position: relative;
+  }
+  &__content-link-container {
+    display: flex;
+    flex-shrink: 0;
+  }
+  &__content-link-download,
+  &__content-link-download-solo {
+    padding: 6px 10px;
+    @include mixins.text-style(15px, 15px, 500, vars.$hulk);
+    text-decoration: none;
+    border: 2px solid green;
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  }
+  &__content-link-download:first-child {
+    border-right: none;
+  }
+  &__content-link-download:hover,
+  &__content-link-download-solo:hover {
+    background-color: vars.$hulk;
+    color: vars.$white;
+  }
+  &__content-link-download:active,
+  &__content-link-download-solo:active {
+    background-color: vars.$hulk;
+    color: vars.$white;
+  }
+  &__content-link-download:focus,
+  &__content-link-download-solo:focus {
+    background-color: vars.$hulk;
+    color: vars.$white;
+  }
+}

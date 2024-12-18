@@ -1,0 +1,135 @@
+<div class="mnemo-container" *ngIf="data; else loading">
+  <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
+
+
+  <div class="mnemo">
+    <div class="mnemo__param-box--btns">
+      <button class="mnemo__param-box--btn btn-reset" (click)="toggleTooltips()">
+        {{ isTooltipsEnabled ? 'Выключить всплывающие подсказки' : 'Включить всплывающие подсказки' }}
+      </button>
+      <button class="mnemo__param-box--btn btn-reset" (click)="openDocumentation()">
+        Документация объекта
+      </button>
+    </div>
+
+    <img class="mnemo__img" src="/img/sushilka.jpg">
+
+    <div class="mnemo__gif mnemo__gif-1" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+      <img src="/img/fire-gif.gif" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-2" *ngIf="(data.temperatures['Температура уходящих газов'] || 0) > 30">
+      <img src="/img/par.gif" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-3">
+      <img
+        [ngStyle]="{'animation-play-state': (data.temperatures['Температура уходящих газов'] || 0) > 30 ? 'running' : 'paused'}"
+        src="/img/ventilator.png" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-4">
+      <img
+        [ngStyle]="{'animation-play-state': (data.temperatures['Температура уходящих газов'] || 0) > 30 ? 'running' : 'paused'}"
+        src="/img/ventilator.png" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-5" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+      <img src="/img/pipeline_top_coal.gif" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-6" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+      <img src="/img/pipeline_middle_coal.gif" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-7" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+      <img src="/img/pipeline_flow_coal.gif" alt="img">
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-8" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+      <img src="/img/pipeline_middle_coal.gif" alt="img">
+    </div>
+
+    <div class="mnemo__param-descr kamera-smeshenia-text">Камера <br> смешения</div>
+    <div class="mnemo__param-descr gaz-text">Газ природный</div>
+    <div class="mnemo__param-descr mosh-gorelki-text">Мощность <br> горелки</div>
+    <div class="mnemo__param-descr zadanie-temper-text">Задание <br> температуры</div>
+    <div class="mnemo__param-descr vosduh-na-razbavl-text">Воздух на <br> разбавление</div>
+    <div class="mnemo__param-descr liniya-parotush-text">Линия паротушения</div>
+    <div class="mnemo__param-descr baraban-text">Барабан</div>
+    <div class="mnemo__param-descr kamera-vigruzki-text">Выгрузочная <br> камера</div>
+    <div class="mnemo__param-descr dymosos-text">Дымосос</div>
+    <div class="mnemo__param-descr temper-uhodyashih-gazov-text">Температура уходящих <br> газов</div>
+    <div class="mnemo__param-descr topka-text">Топка</div>
+    <div class="mnemo__param-descr pluzdh-sbrasyvatel-text">Плужковый сбрасыватель</div>
+
+
+    <div class="mnemo__param kamera-smeshenia" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="kameraSmeshenia"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <span class="mnemo__param-text">
+        {{ data.temperatures['Температура в камере смешения'] || '—' }} °C
+      </span>
+    </div>
+
+    <div class="mnemo__param topka-temper" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="topkaTemper"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <span class="mnemo__param-text">
+        {{ data.temperatures['Температура в топке'] || '—' }} °C
+      </span>
+    </div>
+
+    <div class="mnemo__param topka-davl" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="topkaDavl"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <span class="mnemo__param-text">
+        {{ data.vacuums['Разрежение в топке'] || '—' }}кг/см²
+      </span>
+    </div>
+
+    <div class="mnemo__param mosh-gorelki">
+      <span class="mnemo__param-text">
+        {{ data.gorelka['Мощность горелки №1'] || '—' }}%
+      </span>
+    </div>
+
+    <div class="mnemo__param zadanie-temper">
+      <span class="mnemo__param-text">
+        {{ data.gorelka['Задание температуры №1'] || '—' }} °C
+      </span>
+    </div>
+
+    <div class="mnemo__param vosduh-na-razbavl" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="vosduhNaRazbavl"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <span class="mnemo__param-text">
+        {{ data.vacuums['Разрежение воздуха на разбавление'] || '—' }}кг/см²
+      </span>
+    </div>
+
+    <div class="mnemo__param kamera-vigruzki" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="kameraVigruzki"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <span class="mnemo__param-text">
+        {{ data.vacuums['Разрежение в камере выгрузки'] || '—' }}кг/см²
+      </span>
+    </div>
+
+    <div class="mnemo__param temper-uhodyashih-gazov" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="temperUhodyashihGazov" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <span class="mnemo__param-text">
+        {{ data.temperatures['Температура уходящих газов'] || '—' }}°C
+      </span>
+    </div>
+
+    <!-- Кран с индикатором -->
+    <app-mnemo-kran [isActive]="data.im['Индикация паротушения']"></app-mnemo-kran>
+  </div>
+
+  <div class="mnemo-param">
+    <h3>Последнее обновление</h3>
+    <p>{{ data.lastUpdated || '—' }}</p>
+  </div>
+
+</div>
+
+<ng-template #loading>
+  <p>Загрузка данных...</p>
+</ng-template>

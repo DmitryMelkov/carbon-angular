@@ -1,0 +1,21 @@
+@use "../../../styles/mixins" as mixins;
+@use "../../../styles/variables" as vars;
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid vars.$cerebral-grey;
+  &__title {
+    text-decoration: none;
+    @include mixins.text-style(24px, 24px, 600, vars.$stone-cold);
+  }
+  &__close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: vars.$stone-cold;
+    cursor: pointer;
+  }
+}

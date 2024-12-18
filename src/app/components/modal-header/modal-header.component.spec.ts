@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SushilkaMnemoComponent } from './sushilka-mnemo.component';
+import { ModalHeaderComponent } from './modal-header.component';
 
-describe('SushilkaMnemoComponent', () => {
-  let component: SushilkaMnemoComponent;
-  let fixture: ComponentFixture<SushilkaMnemoComponent>;
+describe('ModalHeaderComponent', () => {
+  let component: ModalHeaderComponent;
+  let fixture: ComponentFixture<ModalHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SushilkaMnemoComponent]
+      imports: [ModalHeaderComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SushilkaMnemoComponent);
+    fixture = TestBed.createComponent(ModalHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

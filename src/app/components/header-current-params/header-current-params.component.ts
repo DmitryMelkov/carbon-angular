@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,19 +8,26 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header-current-params.component.html',
   styleUrls: ['./header-current-params.component.scss'],
 })
-export class HeaderCurrentParamsComponent implements OnInit {
+export class HeaderCurrentParamsComponent implements OnInit, OnDestroy {
   @Input() title: string = ''; // Заголовок сушилки
-  @Input() currentDate: string = ''; // Текущая дата
-  @Input() currentTime: string = ''; // Текущее время
+  currentDate: string = ''; // Текущая дата
+  currentTime: string = ''; // Текущее время
+  private timer: any; // Переменная для хранения интервала
 
   ngOnInit(): void {
-    if (!this.currentDate) {
-      const now = new Date();
-      this.currentDate = now.toLocaleDateString('ru-RU');
-    }
-    if (!this.currentTime) {
-      const now = new Date();
-      this.currentTime = now.toLocaleTimeString('ru-RU');
+    this.updateDateTime(); // Обновление времени сразу при инициализации
+    this.timer = setInterval(() => this.updateDateTime(), 1000); // Обновляем каждую секунду
+  }
+
+  updateDateTime(): void {
+    const now = new Date();
+    this.currentDate = now.toLocaleDateString('ru-RU');
+    this.currentTime = now.toLocaleTimeString('ru-RU');
+  }
+
+  ngOnDestroy(): void {
+    if (this.timer) {
+      clearInterval(this.timer); // Очистка интервала при уничтожении компонента
     }
   }
 }
