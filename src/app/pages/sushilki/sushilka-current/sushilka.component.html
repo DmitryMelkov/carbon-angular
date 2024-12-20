@@ -1,14 +1,11 @@
-<app-header-current-params
-  [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"
-></app-header-current-params>
+<app-loader *ngIf="isLoading" [delay]="1000" [loadingText]="'Подождите, идет загрузка данных...'" (loadingComplete)="onLoadingComplete()"></app-loader>
 
-<div class="tables">
-  <app-sushilka-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="'°C'">
-  </app-sushilka-table>
+<div class="current-container" *ngIf="!isLoading">
+  <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
 
-  <app-sushilka-table [title]="'Текущие параметры (разрежения)'" [data]="data?.vacuums || {}" [unit]="' кгс/м²'">
-  </app-sushilka-table>
-
-  <app-sushilka-table [title]="'Текущие параметры (горелка)'" [data]="data?.gorelka || {}">
-  </app-sushilka-table>
+  <div class="tables">
+    <app-sushilka-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="'°C'"></app-sushilka-table>
+    <app-sushilka-table [title]="'Текущие параметры (разрежения)'" [data]="data?.vacuums || {}" [unit]="' кгс/м²'"></app-sushilka-table>
+    <app-sushilka-table [title]="'Текущие параметры (горелка)'" [data]="data?.gorelka || {}"></app-sushilka-table>
+  </div>
 </div>

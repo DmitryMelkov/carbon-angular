@@ -1,0 +1,8 @@
+<h1>Добро пожаловать на главную страницу!</h1>
+<h2>Выберите сушилку:</h2>
+<ul>
+  <li *ngFor="let id of sushilkaIds">
+    <a [routerLink]="['/sushilka', id]">Сушилка {{ id }}</a>
+    <a [routerLink]="['/sushilka', id, 'mnemo']">Мнемосхема {{ id }}</a>
+  </li>
+</ul>

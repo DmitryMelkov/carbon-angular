@@ -1,4 +1,4 @@
-<app-loader [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"
+<app-loader [delay]="1000" [loadingText]="'Подождите, идет загрузка данных...'"
   (loadingComplete)="onLoadingComplete()"></app-loader>
 
 <div class="mnemo-container" *ngIf="data">
@@ -37,19 +37,19 @@
         src="/img/ventilator.png" alt="img">
     </div>
 
-    <div class="mnemo__gif mnemo__gif-5" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+    <div class="mnemo__gif mnemo__gif-5" *ngIf="(data.gorelka[getDynamicKey('Мощность горелки')] || 0) > 5">
       <img src="/img/pipeline_top_coal.gif" alt="img">
     </div>
 
-    <div class="mnemo__gif mnemo__gif-6" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+    <div class="mnemo__gif mnemo__gif-6" *ngIf="(data.gorelka[getDynamicKey('Мощность горелки')] || 0) > 5">
       <img src="/img/pipeline_middle_coal.gif" alt="img">
     </div>
 
-    <div class="mnemo__gif mnemo__gif-7" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+    <div class="mnemo__gif mnemo__gif-7" *ngIf="(data.gorelka[getDynamicKey('Мощность горелки')] || 0) > 5">
       <img src="/img/pipeline_flow_coal.gif" alt="img">
     </div>
 
-    <div class="mnemo__gif mnemo__gif-8" *ngIf="(data.gorelka['Мощность горелки №1'] || 0) > 5">
+    <div class="mnemo__gif mnemo__gif-8" *ngIf="(data.gorelka[getDynamicKey('Мощность горелки')] || 0) > 5">
       <img src="/img/pipeline_middle_coal.gif" alt="img">
     </div>
 
@@ -89,13 +89,13 @@
 
     <div class="mnemo__param mosh-gorelki">
       <span class="mnemo__param-text">
-        {{ data.gorelka['Мощность горелки №1'] || '—' }}%
+        {{ data.gorelka[getDynamicKey('Мощность горелки')] || '—' }}%
       </span>
     </div>
 
     <div class="mnemo__param zadanie-temper">
       <span class="mnemo__param-text">
-        {{ data.gorelka['Задание температуры №1'] || '—' }} °C
+        {{ data.gorelka[getDynamicKey('Задание температуры')] || '—' }} °C
       </span>
     </div>
 
@@ -121,6 +121,5 @@
       </span>
     </div>
 
-    <!-- Кран с индикатором -->
     <app-mnemo-kran [isActive]="data.im['Индикация паротушения']"></app-mnemo-kran>
   </div>

@@ -33,7 +33,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
         style({
           height: '0px',
           opacity: 0,
-          overflow: 'hidden',
         })
       ),
       state(
@@ -43,7 +42,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
           opacity: 1,
         })
       ),
-      transition('closed <=> open', animate('500ms ease-in-out')),
+      transition('closed <=> open', animate('300ms ease-in-out')),
     ]),
   ],
 })

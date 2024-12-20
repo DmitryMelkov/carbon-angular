@@ -14,7 +14,8 @@ export class SushilkiService {
       catchError((error) => {
         console.error(`Ошибка при запросе данных для сушилки ${id}:`, error);
 
-        // Возвращаем объект с прочерками
+        // Формируем номер сушилки на основе ID
+        const suffix = id.replace('sushilka', ''); // Получаем номер сушилки
         return of({
           temperatures: {
             "Температура в топке": NaN,
@@ -27,16 +28,16 @@ export class SushilkiService {
             "Разрежение воздуха на разбавление": '—',
           },
           gorelka: {
-            "Мощность горелки №1": NaN,
-            "Сигнал от регулятора №1": NaN,
-            "Задание температуры №1": NaN,
+            [`Мощность горелки №${suffix}`]: NaN,
+            [`Сигнал от регулятора №${suffix}`]: NaN,
+            [`Задание температуры №${suffix}`]: NaN,
           },
           im: {
             "Индикация паротушения": false,
             "Индикация сбрасыватель": false,
           },
           lastUpdated: '—',
-        });
+        } as SushilkiData); // Приводим объект к типу SushilkiData
       })
     );
   }

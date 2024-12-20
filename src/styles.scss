@@ -92,3 +92,8 @@ body {
   .mat-expansion-panel-header:not([aria-disabled="true"]) {
   transition: background 0.3s ease-in-out;
 }
+
+
+.current-container, .mnemo-container {
+  padding-left: 10px;
+}

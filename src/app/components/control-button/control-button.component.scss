@@ -7,6 +7,7 @@
   border: 1px solid vars.$hulk;
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
   cursor: pointer;
+  outline: none;
 
   &:hover {
     color: vars.$white;
@@ -14,6 +15,11 @@
   }
 
   &:active {
+    color: vars.$white;
+    background-color: vars.$hulk;
+  }
+
+  &:focus {
     color: vars.$white;
     background-color: vars.$hulk;
   }

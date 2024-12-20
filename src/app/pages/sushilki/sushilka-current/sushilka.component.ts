@@ -1,25 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SushilkiService } from '../../../common/services/sushilka.service';
 import { ActivatedRoute } from '@angular/router';
-import { interval, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { interval, Subject, of } from 'rxjs';
+import { switchMap, catchError, takeUntil } from 'rxjs/operators';
 import { SushilkiData } from '../../../common/types/sushilki-data';
 import { SushilkaTableComponent } from '../../../components/sushilka-table/sushilka-table.component';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
+import { LoaderComponent } from '../../../components/loader/loader.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sushilka',
   standalone: true,
-  imports: [CommonModule, SushilkaTableComponent, HeaderCurrentParamsComponent],
+  imports: [SushilkaTableComponent, HeaderCurrentParamsComponent, LoaderComponent, CommonModule],
   templateUrl: './sushilka.component.html',
   styleUrls: ['./sushilka.component.scss'],
 })
 export class SushilkaComponent implements OnInit, OnDestroy {
   data: SushilkiData | null = null;
-  private updateSubscription!: Subscription;
-
   id!: string; // ID сушилки
+  isLoading: boolean = true; // Управление прелоудером
+  private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   constructor(
     private sushilkiService: SushilkiService,
@@ -27,7 +28,6 @@ export class SushilkaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Считываем параметр id из маршрута
     this.id = this.route.snapshot.paramMap.get('id') ?? '';
 
     if (!this.id) {
@@ -35,30 +35,78 @@ export class SushilkaComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.updateSubscription = interval(10000)
-      .pipe(switchMap(() => this.sushilkiService.getSushilkaData(this.id)))
-      .subscribe((response) => {
-        this.updateData(response);
-      });
-
-    this.sushilkiService.getSushilkaData(this.id).subscribe((response) => {
-      this.updateData(response);
-    });
+    this.loadData();
+    this.startPeriodicDataLoading();
   }
 
   ngOnDestroy(): void {
-    if (this.updateSubscription) {
-      this.updateSubscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete(); // Завершаем поток
+  }
+
+  private loadData(): void {
+    this.isLoading = true; // Устанавливаем состояние загрузки в true перед загрузкой данных
+    this.sushilkiService.getSushilkaData(this.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(error => {
+          console.error('Ошибка при первичной загрузке данных:', error);
+          this.isLoading = false; // Устанавливаем состояние загрузки в false при ошибке
+          return of(null);
+        })
+      )
+      .subscribe((response) => {
+        this.updateData(response);
+      });
+  }
+
+  private startPeriodicDataLoading(): void {
+    interval(10000)
+      .pipe(
+        switchMap(() => this.sushilkiService.getSushilkaData(this.id)),
+        takeUntil(this.destroy$),
+        catchError(error => {
+          console.error('Ошибка при получении данных:', error);
+          return of(null);
+        })
+      )
+      .subscribe((response) => {
+        this.updateData(response);
+      });
+  }
+
+  private updateData(response: SushilkiData | null): void {
+    if (response) {
+      this.data = response;
+    } else {
+      // Создаем объект по умолчанию, который соответствует типу SushilkiData
+      const suffix = this.id.replace('sushilka', '');
+      this.data = {
+        temperatures: {
+          "Температура в топке": NaN,
+          "Температура в камере смешения": NaN,
+          "Температура уходящих газов": NaN,
+        },
+        vacuums: {
+          "Разрежение в топке": '—',
+          "Разрежение в камере выгрузки": '—',
+          "Разрежение воздуха на разбавление": '—',
+        },
+        gorelka: {
+          [`Мощность горелки №${suffix}`]: NaN,
+          [`Сигнал от регулятора №${suffix}`]: NaN,
+          [`Задание температуры №${suffix}`]: NaN,
+        },
+        im: {
+          "Индикация паротушения": false,
+          "Индикация сбрасыватель": false,
+        },
+        lastUpdated: '—',
+      } as SushilkiData;
     }
   }
 
-  private updateData(response: SushilkiData): void {
-    this.data = response || {
-      temperatures: {},
-      vacuums: {},
-      gorelka: {},
-      im: {},
-      lastUpdated: '',
-    };
+  onLoadingComplete(): void {
+    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
   }
 }
