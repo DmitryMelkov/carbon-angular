@@ -1,8 +1,19 @@
-<h1>Добро пожаловать на главную страницу!</h1>
-<h2>Выберите сушилку:</h2>
-<ul>
-  <li *ngFor="let id of sushilkaIds">
-    <a [routerLink]="['/sushilka', id]">Сушилка {{ id }}</a>
-    <a [routerLink]="['/sushilka', id, 'mnemo']">Мнемосхема {{ id }}</a>
-  </li>
-</ul>
+<div class="container">
+  <div class="tab-container">
+    <button class="tab-container__button" (click)="selectTab('sushilka-1')">Сушилка-1</button>
+    <button class="tab-container__button" (click)="selectTab('sushilka-2')">Сушилка-2</button>
+  </div>
+
+  <div class="tab-container-box">
+    <h2 class="tab-content__title title-reset">{{ selectedTab }}</h2>
+    <div class="tab-content__sub-tab-container">
+      <button class="sub-tab-button" (click)="loadContent('current-parameters')">Текущие параметры {{ selectedTab }}</button>
+      <button class="sub-tab-button" (click)="loadContent('mnemo')">Мнемосхема {{ selectedTab }}</button>
+    </div>
+  </div>
+
+  <div class="content-container">
+    <app-sushilka *ngIf="selectedContent === 'current-parameters'" [id]="id" [contentType]="selectedContent"></app-sushilka>
+    <app-sushilka-mnemo *ngIf="selectedContent === 'mnemo'" [id]="id" ></app-sushilka-mnemo>
+  </div>
+</div>

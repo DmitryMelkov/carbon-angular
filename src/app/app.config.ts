@@ -10,7 +10,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter([
       { path: '', component: HomeComponent }, // Главная страница
-      { path: 'sushilka/:id', component: SushilkaComponent },
+      { path: 'sushilka/:id/current', component: SushilkaComponent },
       { path: 'sushilka/:id/mnemo', component: SushilkaMnemoComponent },
     ]),
     provideHttpClient(),

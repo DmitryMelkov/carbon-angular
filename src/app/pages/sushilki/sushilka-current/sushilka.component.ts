@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { SushilkiService } from '../../../common/services/sushilka.service';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
@@ -17,8 +17,10 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./sushilka.component.scss'],
 })
 export class SushilkaComponent implements OnInit, OnDestroy {
+  @Input() id!: string; // ID сушилки
+  @Input() contentType!: string; // Тип контента (например, 'current-parameters')
+
   data: SushilkiData | null = null;
-  id!: string; // ID сушилки
   isLoading: boolean = true; // Управление прелоудером
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
@@ -28,7 +30,10 @@ export class SushilkaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id') ?? '';
+     // Если ID не передан через route, используем входное свойство
+     if (!this.id) {
+      this.id = this.route.snapshot.paramMap.get('id') ?? '';
+    }
 
     if (!this.id) {
       console.error('ID сушилки не указан!');
