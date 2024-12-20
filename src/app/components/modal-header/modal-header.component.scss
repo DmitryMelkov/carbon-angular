@@ -14,8 +14,19 @@
   &__close-btn {
     position: absolute;
     top: 8px;
-    right: 8px;
+    right: 22px;
     color: vars.$stone-cold;
     cursor: pointer;
+    transition: background-color .3s ease-in-out;
+    outline: none;
+    &:hover {
+      background-color: vars.$plaster;
+    }
+    &:active {
+      background-color: vars.$plaster;
+    }
+    &:focus {
+      background-color: vars.$plaster;
+    }
   }
 }

@@ -28,14 +28,27 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrls: ['./documentation-modal.component.scss'],
   animations: [
     trigger('accordionAnimation', [
-      state('closed', style({ height: '0', overflow: 'hidden', opacity: 0 })),
-      state('open', style({ height: '*', opacity: 1 })),
-      transition('closed <=> open', animate('300ms ease-in-out')),
+      state(
+        'closed',
+        style({
+          height: '0px',
+          opacity: 0,
+          overflow: 'hidden',
+        })
+      ),
+      state(
+        'open',
+        style({
+          height: '*',
+          opacity: 1,
+        })
+      ),
+      transition('closed <=> open', animate('500ms ease-in-out')),
     ]),
   ],
 })
 export class DocumentationModalComponent {
-  activeAccordion: string | null = null;
+  activeAccordion: string | null = 'schemes'; // 'schemes' для открытого состояния
 
   schemes = [
     {
@@ -114,7 +127,10 @@ export class DocumentationModalComponent {
     this.activeAccordion = this.activeAccordion === section ? null : section;
   }
 
-  isOpen(section: string): string {
-    return this.activeAccordion === section ? 'open' : 'closed';
+  get accordionState(): { [key: string]: string } {
+    return {
+      schemes: this.activeAccordion === 'schemes' ? 'open' : 'closed',
+      programs: this.activeAccordion === 'programs' ? 'open' : 'closed',
+    };
   }
 }

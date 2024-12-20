@@ -15,23 +15,6 @@
     display: flex;
     align-items: center;
   }
-  &__param-box--btn {
-    padding: 5px;
-    @include mixins.text-style(16px, 23px, 600, vars.$hulk);
-    border: 1px solid vars.$hulk;
-    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-  }
-  &__param-box--btn:first-child {
-    border-right: 1px solid transparent;
-  }
-  &__param-box--btn:hover {
-    color: vars.$white;
-    background-color: vars.$hulk;
-  }
-  &__param-box--btn:active {
-    color: vars.$white;
-    background-color: vars.$hulk;
-  }
   &__img {
     width: 1616px;
     opacity: 0.8;
@@ -108,6 +91,10 @@
   &__param-text {
     @include mixins.text-style(16px, 16px, 600, vars.$blue);
   }
+}
+
+.mnemo__param-box--btns ::ng-deep app-control-button:first-child .control-button {
+  border-right: 1px solid transparent !important;
 }
 
 @keyframes rotate {

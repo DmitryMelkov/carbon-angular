@@ -21,7 +21,7 @@ import { ControlButtonComponent } from '../../../components/control-button/contr
     MnemoKranComponent,
     MatDialogModule,
     LoaderComponent,
-    ControlButtonComponent
+    ControlButtonComponent,
   ],
   standalone: true,
   templateUrl: './sushilka-mnemo-1.component.html',
