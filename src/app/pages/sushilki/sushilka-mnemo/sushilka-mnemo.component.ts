@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiService } from '../../../common/services/sushilka.service';
@@ -30,7 +30,7 @@ import { ControlButtonComponent } from '../../../components/control-button/contr
 })
 export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   data: SushilkiData | null = null;
-  id!: string;
+  @Input() id!: string;
   sushilkaNumber!: string; // Номер сушилки
   isLoading: boolean = true; // Управление прелоудером
   isTooltipsEnabled: boolean = true;
@@ -52,10 +52,26 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Получаем ID сушилки из маршрута
-    this.id = this.route.snapshot.paramMap.get('id') || '';
+    // Если id не передан через @Input(), получаем его из маршрута
+    if (!this.id) {
+      this.id = this.route.snapshot.paramMap.get('id') || '';
+    }
+
+    // Убедитесь, что id правильно передан
+    if (!this.id) {
+      console.error('ID сушилки не указан!');
+      return;
+    }
+
     this.sushilkaNumber = this.id.replace('sushilka', ''); // Извлекаем номер сушилки
-    this.loadData();
+    this.loadData(); // Загружаем данные
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['id'] && this.id) {
+      this.sushilkaNumber = this.id.replace('sushilka', ''); // Извлекаем номер сушилки
+      this.loadData(); // Загружаем данные при изменении id
+    }
   }
 
   /**
@@ -65,35 +81,34 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     // Первичная загрузка данных
     this.sushilkiService.getSushilkaData(this.id)
       .pipe(
-        takeUntil(this.destroy$), // Завершаем подписку при уничтожении компонента
+        takeUntil(this.destroy$),
         catchError((err) => {
           console.error('Ошибка первичной загрузки данных:', err);
           this.isLoading = false;
-          return of(null); // Возвращаем null в случае ошибки
+          return of(null);
         })
       )
       .subscribe((response) => {
-        this.updateData(response); // Обновляем данные с помощью метода updateData
-        this.isLoading = false; // Убираем прелоудер
+        this.updateData(response);
+        this.isLoading = false;
       });
 
     // Периодическая загрузка данных
     interval(10000)
       .pipe(
         switchMap(() => this.sushilkiService.getSushilkaData(this.id)),
-        takeUntil(this.destroy$), // Завершаем подписку при уничтожении компонента
+        takeUntil(this.destroy$),
         catchError((err) => {
           console.error('Ошибка загрузки данных:', err);
           this.isLoading = false;
-          return of(null); // Возвращаем null в случае ошибки
+          return of(null);
         })
       )
       .subscribe((response) => {
-        this.updateData(response); // Обновляем данные с помощью метода updateData
-        this.isLoading = false; // Убираем прелоудер
+        this.updateData(response);
+        this.isLoading = false;
       });
   }
-
 
   ngOnDestroy(): void {
     this.destroy$.next();

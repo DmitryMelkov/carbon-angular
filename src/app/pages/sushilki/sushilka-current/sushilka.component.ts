@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { SushilkiService } from '../../../common/services/sushilka.service';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SushilkaComponent implements OnInit, OnDestroy {
   @Input() id!: string; // ID сушилки
-  @Input() contentType!: string; // Тип контента (например, 'current-parameters')
+  @Input() contentType!: string; // Тип контента
 
   data: SushilkiData | null = null;
   isLoading: boolean = true; // Управление прелоудером
@@ -30,8 +30,8 @@ export class SushilkaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-     // Если ID не передан через route, используем входное свойство
-     if (!this.id) {
+    // Если ID не передан через route, используем входное свойство
+    if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') ?? '';
     }
 
@@ -44,26 +44,35 @@ export class SushilkaComponent implements OnInit, OnDestroy {
     this.startPeriodicDataLoading();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Проверяем, изменился ли id или contentType
+    if (changes['id'] || changes['contentType']) {
+      this.loadData(); // Загружаем данные при изменении id или contentType
+    }
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
 
   private loadData(): void {
-    this.isLoading = true; // Устанавливаем состояние загрузки в true перед загрузкой данных
+    this.isLoading = true;
     this.sushilkiService.getSushilkaData(this.id)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
           console.error('Ошибка при первичной загрузке данных:', error);
-          this.isLoading = false; // Устанавливаем состояние загрузки в false при ошибке
+          this.isLoading = false;
           return of(null);
         })
       )
       .subscribe((response) => {
         this.updateData(response);
+        this.onLoadingComplete(); // Вызываем, когда данные загружены
       });
-  }
+}
+
 
   private startPeriodicDataLoading(): void {
     interval(10000)

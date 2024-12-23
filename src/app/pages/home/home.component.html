@@ -1,19 +1,21 @@
-<div class="container">
-  <div class="tab-container">
-    <button class="tab-container__button" (click)="selectTab('sushilka-1')">Сушилка-1</button>
-    <button class="tab-container__button" (click)="selectTab('sushilka-2')">Сушилка-2</button>
-  </div>
-
-  <div class="tab-container-box">
-    <h2 class="tab-content__title title-reset">{{ selectedTab }}</h2>
-    <div class="tab-content__sub-tab-container">
-      <button class="sub-tab-button" (click)="loadContent('current-parameters')">Текущие параметры {{ selectedTab }}</button>
-      <button class="sub-tab-button" (click)="loadContent('mnemo')">Мнемосхема {{ selectedTab }}</button>
-    </div>
-  </div>
-
-  <div class="content-container">
-    <app-sushilka *ngIf="selectedContent === 'current-parameters'" [id]="id" [contentType]="selectedContent"></app-sushilka>
-    <app-sushilka-mnemo *ngIf="selectedContent === 'mnemo'" [id]="id" ></app-sushilka-mnemo>
+<div class="home">
+  <div class="home__container">
+    <mat-tab-group class="home__tab-group" (selectedTabChange)="selectedSushilkaId = $event.tab.textLabel">
+      <mat-tab *ngFor="let id of sushilkaIds" class="home__tab">
+        <ng-template mat-tab-label>
+          <button mat-button class="home__tab-button">{{ id }}</button>
+        </ng-template>
+        <div class="home__button-group">
+          <button mat-button class="home__button" (click)="showParameters(id)">Текущие параметры</button>
+          <button mat-button class="home__button" (click)="showMnemo(id)">Мнемосхема</button>
+        </div>
+        <div *ngIf="activeView === 'parameters' && selectedSushilkaId === id" class="home__sushilka">
+          <app-sushilka [id]="id" (loadingComplete)="onLoadingComplete()"></app-sushilka>
+        </div>
+        <div *ngIf="activeView === 'mnemo' && selectedSushilkaId === id" class="home__mnemo">
+          <app-sushilka-mnemo [id]="id"></app-sushilka-mnemo>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>
