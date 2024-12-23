@@ -1,12 +1,6 @@
 //краны
 
 .mnemo {
-  &__kran-vert {
-    position: absolute;
-    z-index: 1;
-    top: 7%;
-    left: 18%;
-  }
   &__kran-box {
     position: relative;
     display: flex;
@@ -19,6 +13,11 @@
     border-top: 17px solid transparent;
     border-left: 20px solid green;
     border-bottom: 17px solid transparent;
+    @media (max-width: 1280px) {
+      border-top: 10px solid transparent;
+      border-left: 15px solid green !important;
+      border-bottom: 10px solid transparent;
+    }
   }
   &__triangle2 {
     width: 0;
@@ -26,5 +25,10 @@
     border-top: 17px solid transparent;
     border-right: 20px solid green;
     border-bottom: 17px solid transparent;
+    @media (max-width: 1280px) {
+      border-top: 10px solid transparent;
+      border-right: 15px solid green !important;
+      border-bottom: 10px solid transparent;
+    }
   }
 }
