@@ -28,4 +28,9 @@
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  &.active-button {
+    background-color: green !important; // Цвет фона для активной кнопки
+    color: white !important; // Цвет текста для активной кнопки
+  }
 }

@@ -1,7 +1,7 @@
 <button
   class="control-button btn-reset"
+  [ngClass]="{'active-button': isActive}"
   [disabled]="isDisabled"
-  (click)="onClick.emit($event)"
->
+  (click)="onClick.emit($event)">
   <ng-content></ng-content>
 </button>

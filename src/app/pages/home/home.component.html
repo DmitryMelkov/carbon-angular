@@ -1,19 +1,26 @@
 <div class="home">
   <div class="home__container">
     <mat-tab-group class="home__tab-group" (selectedTabChange)="selectedSushilkaId = $event.tab.textLabel">
-      <mat-tab *ngFor="let id of sushilkaIds" class="home__tab">
+      <mat-tab *ngFor="let object of objectData" class="home__tab">
         <ng-template mat-tab-label>
-          <button mat-button class="home__tab-button">{{ id }}</button>
+          <button mat-button class="home__tab-button btn-reset">{{ object.name }}</button>
         </ng-template>
         <div class="home__button-group">
-          <button mat-button class="home__button" (click)="showParameters(id)">Текущие параметры</button>
-          <button mat-button class="home__button" (click)="showMnemo(id)">Мнемосхема</button>
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'parameters' && selectedSushilkaId === object.id"
+            (onClick)="showParameters(object.id)">
+            Текущие параметры
+          </app-control-button>
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'mnemo' && selectedSushilkaId === object.id" (onClick)="showMnemo(object.id)">
+            Мнемосхема
+          </app-control-button>
         </div>
-        <div *ngIf="activeView === 'parameters' && selectedSushilkaId === id" class="home__sushilka">
-          <app-sushilka [id]="id" (loadingComplete)="onLoadingComplete()"></app-sushilka>
+        <div *ngIf="activeView === 'parameters' && selectedSushilkaId === object.id" class="home__sushilka">
+          <app-sushilka [id]="object.id"></app-sushilka>
         </div>
-        <div *ngIf="activeView === 'mnemo' && selectedSushilkaId === id" class="home__mnemo">
-          <app-sushilka-mnemo [id]="id"></app-sushilka-mnemo>
+        <div *ngIf="activeView === 'mnemo' && selectedSushilkaId === object.id" class="home__mnemo">
+          <app-sushilka-mnemo [id]="object.id"></app-sushilka-mnemo>
         </div>
       </mat-tab>
     </mat-tab-group>

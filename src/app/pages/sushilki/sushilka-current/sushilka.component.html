@@ -1,4 +1,4 @@
-<app-loader *ngIf="isLoading" [delay]="1000" [loadingText]="'Подождите, идет загрузка данных...'" (loadingComplete)="onLoadingComplete()"></app-loader>
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'" (loadingComplete)="onLoadingComplete()"></app-loader>
 
 <div class="current-container" *ngIf="!isLoading">
   <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
