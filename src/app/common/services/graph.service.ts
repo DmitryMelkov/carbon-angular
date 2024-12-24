@@ -41,6 +41,7 @@ export class GraphService {
               autoSkip: true,
               maxTicksLimit: 10,
             },
+            reverse: false, // Убедитесь, что здесь false (по умолчанию)
           },
           y: {
             title: {
@@ -61,13 +62,15 @@ export class GraphService {
     const length = duration === '30min' ? 30 : 24;
     const interval = duration === '30min' ? 60 * 1000 : 60 * 60 * 1000;
 
-    return Array.from({ length }, (_, i) => {
-      const date = new Date(now.getTime() - i * interval); // Измените порядок здесь
+    const timeStamps = Array.from({ length }, (_, i) => {
+      const date = new Date(now.getTime() - (length - 1 - i) * interval);
       return date.toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
       });
     });
+
+    return timeStamps;
   }
 
   createDatasets(sushilkaData: SushilkiData, timeRange: '30min' | '24h') {
@@ -77,10 +80,14 @@ export class GraphService {
 
     for (const key in temperatures) {
       if (temperatures.hasOwnProperty(key)) {
-        const tempDataArray = Array(length).fill(temperatures[key] || 0);
+        // Создайте массив данных в том же порядке, что и временные метки
+        const tempDataArray = Array.from(
+          { length },
+          (_, i) => temperatures[key] || 0
+        );
         datasets.push({
           label: key,
-          data: tempDataArray,
+          data: tempDataArray, // Убедитесь, что порядок данных совпадает с временными метками
           fill: false,
           borderColor: this.getColorForLabel(key),
           backgroundColor: this.getColorForLabel(key),
