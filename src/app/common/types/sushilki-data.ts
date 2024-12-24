@@ -1,4 +1,5 @@
 export interface Temperatures {
+  [key: string]: number; // Добавьте эту строку
   'Температура в топке': number;
   'Температура в камере смешения': number;
   'Температура уходящих газов': number;
