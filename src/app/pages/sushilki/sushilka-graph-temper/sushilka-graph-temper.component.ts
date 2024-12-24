@@ -1,68 +1,77 @@
-// sushilka-graph-temper.component.ts
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { SushilkiService } from '../../../common/services/sushilka.service';
-import { SushilkiData } from '../../../common/types/sushilki-data';
-import { GraphService } from '../../../common/services/graph.service';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import CrosshairPlugin from 'chartjs-plugin-crosshair';
+import { TemperatureData } from '../../../common/types/sushilki-data-graph';
+import { SushilkaGraphService } from '../../../common/services/sushilka-graph.service';
+
+
+Chart.register(CrosshairPlugin);
 
 @Component({
-  selector: 'app-sushilka-graph',
+  selector: 'app-sushilka-graph-temper',
   templateUrl: './sushilka-graph-temper.component.html',
   styleUrls: ['./sushilka-graph-temper.component.scss'],
 })
-export class SushilkaGraphTemperComponent implements AfterViewInit {
-  @ViewChild('myChart1') myChart1!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('myChart2') myChart2!: ElementRef<HTMLCanvasElement>;
-  chart1!: Chart;
-  chart2!: Chart;
+export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
+  @ViewChild('chartCanvas', { static: true }) chartCanvas!: ElementRef<HTMLCanvasElement>;
+  private chart!: Chart;
+  private intervalId: any;
 
-  sushilkaData1!: SushilkiData;
-  sushilkaData2!: SushilkiData;
-  timeRange: '30min' | '24h' = '30min';
+  data: TemperatureData[] = [];
+  startTime: Date = new Date(Date.now() - 30 * 60 * 1000);
+  endTime: Date = new Date();
 
-  constructor(private sushilkiService: SushilkiService, private graphService: GraphService) {}
+  constructor(private sushilkaGraphService: SushilkaGraphService) {}
 
-  ngAfterViewInit(): void {
-    Promise.all([
-      this.getSushilkaData('sushilka1'),
-      this.getSushilkaData('sushilka2'),
-    ]).then(() => {
-      this.updateCharts();
-    });
+  ngOnInit(): void {
+    this.fetchData();
+    this.intervalId = setInterval(() => {
+      this.endTime = new Date();
+      this.startTime = new Date(Date.now() - 30 * 60 * 1000);
+      this.fetchData();
+    }, 5000);
   }
 
-  getSushilkaData(id: string): Promise<void> {
-    return new Promise((resolve) => {
-      this.sushilkiService.getSushilkaData(id).subscribe((data) => {
-        if (id === 'sushilka1') {
-          this.sushilkaData1 = data;
-        } else if (id === 'sushilka2') {
-          this.sushilkaData2 = data;
-        }
-        resolve();
-      });
-    });
-  }
-
-  updateCharts() {
-    const timeStamps = this.graphService.generateTimeStamps(this.timeRange);
-
-    if (this.chart1) {
-      this.chart1.destroy();
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
+    if (this.chart) {
+      this.chart.destroy();
     }
-    if (this.chart2) {
-      this.chart2.destroy();
-    }
-
-    const datasets1 = this.graphService.createDatasets(this.sushilkaData1, this.timeRange);
-    const datasets2 = this.graphService.createDatasets(this.sushilkaData2, this.timeRange);
-
-    this.chart1 = this.graphService.createChart(this.myChart1.nativeElement, timeStamps, datasets1, 'График Сушилки №1');
-    this.chart2 = this.graphService.createChart(this.myChart2.nativeElement, timeStamps, datasets2, 'График Сушилки №2');
   }
 
-  switchTimeRange(range: '30min' | '24h') {
-    this.timeRange = range;
-    this.updateCharts();
+  async fetchData() {
+    try {
+      const response = await fetch(
+        `http://localhost:3002/api/sushilka1/data?start=${this.startTime.toISOString()}&end=${this.endTime.toISOString()}`
+      );
+      if (!response.ok) {
+        throw new Error('Ошибка при получении данных');
+      }
+      this.data = await response.json();
+      this.renderChart();
+    } catch (err) {
+      console.error('Ошибка при запросе данных:', err);
+    }
+  }
+
+  renderChart() {
+    const ctx = this.chartCanvas.nativeElement.getContext('2d');
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    this.chart = this.sushilkaGraphService.renderChart(ctx!, this.data);
+  }
+
+  handleBackward() {
+    this.startTime = new Date(this.startTime.getTime() - 60 * 60 * 1000);
+    this.endTime = new Date(this.endTime.getTime() - 60 * 60 * 1000);
+    this.fetchData();
+  }
+
+  handleForward() {
+    this.startTime = new Date(this.startTime.getTime() + 60 * 60 * 1000);
+    this.endTime = new Date(this.endTime.getTime() + 60 * 60 * 1000);
+    this.fetchData();
   }
 }

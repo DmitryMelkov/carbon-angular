@@ -30,3 +30,4 @@ export interface SushilkiData {
   im: IM;
   lastUpdated: string;
 }
+
