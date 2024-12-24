@@ -2,14 +2,27 @@
 import { Injectable } from '@angular/core';
 import { Chart, ChartOptions } from 'chart.js';
 import { TemperatureData } from '../types/sushilki-data-graph';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SushilkaGraphService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  renderChart(ctx: CanvasRenderingContext2D, temperatures: TemperatureData[]): Chart {
+  getTemperatureData(
+    startTime: Date,
+    endTime: Date
+  ): Observable<TemperatureData[]> {
+    const url = `http://localhost:3002/api/sushilka1/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
+    return this.http.get<TemperatureData[]>(url);
+  }
+
+  renderChart(
+    ctx: CanvasRenderingContext2D,
+    temperatures: TemperatureData[]
+  ): Chart {
     const chartData = {
       labels: temperatures.map((t) => new Date(t.lastUpdated)),
       datasets: [
@@ -23,7 +36,9 @@ export class SushilkaGraphService {
         },
         {
           label: 'Температура в камере смешения',
-          data: temperatures.map((t) => t.temperatures['Температура в камере смешения']),
+          data: temperatures.map(
+            (t) => t.temperatures['Температура в камере смешения']
+          ),
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           fill: false,
@@ -31,7 +46,9 @@ export class SushilkaGraphService {
         },
         {
           label: 'Температура уходящих газов',
-          data: temperatures.map((t) => t.temperatures['Температура уходящих газов']),
+          data: temperatures.map(
+            (t) => t.temperatures['Температура уходящих газов']
+          ),
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           fill: false,
@@ -65,7 +82,8 @@ export class SushilkaGraphService {
           callbacks: {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
-              const value = tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
+              const value =
+                tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
               return `${label}: ${value}°C`;
             },
           },
@@ -96,11 +114,24 @@ export class SushilkaGraphService {
             },
           },
           ticks: {
+            autoSkip: true,
             maxTicksLimit: 30,
+            callback: function (value, index, values) {
+              const date = new Date(value);
+              // Отображаем метки только для каждой пятой метки
+              return date.getMinutes() % 5 === 0
+                ? date.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                : '';
+            },
           },
         },
         y: {
           beginAtZero: false,
+          min: 0,
+          max: 600,
         },
       },
     };

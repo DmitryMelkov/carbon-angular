@@ -1,10 +1,16 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { Chart } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { TemperatureData } from '../../../common/types/sushilki-data-graph';
 import { SushilkaGraphService } from '../../../common/services/sushilka-graph.service';
-
+import { Subscription } from 'rxjs';
 
 Chart.register(CrosshairPlugin);
 
@@ -14,9 +20,11 @@ Chart.register(CrosshairPlugin);
   styleUrls: ['./sushilka-graph-temper.component.scss'],
 })
 export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
-  @ViewChild('chartCanvas', { static: true }) chartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartCanvas', { static: true })
+  chartCanvas!: ElementRef<HTMLCanvasElement>;
   private chart!: Chart;
   private intervalId: any;
+  private dataSubscription!: Subscription;
 
   data: TemperatureData[] = [];
   startTime: Date = new Date(Date.now() - 30 * 60 * 1000);
@@ -38,21 +46,23 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
     if (this.chart) {
       this.chart.destroy();
     }
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
-  async fetchData() {
-    try {
-      const response = await fetch(
-        `http://localhost:3002/api/sushilka1/data?start=${this.startTime.toISOString()}&end=${this.endTime.toISOString()}`
-      );
-      if (!response.ok) {
-        throw new Error('Ошибка при получении данных');
-      }
-      this.data = await response.json();
-      this.renderChart();
-    } catch (err) {
-      console.error('Ошибка при запросе данных:', err);
-    }
+  fetchData() {
+    this.dataSubscription = this.sushilkaGraphService
+      .getTemperatureData(this.startTime, this.endTime)
+      .subscribe({
+        next: (data) => {
+          this.data = data;
+          this.renderChart();
+        },
+        error: (err) => {
+          console.error('Ошибка при запросе данных:', err);
+        },
+      });
   }
 
   renderChart() {
