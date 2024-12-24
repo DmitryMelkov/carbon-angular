@@ -1,28 +1,23 @@
-// src/services/sushilka-graph.service.ts
 import { Injectable } from '@angular/core';
 import { Chart, ChartOptions } from 'chart.js';
 import { TemperatureData } from '../types/sushilki-data-graph';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SushilkaGraphService {
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  getTemperatureData(
-    startTime: Date,
-    endTime: Date
-  ): Observable<TemperatureData[]> {
-    const url = `http://localhost:3002/api/sushilka1/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
-    return this.http.get<TemperatureData[]>(url);
+  async getTemperatureData(startTime: Date, endTime: Date, sushilkaId: string): Promise<TemperatureData[]> {
+    const url = `http://localhost:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
   }
 
-  renderChart(
-    ctx: CanvasRenderingContext2D,
-    temperatures: TemperatureData[]
-  ): Chart {
+  renderChart(ctx: CanvasRenderingContext2D, temperatures: TemperatureData[], sushilkaId: string): Chart {
     const chartData = {
       labels: temperatures.map((t) => new Date(t.lastUpdated)),
       datasets: [
@@ -32,27 +27,23 @@ export class SushilkaGraphService {
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           fill: false,
-          pointRadius: 0, // Убираем точки
+          pointRadius: 0,
         },
         {
           label: 'Температура в камере смешения',
-          data: temperatures.map(
-            (t) => t.temperatures['Температура в камере смешения']
-          ),
+          data: temperatures.map((t) => t.temperatures['Температура в камере смешения']),
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           fill: false,
-          pointRadius: 0, // Убираем точки
+          pointRadius: 0,
         },
         {
           label: 'Температура уходящих газов',
-          data: temperatures.map(
-            (t) => t.temperatures['Температура уходящих газов']
-          ),
+          data: temperatures.map((t) => t.temperatures['Температура уходящих газов']),
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           fill: false,
-          pointRadius: 0, // Убираем точки
+          pointRadius: 0,
         },
       ],
     };
@@ -67,10 +58,10 @@ export class SushilkaGraphService {
       plugins: {
         title: {
           display: true,
-          text: 'График температур Сушилки №1', // Текст заголовка
-          color: 'green', // Цвет заголовка
+          text: `График температур Сушилки ${sushilkaId === 'sushilka1' ? '№1' : '№2'}`,
+          color: 'green',
           font: {
-            size: 20, // Размер шрифта заголовка
+            size: 20,
           },
         },
         legend: {
@@ -82,8 +73,7 @@ export class SushilkaGraphService {
           callbacks: {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
-              const value =
-                tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
+              const value = tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
               return `${label}: ${value}°C`;
             },
           },
@@ -118,7 +108,6 @@ export class SushilkaGraphService {
             maxTicksLimit: 30,
             callback: function (value, index, values) {
               const date = new Date(value);
-              // Отображаем метки только для каждой пятой метки
               return date.getMinutes() % 5 === 0
                 ? date.toLocaleTimeString([], {
                     hour: '2-digit',
