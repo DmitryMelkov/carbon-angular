@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import { SushilkiService } from '../../../common/services/sushilka.service';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
@@ -12,7 +18,12 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-sushilka',
   standalone: true,
-  imports: [SushilkaTableComponent, HeaderCurrentParamsComponent, LoaderComponent, CommonModule],
+  imports: [
+    SushilkaTableComponent,
+    HeaderCurrentParamsComponent,
+    LoaderComponent,
+    CommonModule,
+  ],
   templateUrl: './sushilka.component.html',
   styleUrls: ['./sushilka.component.scss'],
 })
@@ -58,10 +69,11 @@ export class SushilkaComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.isLoading = true;
-    this.sushilkiService.getSushilkaData(this.id)
+    this.sushilkiService
+      .getSushilkaData(this.id)
       .pipe(
         takeUntil(this.destroy$),
-        catchError(error => {
+        catchError((error) => {
           console.error('Ошибка при первичной загрузке данных:', error);
           this.isLoading = false;
           return of(null);
@@ -71,15 +83,14 @@ export class SushilkaComponent implements OnInit, OnDestroy {
         this.updateData(response);
         this.onLoadingComplete(); // Вызываем, когда данные загружены
       });
-}
-
+  }
 
   private startPeriodicDataLoading(): void {
     interval(10000)
       .pipe(
         switchMap(() => this.sushilkiService.getSushilkaData(this.id)),
         takeUntil(this.destroy$),
-        catchError(error => {
+        catchError((error) => {
           console.error('Ошибка при получении данных:', error);
           return of(null);
         })
@@ -97,14 +108,14 @@ export class SushilkaComponent implements OnInit, OnDestroy {
       const suffix = this.id.replace('sushilka', '');
       this.data = {
         temperatures: {
-          "Температура в топке": NaN,
-          "Температура в камере смешения": NaN,
-          "Температура уходящих газов": NaN,
+          'Температура в топке': NaN,
+          'Температура в камере смешения': NaN,
+          'Температура уходящих газов': NaN,
         },
         vacuums: {
-          "Разрежение в топке": '—',
-          "Разрежение в камере выгрузки": '—',
-          "Разрежение воздуха на разбавление": '—',
+          'Разрежение в топке': '—',
+          'Разрежение в камере выгрузки': '—',
+          'Разрежение воздуха на разбавление': '—',
         },
         gorelka: {
           [`Мощность горелки №${suffix}`]: NaN,
@@ -112,8 +123,8 @@ export class SushilkaComponent implements OnInit, OnDestroy {
           [`Задание температуры №${suffix}`]: NaN,
         },
         im: {
-          "Индикация паротушения": false,
-          "Индикация сбрасыватель": false,
+          'Индикация паротушения': false,
+          'Индикация сбрасыватель': false,
         },
         lastUpdated: '—',
       } as SushilkiData;

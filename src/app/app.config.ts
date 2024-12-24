@@ -1,10 +1,11 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
-import { SushilkaComponent } from './pages/sushilki/sushilka-current/sushilka.component';
-import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka-mnemo.component';
+import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HomeComponent } from './pages/home/home.component';
+import { SushilkaComponent } from './pages/sushilki/sushilka-current/sushilka.component';
+import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka-mnemo.component';
+import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,6 +13,7 @@ export const appConfig: ApplicationConfig = {
       { path: '', component: HomeComponent }, // Главная страница
       { path: 'sushilka/:id/current', component: SushilkaComponent },
       { path: 'sushilka/:id/mnemo', component: SushilkaMnemoComponent },
+      { path: 'sushilka/:id/graph-temper', component: SushilkaGraphTemperComponent }, 
     ]),
     provideHttpClient(),
     provideAnimations(), // Подключаем анимации правильно
