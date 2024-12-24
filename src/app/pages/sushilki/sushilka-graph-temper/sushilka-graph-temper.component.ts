@@ -57,7 +57,6 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
   }
 
   createChart1() {
-    console.log('Создание графика для первой сушилки');
     if (this.chart1) {
       this.chart1.destroy(); // Уничтожаем старый график, если он существует
     }
@@ -90,25 +89,31 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
         labels: timeStamps,
         datasets: [
           {
-            label: 'Температура в топке (Сушилка 1)',
+            label: 'Температура в топке',
             data: tempDataArray1_1,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgb(75, 192, 192)',
             tension: 0.1,
+            pointRadius: 0,
           },
           {
-            label: 'Температура в камере смешения (Сушилка 1)',
+            label: 'Температура в камере смешения',
             data: tempDataArray1_2,
             fill: false,
             borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgb(255, 99, 132)',
             tension: 0.1,
+            pointRadius: 0,
           },
           {
-            label: 'Температура уходящих газов (Сушилка 1)',
+            label: 'Температура уходящих газов',
             data: tempDataArray1_3,
             fill: false,
             borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: 'rgb(54, 162, 235)',
             tension: 0.1,
+            pointRadius: 0,
           },
         ],
       },
@@ -118,6 +123,10 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
           title: {
             display: true,
             text: 'График Сушилки №1', // Заголовок для первого графика
+            color: 'green', // Цвет заголовка
+            font: {
+              size: 20, // Размер шрифта заголовка
+            },
           },
         },
         scales: {
@@ -146,7 +155,6 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
   }
 
   createChart2() {
-    console.log('Создание графика для второй сушилки');
     if (this.chart2) {
       this.chart2.destroy(); // Уничтожаем старый график, если он существует
     }
@@ -179,25 +187,31 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
         labels: timeStamps,
         datasets: [
           {
-            label: 'Температура в топке (Сушилка 2)',
+            label: 'Температура в топке',
             data: tempDataArray2_1,
             fill: false,
             borderColor: 'rgb(255, 205, 86)',
+            backgroundColor: 'rgb(255, 205, 86)',
             tension: 0.1,
+            pointRadius: 0,
           },
           {
-            label: 'Температура в камере смешения (Сушилка 2)',
+            label: 'Температура в камере смешения',
             data: tempDataArray2_2,
             fill: false,
             borderColor: 'rgb(153, 102, 255)',
+            backgroundColor: 'rgb(153, 102, 255)',
             tension: 0.1,
+            pointRadius: 0,
           },
           {
-            label: 'Температура уходящих газов (Сушилка 2)',
+            label: 'Температура уходящих газов',
             data: tempDataArray2_3,
             fill: false,
             borderColor: 'rgb(255, 159, 64)',
+            backgroundColor: 'rgb(255, 159, 64)',
             tension: 0.1,
+            pointRadius: 0,
           },
         ],
       },
@@ -207,6 +221,10 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
           title: {
             display: true,
             text: 'График Сушилки №2', // Заголовок для второго графика
+            color: 'green', // Цвет заголовка
+            font: {
+              size: 20, // Размер шрифта заголовка
+            },
           },
         },
         scales: {
@@ -233,5 +251,4 @@ export class SushilkaGraphTemperComponent implements AfterViewInit {
       },
     });
   }
-
 }
