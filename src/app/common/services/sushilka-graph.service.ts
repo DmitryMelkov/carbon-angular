@@ -8,7 +8,11 @@ import { TemperatureData } from '../types/sushilki-data-graph';
 export class SushilkaGraphService {
   constructor() {}
 
-  async getTemperatureData(startTime: Date, endTime: Date, sushilkaId: string): Promise<TemperatureData[]> {
+  async getTemperatureData(
+    startTime: Date,
+    endTime: Date,
+    sushilkaId: string
+  ): Promise<TemperatureData[]> {
     const url = `http://localhost:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
     const response = await fetch(url);
     if (!response.ok) {
@@ -17,7 +21,11 @@ export class SushilkaGraphService {
     return await response.json();
   }
 
-  renderChart(ctx: CanvasRenderingContext2D, temperatures: TemperatureData[], sushilkaId: string): Chart {
+  renderChart(
+    ctx: CanvasRenderingContext2D,
+    temperatures: TemperatureData[],
+    sushilkaId: string
+  ): Chart {
     const chartData = {
       labels: temperatures.map((t) => new Date(t.lastUpdated)),
       datasets: [
@@ -28,22 +36,31 @@ export class SushilkaGraphService {
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           fill: false,
           pointRadius: 0,
+          borderWidth: 2,
         },
         {
           label: 'Температура в камере смешения',
-          data: temperatures.map((t) => t.temperatures['Температура в камере смешения']),
+          data: temperatures.map(
+            (t) => t.temperatures['Температура в камере смешения']
+          ),
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           fill: false,
           pointRadius: 0,
+          borderWidth: 2,
+
         },
         {
           label: 'Температура уходящих газов',
-          data: temperatures.map((t) => t.temperatures['Температура уходящих газов']),
+          data: temperatures.map(
+            (t) => t.temperatures['Температура уходящих газов']
+          ),
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           fill: false,
           pointRadius: 0,
+          borderWidth: 2,
+
         },
       ],
     };
@@ -58,7 +75,9 @@ export class SushilkaGraphService {
       plugins: {
         title: {
           display: true,
-          text: `График температур Сушилки ${sushilkaId === 'sushilka1' ? '№1' : '№2'}`,
+          text: `График температур Сушилки ${
+            sushilkaId === 'sushilka1' ? '№1' : '№2'
+          }`,
           color: 'green',
           font: {
             size: 20,
@@ -66,14 +85,15 @@ export class SushilkaGraphService {
         },
         legend: {
           display: true,
-          position: 'top',
+          position: 'right',
         },
         tooltip: {
           enabled: true,
           callbacks: {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
-              const value = tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
+              const value =
+                tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
               return `${label}: ${value}°C`;
             },
           },
