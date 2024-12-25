@@ -65,10 +65,13 @@ export class SushilkaGraphService {
 
     const options: ChartOptions<'line'> = {
       responsive: true,
-      animation: false,
+      animation: {
+        duration: 200,
+        easing: 'linear',
+      },
       interaction: {
-        mode: 'index', // Изменяем на 'index', чтобы получать все значения для одной метки
-        intersect: false,
+        mode: 'nearest',
+        intersect: true,
       },
       plugins: {
         title: {
@@ -83,25 +86,30 @@ export class SushilkaGraphService {
         },
         legend: {
           display: true,
-          position: 'right',
+          position: 'top',
         },
         tooltip: {
           enabled: true,
           callbacks: {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
-              const value = tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
+              const value =
+                tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
               return `${label}: ${value}°C`;
             },
             title: (tooltipItems) => {
-              // Заголовок тултипа - время
-              const timestamp = tooltipItems[0].parsed.x; // Получаем метку времени из parsed.x
-              const date = new Date(timestamp); // Создаем новый объект Date
-              return date.toLocaleString(); // Форматируем дату и время по локали
+              const timestamp = tooltipItems[0].parsed.x;
+              const date = new Date(timestamp);
+              return date.toLocaleString();
             },
           },
+          titleFont: {
+            size: 16,
+          },
+          bodyFont: {
+            size: 14,
+          },
         },
-
       },
       scales: {
         x: {
@@ -134,18 +142,18 @@ export class SushilkaGraphService {
       },
     };
 
-    return new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: 'line',
       data: chartData,
       options: options,
     });
+
+    return chart;
   }
 
-
   updateCanvasSize(canvas: HTMLCanvasElement) {
-    // Установка ширины и высоты для адаптивности
     canvas.width = canvas.clientWidth;
-    canvas.height = 60; // Вы можете изменить высоту по вашему усмотрению
+    canvas.height = 400; // Вы можете изменить высоту по вашему усмотрению
   }
 
   resetToCurrentValues(): { startTime: Date; endTime: Date } {
@@ -162,8 +170,9 @@ export class SushilkaGraphService {
     startTime2: Date,
     endTime2: Date
   ): { startTime1: Date; endTime1: Date; startTime2: Date; endTime2: Date } {
-    const hourChange = 60 * 60 * 1000; // 1 hour in milliseconds
-    const timeChange = direction === 'backward' ? -hourChange : hourChange;
+    const fifteenMinutesChange = 15 * 60 * 1000; // 15 минут в миллисекундах
+    const timeChange =
+      direction === 'backward' ? -fifteenMinutesChange : fifteenMinutesChange;
 
     if (chartNumber === 1) {
       startTime1 = new Date(startTime1.getTime() + timeChange);

@@ -44,7 +44,7 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
     this.fetchData();
     this.updateCanvasSize();
 
-    // Обновление данных каждые 5 секунд
+    // Обновление данных каждую секунду
     this.intervalId = setInterval(() => {
       this.fetchData();
     }, 5000);
@@ -76,6 +76,7 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
         this.endTime1,
         'sushilka1'
       );
+      this.updateCanvasSize(); // Обновляем размеры перед отрисовкой
       this.renderChart1();
     } catch (err) {
       console.error('Error fetching data for sushilka1:', err);
@@ -87,6 +88,7 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
         this.endTime2,
         'sushilka2'
       );
+      this.updateCanvasSize(); // Обновляем размеры перед отрисовкой
       this.renderChart2();
     } catch (err) {
       console.error('Error fetching data for sushilka2:', err);
@@ -96,25 +98,93 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
   renderChart1() {
     const ctx = this.chartCanvas1.nativeElement.getContext('2d');
     if (this.chart1) {
-      this.chart1.destroy();
+      // Обновление данных графика
+      this.chart1.data.labels = this.data1.map((t) => new Date(t.lastUpdated));
+      this.chart1.data.datasets[0].data = this.data1.map(
+        (t) => t.temperatures['Температура в топке']
+      );
+      this.chart1.data.datasets[1].data = this.data1.map(
+        (t) => t.temperatures['Температура в камере смешения']
+      );
+      this.chart1.data.datasets[2].data = this.data1.map(
+        (t) => t.temperatures['Температура уходящих газов']
+      );
+
+      // Обновляем график с анимацией
+      this.chart1.update(); // Убираем 'none', чтобы анимация работала
+    } else {
+      this.chart1 = this.sushilkaGraphService.renderChart(
+        ctx!,
+        this.data1,
+        'sushilka1'
+      );
+
+      // Обработчик клика для первого графика
+      this.addClickHandler(this.chart1);
     }
-    this.chart1 = this.sushilkaGraphService.renderChart(
-      ctx!,
-      this.data1,
-      'sushilka1'
-    );
   }
 
   renderChart2() {
     const ctx = this.chartCanvas2.nativeElement.getContext('2d');
     if (this.chart2) {
-      this.chart2.destroy();
+      // Обновление данных графика
+      this.chart2.data.labels = this.data2.map((t) => new Date(t.lastUpdated));
+      this.chart2.data.datasets[0].data = this.data2.map(
+        (t) => t.temperatures['Температура в топке']
+      );
+      this.chart2.data.datasets[1].data = this.data2.map(
+        (t) => t.temperatures['Температура в камере смешения']
+      );
+      this.chart2.data.datasets[2].data = this.data2.map(
+        (t) => t.temperatures['Температура уходящих газов']
+      );
+
+      // Обновляем график с анимацией
+      this.chart2.update(); // Убираем 'none', чтобы анимация работала
+    } else {
+      this.chart2 = this.sushilkaGraphService.renderChart(
+        ctx!,
+        this.data2,
+        'sushilka2'
+      );
+
+      // Обработчик клика для второго графика
+      this.addClickHandler(this.chart2);
     }
-    this.chart2 = this.sushilkaGraphService.renderChart(
-      ctx!,
-      this.data2,
-      'sushilka2'
-    );
+  }
+
+  // Метод для добавления обработчика кликов
+  private addClickHandler(chart: Chart) {
+    const ctx = chart.ctx.canvas;
+    ctx.addEventListener('click', (event) => {
+      const activePoints = chart.getElementsAtEventForMode(
+        event,
+        'nearest',
+        { intersect: true },
+        false
+      );
+
+      console.log('Координаты клика:', event.offsetX, event.offsetY); // Вывод координат клика
+
+      if (activePoints.length > 0) {
+        const { datasetIndex, index } = activePoints[0];
+        const label = chart.data.datasets[datasetIndex].label;
+        const value = chart.data.datasets[datasetIndex].data[index];
+
+        if (chart.data.labels && index < chart.data.labels.length) {
+          const timestamp = chart.data.labels[index] as Date; // Явно указываем тип
+          console.log(
+            `Нажата метка: ${label}, Значение: ${value}°C, Дата: ${new Date(
+              timestamp
+            ).toLocaleString()}`
+          );
+        } else {
+          console.log('Ошибка: метка времени не найдена.');
+        }
+      } else {
+        console.log('Нажата область вне меток.');
+      }
+    });
   }
 
   handleTimeChange(chartNumber: number, direction: 'backward' | 'forward') {
@@ -137,7 +207,10 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
       this.resetToCurrentValues();
     }, 10000);
 
-    this.fetchData();
+    // Используем requestAnimationFrame для обновления графиков
+    requestAnimationFrame(() => {
+      this.fetchData(); // Обновляем данные графиков
+    });
   }
 
   resetToCurrentValues() {
