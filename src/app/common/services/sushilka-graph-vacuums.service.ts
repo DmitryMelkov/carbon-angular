@@ -30,6 +30,10 @@ export class SushilkaVacuumService {
           type: 'time',
           time: {
             unit: 'minute',
+            tooltipFormat: 'HH:mm', // Формат для всплывающих подсказок
+            displayFormats: {
+              minute: 'HH:mm', // Формат для отображения на оси X
+            },
           },
         },
         y: {
@@ -37,6 +41,10 @@ export class SushilkaVacuumService {
         },
       },
       plugins: {
+        title: {
+          display: true,
+          text: 'Данные разрежения для сушилок', // Заголовок графиков
+        },
         crosshair: {
           line: {
             color: '#F66', // Цвет линии курсора
@@ -45,5 +53,18 @@ export class SushilkaVacuumService {
         },
       },
     };
+  }
+
+
+  getChartTitle(sushilkaId: string): string {
+    const sushilkaNumber = Number(sushilkaId.replace('sushilka', '')); // Извлекаем номер сушилки из идентификатора
+    return `Сушилка №${sushilkaNumber}: разрежение`; // Новый формат заголовка
+  }
+
+  getChartDatasetColors(sushilkaNumber: number) {
+    // Определяем цвета для графиков в зависимости от номера сушилки
+    return sushilkaNumber === 1
+      ? ['blue', 'green', 'orange']
+      : ['red', 'purple', 'cyan'];
   }
 }

@@ -8,7 +8,6 @@ import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka
 import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
 import { SushilkaGraphVacuumsComponent } from './pages/sushilki/sushilka-graph-davl/sushilka-graph-vacuums.component';
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter([
