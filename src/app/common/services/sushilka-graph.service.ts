@@ -67,7 +67,7 @@ export class SushilkaGraphService {
       responsive: true,
       animation: false,
       interaction: {
-        mode: 'nearest' as const,
+        mode: 'index', // Изменяем на 'index', чтобы получать все значения для одной метки
         intersect: false,
       },
       plugins: {
@@ -90,27 +90,18 @@ export class SushilkaGraphService {
           callbacks: {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
-              const value =
-                tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
+              const value = tooltipItem.parsed.y !== null ? tooltipItem.parsed.y : '';
               return `${label}: ${value}°C`;
+            },
+            title: (tooltipItems) => {
+              // Заголовок тултипа - время
+              const timestamp = tooltipItems[0].parsed.x; // Получаем метку времени из parsed.x
+              const date = new Date(timestamp); // Создаем новый объект Date
+              return date.toLocaleString(); // Форматируем дату и время по локали
             },
           },
         },
-        crosshair: {
-          line: {
-            color: 'black',
-            width: 1,
-          },
-          sync: {
-            enabled: false,
-          },
-          zoom: {
-            enabled: false,
-          },
-          snap: {
-            enabled: true,
-          },
-        },
+
       },
       scales: {
         x: {
@@ -149,6 +140,7 @@ export class SushilkaGraphService {
       options: options,
     });
   }
+
 
   updateCanvasSize(canvas: HTMLCanvasElement) {
     // Установка ширины и высоты для адаптивности
