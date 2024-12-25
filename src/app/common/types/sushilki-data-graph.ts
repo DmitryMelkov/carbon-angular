@@ -7,3 +7,13 @@ export interface TemperatureData {
     'Температура уходящих газов': number;
   };
 }
+
+export interface VacuumsData {
+  lastUpdated: string;
+  vacuums: {
+    'Разрежение в топке': string;
+    'Разрежение в камере выгрузки': string;
+    'Разрежение воздуха на разбавление': string;
+  };
+}
+

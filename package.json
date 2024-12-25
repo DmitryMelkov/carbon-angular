@@ -20,9 +20,11 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@swimlane/ngx-charts": "^21.1.2",
     "chart.js": "^4.4.7",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-crosshair": "^2.0.0",
+    "date-fns": "^4.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

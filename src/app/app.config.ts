@@ -6,6 +6,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { SushilkaComponent } from './pages/sushilki/sushilka-current/sushilka.component';
 import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka-mnemo.component';
 import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
+import { SushilkaGraphVacuumsComponent } from './pages/sushilki/sushilka-graph-davl/sushilka-graph-vacuums.component';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,7 +15,14 @@ export const appConfig: ApplicationConfig = {
       { path: '', component: HomeComponent }, // Главная страница
       { path: 'sushilka/:id/current', component: SushilkaComponent },
       { path: 'sushilka/:id/mnemo', component: SushilkaMnemoComponent },
-      { path: 'sushilka/:id/graph-temper', component: SushilkaGraphTemperComponent }, 
+      {
+        path: 'sushilka/:id/graph-temper',
+        component: SushilkaGraphTemperComponent,
+      },
+      {
+        path: 'sushilka/:id/graph-vacuums',
+        component: SushilkaGraphVacuumsComponent,
+      },
     ]),
     provideHttpClient(),
     provideAnimations(), // Подключаем анимации правильно
