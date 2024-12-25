@@ -48,7 +48,6 @@ export class SushilkaGraphService {
           fill: false,
           pointRadius: 0,
           borderWidth: 2,
-
         },
         {
           label: 'Температура уходящих газов',
@@ -60,7 +59,6 @@ export class SushilkaGraphService {
           fill: false,
           pointRadius: 0,
           borderWidth: 2,
-
         },
       ],
     };
@@ -150,5 +148,39 @@ export class SushilkaGraphService {
       data: chartData,
       options: options,
     });
+  }
+
+  updateCanvasSize(canvas: HTMLCanvasElement) {
+    // Установка ширины и высоты для адаптивности
+    canvas.width = canvas.clientWidth;
+    canvas.height = 60; // Вы можете изменить высоту по вашему усмотрению
+  }
+
+  resetToCurrentValues(): { startTime: Date; endTime: Date } {
+    const startTime = new Date(Date.now() - 30 * 60 * 1000);
+    const endTime = new Date();
+    return { startTime, endTime };
+  }
+
+  changeTime(
+    chartNumber: number,
+    direction: 'backward' | 'forward',
+    startTime1: Date,
+    endTime1: Date,
+    startTime2: Date,
+    endTime2: Date
+  ): { startTime1: Date; endTime1: Date; startTime2: Date; endTime2: Date } {
+    const hourChange = 60 * 60 * 1000; // 1 hour in milliseconds
+    const timeChange = direction === 'backward' ? -hourChange : hourChange;
+
+    if (chartNumber === 1) {
+      startTime1 = new Date(startTime1.getTime() + timeChange);
+      endTime1 = new Date(endTime1.getTime() + timeChange);
+    } else if (chartNumber === 2) {
+      startTime2 = new Date(startTime2.getTime() + timeChange);
+      endTime2 = new Date(endTime2.getTime() + timeChange);
+    }
+
+    return { startTime1, endTime1, startTime2, endTime2 };
   }
 }

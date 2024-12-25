@@ -4,11 +4,12 @@ import { SushilkaComponent } from '../sushilki/sushilka-current/sushilka.compone
 import { SushilkaMnemoComponent } from '../sushilki/sushilka-mnemo/sushilka-mnemo.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ControlButtonComponent } from '../../components/control-button/control-button.component';
+import { SushilkaGraphTemperComponent } from '../sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, SushilkaComponent, SushilkaMnemoComponent, MatTabsModule, ControlButtonComponent],
+  imports: [CommonModule, SushilkaComponent, SushilkaMnemoComponent, MatTabsModule, ControlButtonComponent, SushilkaGraphTemperComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -18,7 +19,7 @@ export class HomeComponent {
     { id: 'sushilka2', name: 'Сушилка №2' },
   ];
   selectedSushilkaId: string = this.objectData[0].id; // Выбранный объект по умолчанию
-  activeView: 'parameters' | 'mnemo' = 'parameters'; // Текущее отображаемое представление
+  activeView: 'parameters' | 'mnemo' | 'graph-temper' = 'parameters'; // Текущее отображаемое представление
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -30,5 +31,11 @@ export class HomeComponent {
   showMnemo(id: string) {
     this.selectedSushilkaId = id;
     this.activeView = 'mnemo';
+  }
+
+  // Метод для отображения графиков температуры
+  showGraphTemper(id: string) {
+    this.selectedSushilkaId = id;
+    this.activeView = 'graph-temper';
   }
 }

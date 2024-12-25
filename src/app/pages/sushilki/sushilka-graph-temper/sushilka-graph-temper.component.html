@@ -6,7 +6,7 @@
     <div class="dynamic-graph__btns">
       <button class="dynamic-graph__btn" (click)="handleTimeChange(1, 'backward')">Назад</button>
       <button class="dynamic-graph__btn" (click)="handleTimeChange(1, 'forward')">Вперёд</button>
-      <button class="dynamic-graph__btn" id="resetBtn1">Вернуться к текущим значениям</button>
+      <button class="dynamic-graph__btn" (click)="resetToCurrentValues()">Вернуться к текущим значениям</button>
       <button class="dynamic-graph__btn" id="toggleDataBtn1">Скрыть данные</button>
     </div>
   </div>
@@ -18,7 +18,7 @@
     <div class="dynamic-graph__btns">
       <button class="dynamic-graph__btn" (click)="handleTimeChange(2, 'backward')">Назад</button>
       <button class="dynamic-graph__btn" (click)="handleTimeChange(2, 'forward')">Вперёд</button>
-      <button class="dynamic-graph__btn" id="resetBtn2">Вернуться к текущим значениям</button>
+      <button class="dynamic-graph__btn" (click)="resetToCurrentValues()">Вернуться к текущим значениям</button>
       <button class="dynamic-graph__btn" id="toggleDataBtn2">Скрыть данные</button>
     </div>
   </div>
