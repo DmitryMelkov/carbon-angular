@@ -6,7 +6,7 @@ import {
   ElementRef,
   Input,
 } from '@angular/core';
-import { Chart, ChartEvent, ChartOptions } from 'chart.js';
+import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilka-graph-vacuums.service';
@@ -22,7 +22,7 @@ Chart.register(CrosshairPlugin);
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() sushilkaId!: string;
-  private chart!: Chart;
+  private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId!: any;
 
   private currentTime: Date = new Date();
@@ -79,7 +79,6 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Методы для управления графиком
   goBack() {
     this.timeOffset -= 15 * 60 * 1000; // Уменьшаем смещение на 15 минут
     this.loadData();
@@ -96,7 +95,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   }
 
   toggleLinesVisibility() {
-    this.linesVisible = !this.linesVisible; // Переключаем состояние
+    this.linesVisible = !this.linesVisible;
     if (this.chart) {
       this.chart.data.datasets.forEach((dataset) => {
         dataset.hidden = !this.linesVisible;
@@ -166,17 +165,8 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
           ...options.plugins,
           legend: {
             position: 'right',
-            onClick: (event: ChartEvent, legendItem) => {
-              if (event.native) {
-                event.native.stopPropagation();
-              }
-
-              const datasetIndex = legendItem.datasetIndex;
-              if (datasetIndex !== undefined) {
-                const dataset = this.chart.data.datasets[datasetIndex];
-                dataset.hidden = !dataset.hidden;
-                this.chart.update();
-              }
+            onClick: (event: any, legendItem) => {
+              this.vacuumService.handleLegendClick(event, legendItem, this.chart);
             },
           },
           title: {

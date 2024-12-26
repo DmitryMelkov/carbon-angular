@@ -1,8 +1,6 @@
-// src/app/common/services/sushilka-vacuum.service.ts
-
 import { Injectable } from '@angular/core';
 import { VacuumsData } from '../types/sushilki-data-graph';
-import { ChartOptions } from 'chart.js';
+import { ChartOptions, Chart, ChartTypeRegistry } from 'chart.js';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +56,12 @@ export class SushilkaVacuumService {
         },
         y: {
           beginAtZero: true,
+          min: 0,
+          max: 30,
+          title: {
+            display: true,
+            text: 'Разреженеия, кгс/см2',
+          },
         },
       },
       plugins: {
@@ -76,10 +80,7 @@ export class SushilkaVacuumService {
             },
           },
         },
-        legend: {
-          display: true,
-          position: 'right',
-        },
+
       },
     };
   }
@@ -93,5 +94,18 @@ export class SushilkaVacuumService {
     return sushilkaNumber === 1
       ? ['blue', 'green', 'orange']
       : ['red', 'purple', 'cyan'];
+  }
+
+  handleLegendClick(event: any, legendItem: any, chart: Chart<keyof ChartTypeRegistry>) {
+    if (event.native) {
+      event.native.stopPropagation();
+    }
+
+    const datasetIndex = legendItem.datasetIndex;
+    if (datasetIndex !== undefined) {
+      const dataset = chart.data.datasets[datasetIndex];
+      dataset.hidden = !dataset.hidden;
+      chart.update();
+    }
   }
 }
