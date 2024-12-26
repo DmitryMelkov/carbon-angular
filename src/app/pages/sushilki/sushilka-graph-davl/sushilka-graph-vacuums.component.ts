@@ -4,12 +4,12 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  Input,
 } from '@angular/core';
 import { Chart, ChartOptions } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilka-graph-vacuums.service';
-import { ActivatedRoute } from '@angular/router';
 
 Chart.register(CrosshairPlugin);
 
@@ -20,28 +20,20 @@ Chart.register(CrosshairPlugin);
 })
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @Input() sushilkaId!: string; // Принимаем sushilkaId через @Input
   private chart!: Chart;
   private intervalId!: any;
-  private resetTimerId!: any;
 
   private currentTime: Date = new Date();
   private autoUpdateInterval: number = 5 * 1000;
 
-  private sushilkaId!: string;
   private timeOffset: number = 0; // Смещение времени в миллисекундах
-  linesVisible: boolean = true; // Добавляем состояние для видимости линий
+  linesVisible: boolean = true; // Состояние видимости линий
 
-  constructor(
-    private vacuumService: SushilkaVacuumService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private vacuumService: SushilkaVacuumService) {}
 
   async ngOnInit() {
-    this.sushilkaId = this.route.snapshot.paramMap.get('id')!;
-
     await this.loadData();
-
-    // Запускаем таймер для автоматического обновления данных
     this.startAutoUpdate();
   }
 
@@ -54,7 +46,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   private async loadData() {
     this.currentTime = new Date(); // Обновляем текущее время
     const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-    const startTime = new Date(endTime.getTime() - 30 * 60 * 1000); // последние полчаса
+    const startTime = new Date(endTime.getTime() - 30 * 60 * 1000); // последние 30 минут
 
     try {
       const sushilkaData = await this.vacuumService.getVacuumData(
@@ -96,22 +88,20 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Метод для перемещения назад на 15 минут
+  // Методы для управления графиком
   goBack() {
     this.timeOffset -= 15 * 60 * 1000; // Уменьшаем смещение на 15 минут
-    this.loadData(); // Загружаем данные с новым смещением
+    this.loadData();
   }
 
-  // Метод для перемещения вперед на 15 минут
   goForward() {
     this.timeOffset += 15 * 60 * 1000; // Увеличиваем смещение на 15 минут
-    this.loadData(); // Загружаем данные с новым смещением
+    this.loadData();
   }
 
-  // Метод для сброса к текущему времени
   resetToCurrentTime() {
-    this.timeOffset = 0; // Сбрасываем смещение времени
-    this.loadData(); // Загружаем данные с новым смещением
+    this.timeOffset = 0;
+    this.loadData();
   }
 
   toggleLinesVisibility() {
@@ -203,9 +193,6 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     }
     if (this.intervalId) {
       clearInterval(this.intervalId);
-    }
-    if (this.resetTimerId) {
-      clearTimeout(this.resetTimerId);
     }
   }
 }
