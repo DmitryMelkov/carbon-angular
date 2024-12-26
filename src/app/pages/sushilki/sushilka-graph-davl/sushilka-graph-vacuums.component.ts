@@ -21,13 +21,14 @@ Chart.register(CrosshairPlugin);
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private chart!: Chart;
-  private intervalId!: any; // Для хранения идентификатора интервала
-  private resetTimerId!: any; // Для хранения идентификатора таймера сброса
+  private intervalId!: any;
+  private resetTimerId!: any;
 
   private currentTime: Date = new Date();
-  private autoUpdateInterval: number = 5 * 1000; // 5 секунд в миллисекундах
+  private autoUpdateInterval: number = 5 * 1000;
 
   private sushilkaId!: string;
+  private timeOffset: number = 0; // Смещение времени в миллисекундах
 
   constructor(
     private vacuumService: SushilkaVacuumService,
@@ -51,7 +52,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
 
   private async loadData() {
     this.currentTime = new Date(); // Обновляем текущее время
-    const endTime = this.currentTime;
+    const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
     const startTime = new Date(endTime.getTime() - 30 * 60 * 1000); // последние полчаса
 
     try {
@@ -95,10 +96,16 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   }
 
   // Метод для перемещения назад на 15 минут
-  goBack() {}
+  goBack() {
+    this.timeOffset -= 15 * 60 * 1000; // Уменьшаем смещение на 15 минут
+    this.loadData(); // Загружаем данные с новым смещением
+  }
 
   // Метод для перемещения вперед на 15 минут
-  goForward() {}
+  goForward() {
+    this.timeOffset += 15 * 60 * 1000; // Увеличиваем смещение на 15 минут
+    this.loadData(); // Загружаем данные с новым смещением
+  }
 
   createChart(
     labels: Date[],
@@ -177,10 +184,10 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
       this.chart.destroy();
     }
     if (this.intervalId) {
-      clearInterval(this.intervalId); // Очищаем интервал при уничтожении компонента
+      clearInterval(this.intervalId);
     }
     if (this.resetTimerId) {
-      clearTimeout(this.resetTimerId); // Очищаем таймер сброса при уничтожении компонента
+      clearTimeout(this.resetTimerId);
     }
   }
 }
