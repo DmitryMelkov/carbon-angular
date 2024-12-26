@@ -10,6 +10,7 @@ import { Chart, ChartOptions } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilka-graph-vacuums.service';
+import { ActivatedRoute } from '@angular/router';
 
 Chart.register(CrosshairPlugin);
 
@@ -20,7 +21,7 @@ Chart.register(CrosshairPlugin);
 })
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-  @Input() sushilkaId!: string; // Принимаем sushilkaId через @Input
+  @Input() sushilkaId!: string;
   private chart!: Chart;
   private intervalId!: any;
 
@@ -30,9 +31,12 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   private timeOffset: number = 0; // Смещение времени в миллисекундах
   linesVisible: boolean = true; // Состояние видимости линий
 
-  constructor(private vacuumService: SushilkaVacuumService) {}
+  constructor(private route: ActivatedRoute, private vacuumService: SushilkaVacuumService) {}
 
   async ngOnInit() {
+    if (!this.sushilkaId) {
+      this.sushilkaId = this.route.snapshot.paramMap.get('id') || '';
+    }
     await this.loadData();
     this.startAutoUpdate();
   }
