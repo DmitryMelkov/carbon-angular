@@ -23,6 +23,26 @@ export class SushilkaVacuumService {
     return await response.json();
   }
 
+  processVacuumData(sushilkaData: VacuumsData[]) {
+    if (!sushilkaData || sushilkaData.length === 0) {
+      console.warn('Нет данных для отображения');
+      return { labels: [], values1: [], values2: [], values3: [] };
+    }
+
+    const labels = sushilkaData.map((data) => new Date(data.lastUpdated));
+    const values1 = sushilkaData.map((data) =>
+      parseFloat(data.vacuums['Разрежение в топке'])
+    );
+    const values2 = sushilkaData.map((data) =>
+      parseFloat(data.vacuums['Разрежение в камере выгрузки'])
+    );
+    const values3 = sushilkaData.map((data) =>
+      parseFloat(data.vacuums['Разрежение воздуха на разбавление'])
+    );
+
+    return { labels, values1, values2, values3 };
+  }
+
   getChartOptions(): ChartOptions {
     return {
       scales: {
@@ -30,9 +50,9 @@ export class SushilkaVacuumService {
           type: 'time',
           time: {
             unit: 'minute',
-            tooltipFormat: 'HH:mm', // Формат для всплывающих подсказок
+            tooltipFormat: 'HH:mm',
             displayFormats: {
-              minute: 'HH:mm', // Формат для отображения на оси X
+              minute: 'HH:mm',
             },
           },
         },
@@ -43,16 +63,16 @@ export class SushilkaVacuumService {
       plugins: {
         title: {
           display: true,
-          text: 'Данные разрежения для сушилок', // Заголовок графиков
+          text: 'Данные разрежения для сушилок',
         },
         tooltip: {
-          mode: 'index', // Отображение тултипа для всех данных в одной точке времени
-          intersect: false, // Не требуется пересечение с точками данных
+          mode: 'index',
+          intersect: false,
           callbacks: {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
-              const value = tooltipItem.raw; // Получаем значение
-              return `${label}: ${value}`; // Форматируем вывод
+              const value = tooltipItem.raw;
+              return `${label}: ${value}`;
             },
           },
         },
@@ -60,23 +80,16 @@ export class SushilkaVacuumService {
           display: true,
           position: 'right',
         },
-        crosshair: {
-          line: {
-            color: '#F66', // Цвет линии курсора
-            width: 1, // Ширина линии курсора
-          },
-        },
       },
     };
   }
 
   getChartTitle(sushilkaId: string): string {
-    const sushilkaNumber = Number(sushilkaId.replace('sushilka', '')); // Извлекаем номер сушилки из идентификатора
-    return `Сушилка №${sushilkaNumber}: разрежение`; // Новый формат заголовка
+    const sushilkaNumber = Number(sushilkaId.replace('sushilka', ''));
+    return `Сушилка №${sushilkaNumber}: разрежение`;
   }
 
   getChartDatasetColors(sushilkaNumber: number) {
-    // Определяем цвета для графиков в зависимости от номера сушилки
     return sushilkaNumber === 1
       ? ['blue', 'green', 'orange']
       : ['red', 'purple', 'cyan'];

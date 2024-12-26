@@ -6,7 +6,7 @@ import {
   ElementRef,
   Input,
 } from '@angular/core';
-import { Chart, ChartOptions } from 'chart.js';
+import { Chart, ChartEvent, ChartOptions } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilka-graph-vacuums.service';
@@ -27,11 +27,13 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
 
   private currentTime: Date = new Date();
   private autoUpdateInterval: number = 5 * 1000;
-
   private timeOffset: number = 0; // Смещение времени в миллисекундах
   linesVisible: boolean = true; // Состояние видимости линий
 
-  constructor(private route: ActivatedRoute, private vacuumService: SushilkaVacuumService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private vacuumService: SushilkaVacuumService
+  ) {}
 
   async ngOnInit() {
     if (!this.sushilkaId) {
@@ -59,22 +61,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
         this.sushilkaId
       );
 
-      // Проверяем, получили ли мы данные
-      if (!sushilkaData || sushilkaData.length === 0) {
-        console.warn('Нет данных для отображения');
-        return;
-      }
-
-      const labels = sushilkaData.map((data) => new Date(data.lastUpdated));
-      const values1 = sushilkaData.map((data) =>
-        parseFloat(data.vacuums['Разрежение в топке'])
-      );
-      const values2 = sushilkaData.map((data) =>
-        parseFloat(data.vacuums['Разрежение в камере выгрузки'])
-      );
-      const values3 = sushilkaData.map((data) =>
-        parseFloat(data.vacuums['Разрежение воздуха на разбавление'])
-      );
+      const { labels, values1, values2, values3 } = this.vacuumService.processVacuumData(sushilkaData);
 
       if (this.chart) {
         this.chart.data.labels = labels;
@@ -111,11 +98,10 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   toggleLinesVisibility() {
     this.linesVisible = !this.linesVisible; // Переключаем состояние
     if (this.chart) {
-      // Обновляем данные графика в зависимости от состояния
       this.chart.data.datasets.forEach((dataset) => {
-        dataset.hidden = !this.linesVisible; // Скрываем или показываем линии
+        dataset.hidden = !this.linesVisible;
       });
-      this.chart.update(); // Обновляем график
+      this.chart.update();
     }
   }
 
@@ -178,6 +164,21 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
         ...options,
         plugins: {
           ...options.plugins,
+          legend: {
+            position: 'right',
+            onClick: (event: ChartEvent, legendItem) => {
+              if (event.native) {
+                event.native.stopPropagation();
+              }
+
+              const datasetIndex = legendItem.datasetIndex;
+              if (datasetIndex !== undefined) {
+                const dataset = this.chart.data.datasets[datasetIndex];
+                dataset.hidden = !dataset.hidden;
+                this.chart.update();
+              }
+            },
+          },
           title: {
             display: true,
             text: this.vacuumService.getChartTitle(this.sushilkaId),
