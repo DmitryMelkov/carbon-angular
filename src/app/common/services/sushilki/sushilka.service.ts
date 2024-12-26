@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
-import { SushilkiData } from '../types/sushilki-data';
+import { SushilkiData } from '../../types/sushilki-data';
+
 
 @Injectable({
   providedIn: 'root',

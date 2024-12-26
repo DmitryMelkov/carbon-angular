@@ -84,6 +84,79 @@ export class SushilkaVacuumService {
     };
   }
 
+  createChart(
+    ctx: CanvasRenderingContext2D,
+    labels: Date[],
+    values1: number[],
+    values2: number[],
+    values3: number[],
+    options: ChartOptions,
+    sushilkaId: string
+  ): Chart<keyof ChartTypeRegistry> {
+    const colors = this.getChartDatasetColors(
+      Number(sushilkaId.replace('sushilka', ''))
+    );
+
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Разрежение в топке',
+            data: values1,
+            borderColor: colors[0],
+            fill: false,
+            pointRadius: 0,
+            borderWidth: 2,
+            backgroundColor: 'transparent',
+          },
+          {
+            label: 'Разрежение в камере выгрузки',
+            data: values2,
+            borderColor: colors[1],
+            fill: false,
+            pointRadius: 0,
+            borderWidth: 2,
+            backgroundColor: 'transparent',
+          },
+          {
+            label: 'Разрежение воздуха на разбавление',
+            data: values3,
+            borderColor: colors[2],
+            fill: false,
+            pointRadius: 0,
+            borderWidth: 2,
+            backgroundColor: 'transparent',
+          },
+        ],
+      },
+      options: {
+        ...options,
+        plugins: {
+          ...options.plugins,
+          legend: {
+            position: 'right',
+            onClick: (event: any, legendItem) => {
+              this.handleLegendClick(event, legendItem, chart); // Передаем chart
+            },
+          },
+          title: {
+            display: true,
+            text: this.getChartTitle(sushilkaId),
+            font: {
+              size: 16,
+              weight: 'bold',
+            },
+          },
+        },
+      },
+    });
+
+    return chart; // Возвращаем созданный график
+  }
+
+
   getChartTitle(sushilkaId: string): string {
     const sushilkaNumber = Number(sushilkaId.replace('sushilka', ''));
     return `Сушилка №${sushilkaNumber}: разрежение`;

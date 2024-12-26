@@ -6,7 +6,7 @@ import {
   ElementRef,
   Input,
 } from '@angular/core';
-import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
+import { Chart, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilki/sushilka-graph-vacuums.service';
@@ -23,13 +23,13 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() sushilkaId!: string;
   private chart!: Chart<keyof ChartTypeRegistry>;
-  private intervalId!: any;
-  private resetTimerId!: any; // Добавлено для хранения идентификатора таймера сброса
+  private intervalId?: any;
+  private resetTimerId?: any;
 
   private currentTime: Date = new Date();
-  private autoUpdateInterval: number = 5 * 1000;
-  private timeOffset: number = 0; // Смещение времени в миллисекундах
-  linesVisible: boolean = true; // Состояние видимости линий
+  private autoUpdateInterval: number = 5000; // 5 секунд
+  private timeOffset: number = 0;
+  linesVisible: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,9 +37,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    if (!this.sushilkaId) {
-      this.sushilkaId = this.route.snapshot.paramMap.get('id') || '';
-    }
+    this.sushilkaId = this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
     await this.loadData();
     this.startAutoUpdate();
   }
@@ -47,61 +45,59 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   private startAutoUpdate() {
     this.intervalId = setInterval(() => {
       this.loadData();
-    }, this.autoUpdateInterval); // Обновляем данные каждые 5 секунд
+    }, this.autoUpdateInterval);
   }
 
   private resetToCurrentTimeAfterDelay() {
-    if (this.resetTimerId) {
-      clearTimeout(this.resetTimerId); // Очистить предыдущий таймер, если он установлен
-    }
+    this.clearResetTimer();
+    this.resetTimerId = setTimeout(() => this.resetToCurrentTime(), 10000);
+  }
 
-    // Установить новый таймер на 10 секунд
-    this.resetTimerId = setTimeout(() => {
-      this.resetToCurrentTime();
-    }, 10000);
+  private clearResetTimer() {
+    if (this.resetTimerId) {
+      clearTimeout(this.resetTimerId);
+      this.resetTimerId = undefined;
+    }
   }
 
   private async loadData() {
-    this.currentTime = new Date(); // Обновляем текущее время
+    this.currentTime = new Date();
     const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-    const startTime = new Date(endTime.getTime() - 30 * 60 * 1000); // последние 30 минут
+    const startTime = new Date(endTime.getTime() - 30 * 60 * 1000);
 
     try {
-      const sushilkaData = await this.vacuumService.getVacuumData(
-        startTime,
-        endTime,
-        this.sushilkaId
-      );
-
-      const { labels, values1, values2, values3 } =
-        this.vacuumService.processVacuumData(sushilkaData);
-
-      if (this.chart) {
-        this.chart.data.labels = labels;
-        this.chart.data.datasets[0].data = values1;
-        this.chart.data.datasets[1].data = values2;
-        this.chart.data.datasets[2].data = values3;
-
-        this.chart.update();
-      } else {
-        const chartOptions = this.vacuumService.getChartOptions();
-        this.createChart(labels, values1, values2, values3, chartOptions);
-      }
+      const sushilkaData = await this.vacuumService.getVacuumData(startTime, endTime, this.sushilkaId);
+      const { labels, values1, values2, values3 } = this.vacuumService.processVacuumData(sushilkaData);
+      this.updateChart(labels, values1, values2, values3);
     } catch (error) {
       console.error('Ошибка при получении данных:', error);
     }
   }
 
+  private updateChart(labels: Date[], values1: number[], values2: number[], values3: number[]) {
+    if (this.chart) {
+      this.chart.data.labels = labels;
+      this.chart.data.datasets[0].data = values1;
+      this.chart.data.datasets[1].data = values2;
+      this.chart.data.datasets[2].data = values3;
+      this.chart.update();
+    } else {
+      const chartOptions = this.vacuumService.getChartOptions();
+      const ctx = this.canvasRef.nativeElement.getContext('2d');
+      this.chart = this.vacuumService.createChart(ctx!, labels, values1, values2, values3, chartOptions, this.sushilkaId);
+    }
+  }
+
   goBack() {
-    this.timeOffset -= 15 * 60 * 1000; // Уменьшаем смещение на 15 минут
+    this.timeOffset -= 15 * 60 * 1000;
     this.loadData();
-    this.resetToCurrentTimeAfterDelay(); // Сброс таймера
+    this.resetToCurrentTimeAfterDelay();
   }
 
   goForward() {
-    this.timeOffset += 15 * 60 * 1000; // Увеличиваем смещение на 15 минут
+    this.timeOffset += 15 * 60 * 1000;
     this.loadData();
-    this.resetToCurrentTimeAfterDelay(); // Сброс таймера
+    this.resetToCurrentTimeAfterDelay();
   }
 
   resetToCurrentTime() {
@@ -119,97 +115,13 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     }
   }
 
-  createChart(
-    labels: Date[],
-    values1: number[],
-    values2: number[],
-    values3: number[],
-    options: ChartOptions
-  ) {
-    const ctx = this.canvasRef.nativeElement.getContext('2d');
-    if (!ctx) {
-      console.error('Не удалось получить контекст канваса');
-      return;
-    }
-
-    if (this.chart) {
-      this.chart.destroy();
-    }
-
-    const colors = this.vacuumService.getChartDatasetColors(
-      Number(this.sushilkaId.replace('sushilka', ''))
-    );
-
-    this.chart = new Chart(ctx!, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Разрежение в топке',
-            data: values1,
-            borderColor: colors[0],
-            fill: false,
-            pointRadius: 0,
-            borderWidth: 2,
-            backgroundColor: 'transparent',
-          },
-          {
-            label: 'Разрежение в камере выгрузки',
-            data: values2,
-            borderColor: colors[1],
-            fill: false,
-            pointRadius: 0,
-            borderWidth: 2,
-            backgroundColor: 'transparent',
-          },
-          {
-            label: 'Разрежение воздуха на разбавление',
-            data: values3,
-            borderColor: colors[2],
-            fill: false,
-            pointRadius: 0,
-            borderWidth: 2,
-            backgroundColor: 'transparent',
-          },
-        ],
-      },
-      options: {
-        ...options,
-        plugins: {
-          ...options.plugins,
-          legend: {
-            position: 'right',
-            onClick: (event: any, legendItem) => {
-              this.vacuumService.handleLegendClick(
-                event,
-                legendItem,
-                this.chart
-              );
-            },
-          },
-          title: {
-            display: true,
-            text: this.vacuumService.getChartTitle(this.sushilkaId),
-            font: {
-              size: 16,
-              weight: 'bold',
-            },
-          },
-        },
-      },
-    });
-  }
-
   ngOnDestroy() {
+    this.clearResetTimer();
     if (this.chart) {
       this.chart.destroy();
     }
     if (this.intervalId) {
       clearInterval(this.intervalId);
-    }
-    if (this.resetTimerId) {
-      clearTimeout(this.resetTimerId); // Очистить таймер сброса при уничтожении компонента
     }
   }
 }
