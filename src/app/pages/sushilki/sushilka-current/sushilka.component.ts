@@ -5,7 +5,6 @@ import {
   Input,
   SimpleChanges,
 } from '@angular/core';
-import { SushilkiService } from '../../../common/services/sushilka.service';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
 import { switchMap, catchError, takeUntil } from 'rxjs/operators';
@@ -14,6 +13,7 @@ import { SushilkaTableComponent } from '../../../components/sushilka-table/sushi
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
+import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 
 @Component({
   selector: 'app-sushilka',

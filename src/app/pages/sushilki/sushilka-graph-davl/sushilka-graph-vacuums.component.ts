@@ -9,7 +9,7 @@ import {
 import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
-import { SushilkaVacuumService } from '../../../common/services/sushilka-graph-vacuums.service';
+import { SushilkaVacuumService } from '../../../common/services/sushilki/sushilka-graph-vacuums.service';
 import { ActivatedRoute } from '@angular/router';
 
 Chart.register(CrosshairPlugin);
@@ -24,6 +24,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @Input() sushilkaId!: string;
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId!: any;
+  private resetTimerId!: any; // Добавлено для хранения идентификатора таймера сброса
 
   private currentTime: Date = new Date();
   private autoUpdateInterval: number = 5 * 1000;
@@ -49,6 +50,17 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     }, this.autoUpdateInterval); // Обновляем данные каждые 5 секунд
   }
 
+  private resetToCurrentTimeAfterDelay() {
+    if (this.resetTimerId) {
+      clearTimeout(this.resetTimerId); // Очистить предыдущий таймер, если он установлен
+    }
+
+    // Установить новый таймер на 10 секунд
+    this.resetTimerId = setTimeout(() => {
+      this.resetToCurrentTime();
+    }, 10000);
+  }
+
   private async loadData() {
     this.currentTime = new Date(); // Обновляем текущее время
     const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
@@ -61,7 +73,8 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
         this.sushilkaId
       );
 
-      const { labels, values1, values2, values3 } = this.vacuumService.processVacuumData(sushilkaData);
+      const { labels, values1, values2, values3 } =
+        this.vacuumService.processVacuumData(sushilkaData);
 
       if (this.chart) {
         this.chart.data.labels = labels;
@@ -82,11 +95,13 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   goBack() {
     this.timeOffset -= 15 * 60 * 1000; // Уменьшаем смещение на 15 минут
     this.loadData();
+    this.resetToCurrentTimeAfterDelay(); // Сброс таймера
   }
 
   goForward() {
     this.timeOffset += 15 * 60 * 1000; // Увеличиваем смещение на 15 минут
     this.loadData();
+    this.resetToCurrentTimeAfterDelay(); // Сброс таймера
   }
 
   resetToCurrentTime() {
@@ -166,7 +181,11 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
           legend: {
             position: 'right',
             onClick: (event: any, legendItem) => {
-              this.vacuumService.handleLegendClick(event, legendItem, this.chart);
+              this.vacuumService.handleLegendClick(
+                event,
+                legendItem,
+                this.chart
+              );
             },
           },
           title: {
@@ -188,6 +207,9 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     }
     if (this.intervalId) {
       clearInterval(this.intervalId);
+    }
+    if (this.resetTimerId) {
+      clearTimeout(this.resetTimerId); // Очистить таймер сброса при уничтожении компонента
     }
   }
 }

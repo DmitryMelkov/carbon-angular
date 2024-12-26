@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { SushilkiService } from '../../../common/services/sushilka.service';
 import { SushilkiData } from '../../../common/types/sushilki-data';
 import { Subscription, switchMap, interval, Subject, of } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
@@ -12,6 +11,7 @@ import { DocumentationModalComponent } from './documentation-modal/documentation
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
+import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 
 @Component({
   selector: 'app-sushilka-mnemo',

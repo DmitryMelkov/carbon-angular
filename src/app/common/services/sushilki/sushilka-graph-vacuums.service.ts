@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { VacuumsData } from '../types/sushilki-data-graph';
 import { ChartOptions, Chart, ChartTypeRegistry } from 'chart.js';
+import { VacuumsData } from '../../types/sushilki-data-graph';
 
 @Injectable({
   providedIn: 'root',
@@ -56,7 +56,7 @@ export class SushilkaVacuumService {
         },
         y: {
           beginAtZero: true,
-          min: 0,
+          min: -20,
           max: 30,
           title: {
             display: true,
@@ -80,7 +80,6 @@ export class SushilkaVacuumService {
             },
           },
         },
-
       },
     };
   }
@@ -96,7 +95,11 @@ export class SushilkaVacuumService {
       : ['red', 'purple', 'cyan'];
   }
 
-  handleLegendClick(event: any, legendItem: any, chart: Chart<keyof ChartTypeRegistry>) {
+  handleLegendClick(
+    event: any,
+    legendItem: any,
+    chart: Chart<keyof ChartTypeRegistry>
+  ) {
     if (event.native) {
       event.native.stopPropagation();
     }
