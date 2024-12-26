@@ -133,12 +133,14 @@ export class SushilkaVacuumService {
       },
       options: {
         ...options,
+        responsive: true, // Убедитесь, что график адаптивный
+        maintainAspectRatio: false, // Позволяет устанавливать высоту отдельно
         plugins: {
           ...options.plugins,
           legend: {
             position: 'right',
             onClick: (event: any, legendItem) => {
-              this.handleLegendClick(event, legendItem, chart); // Передаем chart
+              this.handleLegendClick(event, legendItem, chart);
             },
           },
           title: {
@@ -153,9 +155,8 @@ export class SushilkaVacuumService {
       },
     });
 
-    return chart; // Возвращаем созданный график
+    return chart;
   }
-
 
   getChartTitle(sushilkaId: string): string {
     const sushilkaNumber = Number(sushilkaId.replace('sushilka', ''));
