@@ -45,6 +45,21 @@ export class SushilkaVacuumService {
           display: true,
           text: 'Данные разрежения для сушилок', // Заголовок графиков
         },
+        tooltip: {
+          mode: 'index', // Отображение тултипа для всех данных в одной точке времени
+          intersect: false, // Не требуется пересечение с точками данных
+          callbacks: {
+            label: (tooltipItem) => {
+              const label = tooltipItem.dataset.label || '';
+              const value = tooltipItem.raw; // Получаем значение
+              return `${label}: ${value}`; // Форматируем вывод
+            },
+          },
+        },
+        legend: {
+          display: true,
+          position: 'right',
+        },
         crosshair: {
           line: {
             color: '#F66', // Цвет линии курсора
@@ -54,7 +69,6 @@ export class SushilkaVacuumService {
       },
     };
   }
-
 
   getChartTitle(sushilkaId: string): string {
     const sushilkaNumber = Number(sushilkaId.replace('sushilka', '')); // Извлекаем номер сушилки из идентификатора
