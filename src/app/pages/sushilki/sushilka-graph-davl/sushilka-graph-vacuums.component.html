@@ -6,8 +6,10 @@
     <div class="dynamic-graph__btns">
       <button class="dynamic-graph__btn" (click)="goBack()">Назад</button>
       <button class="dynamic-graph__btn" (click)="goForward()">Вперёд</button>
-      <button class="dynamic-graph__btn">Вернуться к текущим значениям</button>
-      <button class="dynamic-graph__btn" id="toggleDataBtn">Скрыть данные</button>
+      <button class="dynamic-graph__btn" (click)="resetToCurrentTime()">Вернуться к текущим значениям</button>
+      <button class="dynamic-graph__btn" (click)="toggleLinesVisibility()">
+        Скрыть/Показать все
+      </button>
     </div>
   </div>
 </div>

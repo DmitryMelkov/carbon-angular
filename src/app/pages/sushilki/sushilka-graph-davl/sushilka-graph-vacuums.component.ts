@@ -29,6 +29,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
 
   private sushilkaId!: string;
   private timeOffset: number = 0; // Смещение времени в миллисекундах
+  linesVisible: boolean = true; // Добавляем состояние для видимости линий
 
   constructor(
     private vacuumService: SushilkaVacuumService,
@@ -105,6 +106,23 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   goForward() {
     this.timeOffset += 15 * 60 * 1000; // Увеличиваем смещение на 15 минут
     this.loadData(); // Загружаем данные с новым смещением
+  }
+
+  // Метод для сброса к текущему времени
+  resetToCurrentTime() {
+    this.timeOffset = 0; // Сбрасываем смещение времени
+    this.loadData(); // Загружаем данные с новым смещением
+  }
+
+  toggleLinesVisibility() {
+    this.linesVisible = !this.linesVisible; // Переключаем состояние
+    if (this.chart) {
+      // Обновляем данные графика в зависимости от состояния
+      this.chart.data.datasets.forEach((dataset) => {
+        dataset.hidden = !this.linesVisible; // Скрываем или показываем линии
+      });
+      this.chart.update(); // Обновляем график
+    }
   }
 
   createChart(
