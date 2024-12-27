@@ -45,15 +45,12 @@ export class SushilkaVacuumService {
 
     let previousTime: Date | null = null;
 
-    for (const dataPoint of sushilkaData) {
+    sushilkaData.forEach((dataPoint) => {
       const currentTime = new Date(dataPoint.lastUpdated);
-
-      // Если это не первый элемент, проверяем разницу во времени
       if (previousTime) {
         const timeDiff = currentTime.getTime() - previousTime.getTime();
-        // Если разница больше 1 минуты, добавляем null значения
+        const missingIntervals = Math.floor(timeDiff / (60 * 1000));
         if (timeDiff > 60 * 1000) {
-          const missingIntervals = Math.floor(timeDiff / (60 * 1000));
           for (let i = 1; i < missingIntervals; i++) {
             const missingTime = new Date(
               previousTime.getTime() + i * 60 * 1000
@@ -66,7 +63,6 @@ export class SushilkaVacuumService {
         }
       }
 
-      // Добавляем текущие значения
       labels.push(currentTime);
       values1.push(parseFloat(dataPoint.vacuums['Разрежение в топке']));
       values2.push(
@@ -77,7 +73,7 @@ export class SushilkaVacuumService {
       );
 
       previousTime = currentTime;
-    }
+    });
 
     return { labels, values1, values2, values3 };
   }
@@ -125,6 +121,19 @@ export class SushilkaVacuumService {
     };
   }
 
+  private createDataset(label: string, data: (number | null)[], color: string) {
+    return {
+      label: label,
+      data: data,
+      borderColor: color,
+      fill: false,
+      pointRadius: 1,
+      borderWidth: 2,
+      backgroundColor: 'transparent',
+      spanGaps: false, // разрывы
+    };
+  }
+
   createChart(
     ctx: CanvasRenderingContext2D,
     labels: Date[],
@@ -143,36 +152,17 @@ export class SushilkaVacuumService {
       data: {
         labels: labels,
         datasets: [
-          {
-            label: 'Разрежение в топке',
-            data: values1,
-            borderColor: colors[0],
-            fill: false,
-            pointRadius: 1,
-            borderWidth: 2,
-            backgroundColor: 'transparent',
-            spanGaps: false, // разрывы
-          },
-          {
-            label: 'Разрежение в камере выгрузки',
-            data: values2,
-            borderColor: colors[1],
-            fill: false,
-            pointRadius: 1,
-            borderWidth: 2,
-            backgroundColor: 'transparent',
-            spanGaps: false, // разрывы
-          },
-          {
-            label: 'Разрежение воздуха на разбавление',
-            data: values3,
-            borderColor: colors[2],
-            fill: false,
-            pointRadius: 1,
-            borderWidth: 2,
-            backgroundColor: 'transparent',
-            spanGaps: false, // разрывы
-          },
+          this.createDataset('Разрежение в топке', values1, colors[0]),
+          this.createDataset(
+            'Разрежение в камере выгрузки',
+            values2,
+            colors[1]
+          ),
+          this.createDataset(
+            'Разрежение воздуха на разбавление',
+            values3,
+            colors[2]
+          ),
         ],
       },
       options: {
