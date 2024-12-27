@@ -8,4 +8,10 @@ import { SushilkaGraphVacuumsComponent } from '../../sushilki/sushilka-graph-dav
   standalone: true,
   imports: [SushilkaGraphVacuumsComponent],
 })
-export class GraphicVacuumsGeneralComponent {}
+export class GraphicVacuumsGeneralComponent {
+  timeRange: number = 10; // Устанавливаем 10 минут по умолчанию
+
+  setTimeRange(minutes: number) {
+    this.timeRange = minutes;
+  }
+}

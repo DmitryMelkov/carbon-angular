@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
+  SimpleChanges,
 } from '@angular/core';
 import { Chart, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -22,6 +23,7 @@ Chart.register(CrosshairPlugin);
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() sushilkaId!: string;
+  @Input() timeRange: number = 30; // Добавляем входное свойство
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
   private resetTimerId?: any;
@@ -41,6 +43,12 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
       this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
     await this.loadData();
     this.startAutoUpdate();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['timeRange']) {
+      this.loadData(); // Вызываем loadData при изменении timeRange
+    }
   }
 
   private startAutoUpdate() {
@@ -64,7 +72,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   private async loadData() {
     this.currentTime = new Date();
     const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-    const startTime = new Date(endTime.getTime() - 30 * 60 * 1000);
+    const startTime = new Date(endTime.getTime() - this.timeRange * 60 * 1000); // Используем timeRange
 
     try {
       const sushilkaData = await this.vacuumService.getVacuumData(
