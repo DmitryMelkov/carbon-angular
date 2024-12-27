@@ -4,12 +4,18 @@
       <canvas class="dynamic-graph__graph" #canvas></canvas>
     </div>
     <div class="dynamic-graph__btns">
-      <button class="dynamic-graph__btn" (click)="goBack()">Назад</button>
-      <button class="dynamic-graph__btn" (click)="goForward()">Вперёд</button>
-      <button class="dynamic-graph__btn" (click)="resetToCurrentTime()">Вернуться к текущим значениям</button>
-      <button class="dynamic-graph__btn" (click)="toggleLinesVisibility()">
+      <app-control-button (click)="goBack()">
+        Назад
+      </app-control-button>
+      <app-control-button (click)="goForward()">
+        Вперёд
+      </app-control-button>
+      <app-control-button (click)="resetToCurrentTime()">
+        Вернуться к текущим значениям
+      </app-control-button>
+      <app-control-button (click)="toggleLinesVisibility()">
         Скрыть/Показать все
-      </button>
+      </app-control-button>
     </div>
   </div>
 </div>

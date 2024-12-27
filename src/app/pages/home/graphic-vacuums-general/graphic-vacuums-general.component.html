@@ -1,13 +1,22 @@
-<div class="dynamic-graph__container">
-  <h2>График для Сушилки 1</h2>
-  <button (click)="setTimeRange(10)">10 минут</button>
-  <button (click)="setTimeRange(30)">30 минут</button>
-  <div>
-    <app-sushilka-graph-vacuums [sushilkaId]="'sushilka1'" [timeRange]="timeRange"></app-sushilka-graph-vacuums>
-  </div>
+<div class="graph-vacuums-general">
+  <div class="graph-vacuums-general__container">
 
-  <h2>График для Сушилки 2</h2>
-  <div>
-    <app-sushilka-graph-vacuums [sushilkaId]="'sushilka2'" [timeRange]="timeRange"></app-sushilka-graph-vacuums>
+    <div class="graph-vacuums-general__btns">
+      <app-control-button [isActive]="activeButton === 10" (onClick)="setTimeRange(10)">
+        10 минут
+      </app-control-button>
+      <app-control-button [isActive]="activeButton === 30" (onClick)="setTimeRange(30)">
+        30 минут
+      </app-control-button>
+    </div>
+
+    <div class="graph-vacuums-general__content">
+      <app-sushilka-graph-vacuums [sushilkaId]="'sushilka1'" [timeRange]="timeRange"></app-sushilka-graph-vacuums>
+    </div>
+
+    <div class="graph-vacuums-general__content">
+      <app-sushilka-graph-vacuums [sushilkaId]="'sushilka2'" [timeRange]="timeRange"></app-sushilka-graph-vacuums>
+    </div>
+
   </div>
 </div>

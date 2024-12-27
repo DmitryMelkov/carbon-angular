@@ -7,9 +7,6 @@
   &:not(:last-child) {
     margin-bottom: 30px;
   }
-  &__container {
-    padding: 20px;
-  }
   &__content {
     position: relative;
     max-height: 400px;
@@ -22,30 +19,6 @@
   &__btns {
     margin-top: 20px;
     display: flex;
-  }
-  &__btn {
-    margin-right: 10px;
-    height: 27px;
-    font-size: 16px;
-    line-height: 22px;
-    font-weight: 600;
-    color: green;
-    border: 1px solid green;
-    background-color: transparent;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-  }
-  &__btn:hover {
-    color: white;
-    background-color: green;
-  }
-  &__btn:active {
-    color: white;
-    background-color: green;
-  }
-  &__btn:focus-visible {
-    color: white;
-    background-color: green;
-    outline: none;
+    gap: 10px;
   }
 }

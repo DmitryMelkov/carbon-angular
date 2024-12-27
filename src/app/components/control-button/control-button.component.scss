@@ -2,8 +2,8 @@
 @use "../../../styles/variables" as vars;
 
 .control-button {
-  padding: 5px;
-  @include mixins.text-style(16px, 23px, 600, vars.$hulk);
+  padding: 2px 5px;
+  @include mixins.text-style(16px, 20px, 600, vars.$hulk);
   border: 1px solid vars.$hulk;
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
   cursor: pointer;

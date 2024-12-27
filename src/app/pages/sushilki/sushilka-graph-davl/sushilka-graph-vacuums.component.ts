@@ -12,11 +12,14 @@ import 'chartjs-adapter-date-fns';
 import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilki/sushilka-graph-vacuums.service';
 import { ActivatedRoute } from '@angular/router';
+import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 
 Chart.register(CrosshairPlugin);
 
 @Component({
   selector: 'app-sushilka-graph-vacuums',
+  standalone: true,
+  imports: [ControlButtonComponent],
   templateUrl: './sushilka-graph-vacuums.component.html',
   styleUrls: ['./sushilka-graph-vacuums.component.scss'],
 })
