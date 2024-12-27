@@ -24,19 +24,60 @@ export class SushilkaVacuumService {
   processVacuumData(sushilkaData: VacuumsData[]) {
     if (!sushilkaData || sushilkaData.length === 0) {
       console.warn('Нет данных для отображения');
-      return { labels: [], values1: [], values2: [], values3: [] };
+      return {
+        labels: [],
+        values1: [] as (number | null)[],
+        values2: [] as (number | null)[],
+        values3: [] as (number | null)[],
+      };
     }
 
-    const labels = sushilkaData.map((data) => new Date(data.lastUpdated));
-    const values1 = sushilkaData.map((data) =>
-      parseFloat(data.vacuums['Разрежение в топке'])
+    const labels: Date[] = [];
+    const values1: (number | null)[] = [];
+    const values2: (number | null)[] = [];
+    const values3: (number | null)[] = [];
+
+    // Сортируем данные по времени
+    sushilkaData.sort(
+      (a, b) =>
+        new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime()
     );
-    const values2 = sushilkaData.map((data) =>
-      parseFloat(data.vacuums['Разрежение в камере выгрузки'])
-    );
-    const values3 = sushilkaData.map((data) =>
-      parseFloat(data.vacuums['Разрежение воздуха на разбавление'])
-    );
+
+    let previousTime: Date | null = null;
+
+    for (const dataPoint of sushilkaData) {
+      const currentTime = new Date(dataPoint.lastUpdated);
+
+      // Если это не первый элемент, проверяем разницу во времени
+      if (previousTime) {
+        const timeDiff = currentTime.getTime() - previousTime.getTime();
+        // Если разница больше 1 минуты, добавляем null значения
+        if (timeDiff > 60 * 1000) {
+          const missingIntervals = Math.floor(timeDiff / (60 * 1000));
+          for (let i = 1; i < missingIntervals; i++) {
+            const missingTime = new Date(
+              previousTime.getTime() + i * 60 * 1000
+            );
+            labels.push(missingTime);
+            values1.push(null);
+            values2.push(null);
+            values3.push(null);
+          }
+        }
+      }
+
+      // Добавляем текущие значения
+      labels.push(currentTime);
+      values1.push(parseFloat(dataPoint.vacuums['Разрежение в топке']));
+      values2.push(
+        parseFloat(dataPoint.vacuums['Разрежение в камере выгрузки'])
+      );
+      values3.push(
+        parseFloat(dataPoint.vacuums['Разрежение воздуха на разбавление'])
+      );
+
+      previousTime = currentTime;
+    }
 
     return { labels, values1, values2, values3 };
   }
@@ -87,9 +128,9 @@ export class SushilkaVacuumService {
   createChart(
     ctx: CanvasRenderingContext2D,
     labels: Date[],
-    values1: number[],
-    values2: number[],
-    values3: number[],
+    values1: (number | null)[],
+    values2: (number | null)[],
+    values3: (number | null)[],
     options: ChartOptions,
     sushilkaId: string
   ): Chart<keyof ChartTypeRegistry> {
@@ -107,34 +148,37 @@ export class SushilkaVacuumService {
             data: values1,
             borderColor: colors[0],
             fill: false,
-            pointRadius: 0,
+            pointRadius: 1,
             borderWidth: 2,
             backgroundColor: 'transparent',
+            spanGaps: false, // разрывы
           },
           {
             label: 'Разрежение в камере выгрузки',
             data: values2,
             borderColor: colors[1],
             fill: false,
-            pointRadius: 0,
+            pointRadius: 1,
             borderWidth: 2,
             backgroundColor: 'transparent',
+            spanGaps: false, // разрывы
           },
           {
             label: 'Разрежение воздуха на разбавление',
             data: values3,
             borderColor: colors[2],
             fill: false,
-            pointRadius: 0,
+            pointRadius: 1,
             borderWidth: 2,
             backgroundColor: 'transparent',
+            spanGaps: false, // разрывы
           },
         ],
       },
       options: {
         ...options,
-        responsive: true, // Убедитесь, что график адаптивный
-        maintainAspectRatio: false, // Позволяет устанавливать высоту отдельно
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           ...options.plugins,
           legend: {

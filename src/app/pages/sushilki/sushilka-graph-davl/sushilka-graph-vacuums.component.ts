@@ -37,7 +37,8 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.sushilkaId = this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
+    this.sushilkaId =
+      this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
     await this.loadData();
     this.startAutoUpdate();
   }
@@ -66,15 +67,25 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     const startTime = new Date(endTime.getTime() - 30 * 60 * 1000);
 
     try {
-      const sushilkaData = await this.vacuumService.getVacuumData(startTime, endTime, this.sushilkaId);
-      const { labels, values1, values2, values3 } = this.vacuumService.processVacuumData(sushilkaData);
+      const sushilkaData = await this.vacuumService.getVacuumData(
+        startTime,
+        endTime,
+        this.sushilkaId
+      );
+      const { labels, values1, values2, values3 } =
+        this.vacuumService.processVacuumData(sushilkaData);
       this.updateChart(labels, values1, values2, values3);
     } catch (error) {
       console.error('Ошибка при получении данных:', error);
     }
   }
 
-  private updateChart(labels: Date[], values1: number[], values2: number[], values3: number[]) {
+  private updateChart(
+    labels: Date[],
+    values1: (number | null)[],
+    values2: (number | null)[],
+    values3: (number | null)[]
+  ) {
     if (this.chart) {
       this.chart.data.labels = labels;
       this.chart.data.datasets[0].data = values1;
@@ -84,7 +95,15 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     } else {
       const chartOptions = this.vacuumService.getChartOptions();
       const ctx = this.canvasRef.nativeElement.getContext('2d');
-      this.chart = this.vacuumService.createChart(ctx!, labels, values1, values2, values3, chartOptions, this.sushilkaId);
+      this.chart = this.vacuumService.createChart(
+        ctx!,
+        labels,
+        values1,
+        values2,
+        values3,
+        chartOptions,
+        this.sushilkaId
+      );
     }
   }
 
