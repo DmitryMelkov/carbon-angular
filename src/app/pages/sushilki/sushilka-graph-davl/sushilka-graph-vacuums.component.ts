@@ -25,7 +25,7 @@ Chart.register(CrosshairPlugin);
   styleUrls: ['./sushilka-graph-vacuums.component.scss'],
 })
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
-  @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() sushilkaId!: string;
   @Input() timeRange: number = 30; // Добавляем входное свойство
   private chart!: Chart<keyof ChartTypeRegistry>;
