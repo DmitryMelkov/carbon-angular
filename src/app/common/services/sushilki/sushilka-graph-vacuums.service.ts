@@ -173,10 +173,40 @@ export class SushilkaVacuumService {
           ...options.plugins,
           legend: {
             position: 'right',
+            labels: {
+              generateLabels: (chart) => {
+                console.log('generateLabels called'); // Проверка вызова
+                const originalLabels =
+                  Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                return originalLabels.map((label) => {
+                  const datasetIndex = label.datasetIndex;
+
+                  if (
+                    datasetIndex !== undefined &&
+                    chart.data.datasets[datasetIndex]
+                  ) {
+                    const datasetData = chart.data.datasets[datasetIndex].data;
+                    const lastValue = datasetData[datasetData.length - 1];
+
+                    // Формируем текст в нужном порядке: цвет линии / значение / наименование
+                    const color = chart.data.datasets[datasetIndex].borderColor;
+                    const name = label.text; // Наименование параметра
+
+                    if (lastValue !== null) {
+                      label.text = `${lastValue} кгс/см2 | ${name}`;
+                    } else {
+                      label.text = `(нет данных) | ${name}`;
+                    }
+                  }
+                  return label;
+                });
+              },
+            },
             onClick: (event: any, legendItem) => {
               this.handleLegendClick(event, legendItem, chart);
             },
           },
+
           title: {
             display: true,
             text: this.getChartTitle(sushilkaId),
