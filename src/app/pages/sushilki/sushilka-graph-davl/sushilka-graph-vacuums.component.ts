@@ -13,13 +13,14 @@ import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { SushilkaVacuumService } from '../../../common/services/sushilki/sushilka-graph-vacuums.service';
 import { ActivatedRoute } from '@angular/router';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
+import { CommonModule } from '@angular/common';
 
 Chart.register(CrosshairPlugin);
 
 @Component({
   selector: 'app-sushilka-graph-vacuums',
   standalone: true,
-  imports: [ControlButtonComponent],
+  imports: [CommonModule, ControlButtonComponent],
   templateUrl: './sushilka-graph-vacuums.component.html',
   styleUrls: ['./sushilka-graph-vacuums.component.scss'],
 })
