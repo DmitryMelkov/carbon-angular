@@ -11,7 +11,7 @@ export class SushilkiService {
   constructor(private http: HttpClient) {}
 
   getSushilkaData(id: string): Observable<SushilkiData> {
-    return this.http.get<SushilkiData>(`http://localhost:3002/api/${id}-data`).pipe(
+    return this.http.get<SushilkiData>(`http://169.254.7.86:3002/api/${id}-data`).pipe(
       catchError((error) => {
         console.error(`Ошибка при запросе данных для сушилки ${id}:`, error);
 

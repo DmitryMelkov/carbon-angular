@@ -13,12 +13,21 @@ export class SushilkaVacuumService {
     endTime: Date,
     sushilkaId: string
   ): Promise<VacuumsData[]> {
-    const url = `http://localhost:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
+    const url = `http://169.254.7.86:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.json();
+  }
+
+  async getServerTime(): Promise<Date> {
+    const response = await fetch('http://169.254.7.86:3002/api/server-time');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return new Date(data.time); // Предполагаем, что API возвращает объект с полем 'time'
   }
 
   processVacuumData(sushilkaData: VacuumsData[]) {
@@ -175,7 +184,6 @@ export class SushilkaVacuumService {
             position: 'right',
             labels: {
               generateLabels: (chart) => {
-                console.log('generateLabels called'); // Проверка вызова
                 const originalLabels =
                   Chart.defaults.plugins.legend.labels.generateLabels(chart);
                 return originalLabels.map((label) => {

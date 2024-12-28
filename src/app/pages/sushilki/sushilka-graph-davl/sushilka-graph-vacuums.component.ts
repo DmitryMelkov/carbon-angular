@@ -25,7 +25,8 @@ Chart.register(CrosshairPlugin);
   styleUrls: ['./sushilka-graph-vacuums.component.scss'],
 })
 export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
-  @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvas', { static: true })
+  canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() sushilkaId!: string;
   @Input() timeRange: number = 30; // Добавляем входное свойство
   private chart!: Chart<keyof ChartTypeRegistry>;
@@ -74,11 +75,13 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
   }
 
   private async loadData() {
-    this.currentTime = new Date();
-    const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-    const startTime = new Date(endTime.getTime() - this.timeRange * 60 * 1000); // Используем timeRange
-
     try {
+      this.currentTime = await this.vacuumService.getServerTime(); // Получаем время сервера
+      const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
+      const startTime = new Date(
+        endTime.getTime() - this.timeRange * 60 * 1000
+      ); // Используем timeRange
+
       const sushilkaData = await this.vacuumService.getVacuumData(
         startTime,
         endTime,
