@@ -13,18 +13,18 @@ import CrosshairPlugin from 'chartjs-plugin-crosshair';
 import { ActivatedRoute } from '@angular/router';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkaDataService } from '../../../common/services/sushilki/sushilka-graph.service';
-import { VacuumsData } from '../../../common/types/sushilki-data-graph';
+import { TemperatureData } from '../../../common/types/sushilki-data-graph';
 
 Chart.register(CrosshairPlugin);
 
 @Component({
-  selector: 'app-sushilka-graph-vacuums',
-  standalone: true,
+  selector: 'app-sushilka-graph-temper',
   imports: [ControlButtonComponent],
-  templateUrl: './sushilka-graph-vacuums.component.html',
-  styleUrls: ['./sushilka-graph-vacuums.component.scss'],
+  standalone: true,
+  templateUrl: './sushilka-graph-temper.component.html',
+  styleUrls: ['./sushilka-graph-temper.component.scss'],
 })
-export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
+export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true })
   canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() sushilkaId!: string;
@@ -40,7 +40,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private vacuumService: SushilkaDataService // Убедитесь, что используете правильный сервис
+    private dataService: SushilkaDataService // Используем новый сервис
   ) {}
 
   async ngOnInit() {
@@ -76,29 +76,38 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
 
   private async loadData() {
     try {
-      this.currentTime = await this.vacuumService.getServerTime(); // Получаем время сервера
+      this.currentTime = await this.dataService.getServerTime(); // Получаем время сервера
       const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
       const startTime = new Date(
         endTime.getTime() - this.timeRange * 60 * 1000
       ); // Используем timeRange
 
-      // Получаем данные давления
-      const sushilkaData = await this.vacuumService.getData(
+      const sushilkaData = await this.dataService.getData(
         startTime,
         endTime,
         this.sushilkaId,
-        'vacuum' // Указываем тип данных как 'vacuum'
-      ) as VacuumsData[]; // Явное приведение типа
+        'temperature' // Указываем тип данных
+      );
 
-      // Обрабатываем данные давления
-      const { labels, values1, values2, values3 } =
-        this.vacuumService.processVacuumData(sushilkaData);
-      this.updateChart(labels, values1, values2, values3);
+      // Здесь мы проверяем, какой тип данных мы получили
+      if (Array.isArray(sushilkaData) && sushilkaData.length > 0) {
+        const firstDataPoint = sushilkaData[0];
+
+        // Проверяем, является ли первый элемент типа TemperatureData
+        if ('temperatures' in firstDataPoint) {
+          const { labels, values1, values2, values3 } =
+            this.dataService.processTemperatureData(sushilkaData as TemperatureData[]);
+          this.updateChart(labels, values1, values2, values3);
+        } else {
+          console.warn('Получены данные не температурного типа');
+        }
+      } else {
+        console.warn('Нет данных для отображения');
+      }
     } catch (error) {
       console.error('Ошибка при получении данных:', error);
     }
   }
-
 
 
   private updateChart(
@@ -114,9 +123,9 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
       this.chart.data.datasets[2].data = values3;
       this.chart.update();
     } else {
-      const chartOptions = this.vacuumService.getChartOptions('vacuum'); // Передаем тип данных
+      const chartOptions = this.dataService.getChartOptions('temperature'); // Указываем тип данных
       const ctx = this.canvasRef.nativeElement.getContext('2d');
-      this.chart = this.vacuumService.createChart(
+      this.chart = this.dataService.createChart(
         ctx!,
         labels,
         values1,
@@ -124,11 +133,10 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
         values3,
         chartOptions,
         this.sushilkaId,
-        'vacuum' // Указываем тип данных
+        'temperature' // Указываем тип данных
       );
     }
   }
-
 
   goBack() {
     this.timeOffset -= 15 * 60 * 1000;

@@ -5,13 +5,22 @@ import { SushilkaMnemoComponent } from '../sushilki/sushilka-mnemo/sushilka-mnem
 import { MatTabsModule } from '@angular/material/tabs';
 import { ControlButtonComponent } from '../../components/control-button/control-button.component';
 import { GraphicVacuumsGeneralComponent } from './graphic-vacuums-general/graphic-vacuums-general.component';
+import { GraphicTempersGeneralComponent } from './graphic-tempers-general/graphic-tempers-general.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, SushilkaComponent, SushilkaMnemoComponent, MatTabsModule, ControlButtonComponent, GraphicVacuumsGeneralComponent],
+  imports: [
+    CommonModule,
+    SushilkaComponent,
+    SushilkaMnemoComponent,
+    MatTabsModule,
+    ControlButtonComponent,
+    GraphicVacuumsGeneralComponent,
+    GraphicTempersGeneralComponent,
+  ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
   objectData = [
@@ -19,7 +28,11 @@ export class HomeComponent {
     { id: 'sushilka2', name: 'Сушилка №2' },
   ];
   selectedSushilkaId: string = this.objectData[0].id; // Выбранный объект по умолчанию
-  activeView: 'parameters' | 'mnemo' | 'graph-vacuums-general' = 'parameters'; // Текущее отображаемое представление
+  activeView:
+    | 'parameters'
+    | 'mnemo'
+    | 'graph-vacuums-general'
+    | 'graph-tempers-general' = 'parameters'; // Текущее отображаемое представление
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -33,10 +46,15 @@ export class HomeComponent {
     this.activeView = 'mnemo';
   }
 
-
   // Метод для отображения графиков давления
   showGraphPressure(id: string) {
     this.selectedSushilkaId = id;
     this.activeView = 'graph-vacuums-general';
+  }
+
+  // Метод для отображения графиков давления
+  showGraphTemper(id: string) {
+    this.selectedSushilkaId = id;
+    this.activeView = 'graph-tempers-general';
   }
 }

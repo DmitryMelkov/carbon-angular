@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ChartOptions, Chart, ChartTypeRegistry } from 'chart.js';
-import { VacuumsData } from '../../types/sushilki-data-graph';
+import { TemperatureData, VacuumsData } from '../../types/sushilki-data-graph';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SushilkaVacuumService {
+export class SushilkaDataService {
   constructor() {}
 
-  async getVacuumData(
+  async getData(
     startTime: Date,
     endTime: Date,
-    sushilkaId: string
-  ): Promise<VacuumsData[]> {
-    const url = `http://169.254.7.86:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
+    sushilkaId: string,
+    dataType: 'temperature' | 'vacuum'
+  ): Promise<TemperatureData[] | VacuumsData[]> {
+    const url = `http://localhost:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -22,7 +23,7 @@ export class SushilkaVacuumService {
   }
 
   async getServerTime(): Promise<Date> {
-    const response = await fetch('http://169.254.7.86:3002/api/server-time');
+    const response = await fetch('http://localhost:3002/api/server-time');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -30,8 +31,16 @@ export class SushilkaVacuumService {
     return new Date(data.time); // Предполагаем, что API возвращает объект с полем 'time'
   }
 
+  processTemperatureData(sushilkaData: TemperatureData[]) {
+    return this.processData(sushilkaData, 'temperature');
+  }
+
   processVacuumData(sushilkaData: VacuumsData[]) {
-    if (!sushilkaData || sushilkaData.length === 0) {
+    return this.processData(sushilkaData, 'vacuum');
+  }
+
+  private processData(data: any[], type: 'temperature' | 'vacuum') {
+    if (!data || data.length === 0) {
       console.warn('Нет данных для отображения');
       return {
         labels: [],
@@ -46,15 +55,14 @@ export class SushilkaVacuumService {
     const values2: (number | null)[] = [];
     const values3: (number | null)[] = [];
 
-    // Сортируем данные по времени
-    sushilkaData.sort(
+    data.sort(
       (a, b) =>
         new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime()
     );
 
     let previousTime: Date | null = null;
 
-    sushilkaData.forEach((dataPoint) => {
+    data.forEach((dataPoint) => {
       const currentTime = new Date(dataPoint.lastUpdated);
       if (previousTime) {
         const timeDiff = currentTime.getTime() - previousTime.getTime();
@@ -73,13 +81,31 @@ export class SushilkaVacuumService {
       }
 
       labels.push(currentTime);
-      values1.push(parseFloat(dataPoint.vacuums['Разрежение в топке']));
-      values2.push(
-        parseFloat(dataPoint.vacuums['Разрежение в камере выгрузки'])
-      );
-      values3.push(
-        parseFloat(dataPoint.vacuums['Разрежение воздуха на разбавление'])
-      );
+      if (type === 'temperature') {
+        values1.push(
+          typeof dataPoint.temperatures['Температура в топке'] === 'number'
+            ? dataPoint.temperatures['Температура в топке']
+            : parseFloat(dataPoint.temperatures['Температура в топке'])
+        );
+        values2.push(
+          typeof dataPoint.temperatures['Температура в камере смешения'] === 'number'
+            ? dataPoint.temperatures['Температура в камере смешения']
+            : parseFloat(dataPoint.temperatures['Температура в камере смешения'])
+        );
+        values3.push(
+          typeof dataPoint.temperatures['Температура уходящих газов'] === 'number'
+            ? dataPoint.temperatures['Температура уходящих газов']
+            : parseFloat(dataPoint.temperatures['Температура уходящих газов'])
+        );
+      } else if (type === 'vacuum') {
+        values1.push(parseFloat(dataPoint.vacuums['Разрежение в топке']));
+        values2.push(
+          parseFloat(dataPoint.vacuums['Разрежение в камере выгрузки'])
+        );
+        values3.push(
+          parseFloat(dataPoint.vacuums['Разрежение воздуха на разбавление'])
+        );
+      }
 
       previousTime = currentTime;
     });
@@ -87,7 +113,10 @@ export class SushilkaVacuumService {
     return { labels, values1, values2, values3 };
   }
 
-  getChartOptions(): ChartOptions {
+  getChartOptions(type: 'temperature' | 'vacuum'): ChartOptions {
+    const yAxisTitle = type === 'temperature' ? 'Температуры, градусы' : 'Разрежения, кгс/см2';
+    const titleText = type === 'temperature' ? 'Данные температуры для сушилок' : 'Данные разрежения для сушилок';
+
     return {
       scales: {
         x: {
@@ -102,18 +131,16 @@ export class SushilkaVacuumService {
         },
         y: {
           beginAtZero: true,
-          min: -20,
-          max: 30,
           title: {
             display: true,
-            text: 'Разреженеия, кгс/см2',
+            text: yAxisTitle,
           },
         },
       },
       plugins: {
         title: {
           display: true,
-          text: 'Данные разрежения для сушилок',
+          text: titleText,
         },
         tooltip: {
           mode: 'index',
@@ -150,7 +177,8 @@ export class SushilkaVacuumService {
     values2: (number | null)[],
     values3: (number | null)[],
     options: ChartOptions,
-    sushilkaId: string
+    sushilkaId: string,
+    type: 'temperature' | 'vacuum'
   ): Chart<keyof ChartTypeRegistry> {
     const colors = this.getChartDatasetColors(
       Number(sushilkaId.replace('sushilka', ''))
@@ -161,17 +189,9 @@ export class SushilkaVacuumService {
       data: {
         labels: labels,
         datasets: [
-          this.createDataset('Разрежение в топке', values1, colors[0]),
-          this.createDataset(
-            'Разрежение в камере выгрузки',
-            values2,
-            colors[1]
-          ),
-          this.createDataset(
-            'Разрежение воздуха на разбавление',
-            values3,
-            colors[2]
-          ),
+          this.createDataset(type === 'temperature' ? 'Температура в топке' : 'Разрежение в топке', values1, colors[0]),
+          this.createDataset(type === 'temperature' ? 'Температура в камере смешения' : 'Разрежение в камере выгрузки', values2, colors[1]),
+          this.createDataset(type === 'temperature' ? 'Температура уходящих газов' : 'Разрежение воздуха на разбавление', values3, colors[2]),
         ],
       },
       options: {
@@ -201,7 +221,7 @@ export class SushilkaVacuumService {
                     const name = label.text; // Наименование параметра
 
                     if (lastValue !== null) {
-                      label.text = `${lastValue} кгс/см2 | ${name}`;
+                      label.text = `${lastValue} ${type === 'temperature' ? '°C' : 'кгс/см2'} | ${name}`;
                     } else {
                       label.text = `(нет данных) | ${name}`;
                     }
@@ -217,7 +237,7 @@ export class SushilkaVacuumService {
 
           title: {
             display: true,
-            text: this.getChartTitle(sushilkaId),
+            text: this.getChartTitle(sushilkaId, type),
             font: {
               size: 16,
               weight: 'bold',
@@ -230,9 +250,9 @@ export class SushilkaVacuumService {
     return chart;
   }
 
-  getChartTitle(sushilkaId: string): string {
+  getChartTitle(sushilkaId: string, type: 'temperature' | 'vacuum'): string {
     const sushilkaNumber = Number(sushilkaId.replace('sushilka', ''));
-    return `Сушилка №${sushilkaNumber}: разрежение`;
+    return `Сушилка №${sushilkaNumber}: ${type === 'temperature' ? 'температура' : 'разрежение'}`;
   }
 
   getChartDatasetColors(sushilkaNumber: number) {

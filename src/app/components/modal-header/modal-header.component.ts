@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-modal-header',
   imports: [MatIconModule, MatButtonModule],
+  standalone: true,
   templateUrl: './modal-header.component.html',
   styleUrl: './modal-header.component.scss'
 })

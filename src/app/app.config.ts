@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { SushilkaComponent } from './pages/sushilki/sushilka-current/sushilka.component';
 import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka-mnemo.component';
 import { SushilkaGraphVacuumsComponent } from './pages/sushilki/sushilka-graph-davl/sushilka-graph-vacuums.component';
+import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,10 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'sushilka/:id/graph-vacuums',
         component: SushilkaGraphVacuumsComponent,
+      },
+      {
+        path: 'sushilka/:id/graph-tempers',
+        component: SushilkaGraphTemperComponent,
       },
     ]),
     provideHttpClient(),

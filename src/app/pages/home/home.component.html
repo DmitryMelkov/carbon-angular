@@ -12,9 +12,13 @@
             Текущие параметры
           </app-control-button>
           <app-control-button class="home__button"
-            [isActive]="activeView === 'mnemo' && selectedSushilkaId === object.id"
-            (onClick)="showMnemo(object.id)">
+            [isActive]="activeView === 'mnemo' && selectedSushilkaId === object.id" (onClick)="showMnemo(object.id)">
             Мнемосхема
+          </app-control-button>
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'graph-tempers-general' && selectedSushilkaId === object.id"
+            (onClick)="showGraphTemper(object.id)">
+            Графики температур
           </app-control-button>
           <app-control-button class="home__button"
             [isActive]="activeView === 'graph-vacuums-general' && selectedSushilkaId === object.id"
@@ -28,9 +32,13 @@
         <div *ngIf="activeView === 'mnemo' && selectedSushilkaId === object.id" class="home__content">
           <app-sushilka-mnemo [id]="object.id"></app-sushilka-mnemo>
         </div>
-        <div *ngIf="activeView === 'graph-vacuums-general' && selectedSushilkaId === object.id" class="home__content">
-          <app-graphic-vacuums-general [id]="object.id" pressureView="true"></app-graphic-vacuums-general>
+        <div *ngIf="activeView === 'graph-tempers-general' && selectedSushilkaId === object.id" class="home__content">
+          <app-graphic-tempers-general [id]="object.id"></app-graphic-tempers-general>
         </div>
+        <div *ngIf="activeView === 'graph-vacuums-general' && selectedSushilkaId === object.id" class="home__content">
+          <app-graphic-vacuums-general [id]="object.id"></app-graphic-vacuums-general>
+        </div>
+
       </mat-tab>
     </mat-tab-group>
   </div>

@@ -1,0 +1,22 @@
+<div class="graph-vacuums-general">
+  <div class="graph-vacuums-general__container">
+
+    <div class="graph-vacuums-general__btns">
+      <app-control-button [isActive]="activeButton === 10" (onClick)="setTimeRange(10)">
+        10 минут
+      </app-control-button>
+      <app-control-button [isActive]="activeButton === 30" (onClick)="setTimeRange(30)">
+        30 минут
+      </app-control-button>
+    </div>
+
+    <div class="graph-vacuums-general__content">
+      <app-sushilka-graph-temper [sushilkaId]="'sushilka1'" [timeRange]="timeRange"></app-sushilka-graph-temper>
+    </div>
+
+    <div class="graph-vacuums-general__content">
+      <app-sushilka-graph-temper [sushilkaId]="'sushilka2'" [timeRange]="timeRange"></app-sushilka-graph-temper>
+    </div>
+
+  </div>
+</div>

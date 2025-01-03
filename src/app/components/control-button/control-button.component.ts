@@ -4,6 +4,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-control-button',
   imports: [CommonModule],
+  standalone: true,
   templateUrl: './control-button.component.html',
   styleUrls: ['./control-button.component.scss'],
 })
