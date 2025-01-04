@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @use "../src/styles/mixins" as mixins;
 @use "../src/styles/variables" as vars;
+@use "../src/styles/fonts";
 
 *,
 *::before,
@@ -91,7 +92,8 @@ body {
   font-family: "Bitter", sans-serif;
 }
 
-.current-container, .mnemo-container {
+.current-container,
+.mnemo-container {
   padding-left: 10px;
 }
 
@@ -104,21 +106,26 @@ body {
   @include mixins.text-style(20px, 20px, 600, vars.$hulk);
 }
 
-
 // tabs
 .mat-mdc-tab .mdc-tab-indicator__content--underline {
   border-color: green !important;
 }
 
-.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
-  transition: background-color .3s ease-in-out;
+.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab {
+  transition: background-color 0.3s ease-in-out;
   max-width: 200px;
 }
 
-.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab:hover {
+.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab:hover {
   background-color: vars.$lynx-white !important;
 }
 
-.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab:active {
+.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab:active {
   background-color: vars.$lynx-white !important;
 }

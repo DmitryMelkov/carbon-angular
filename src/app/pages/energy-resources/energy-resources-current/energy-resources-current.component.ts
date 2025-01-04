@@ -19,6 +19,17 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   isLoading: boolean = true; // Флаг загрузки
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
+  // Определяем порядок ключей
+  orderedKeys: string[] = [
+    'dd569',
+    'dd576',
+    'dd923',
+    'dd924',
+    'de093',
+    'dd972',
+    'dd973',
+  ];
+
   constructor(private energyResourcesService: EnergyResourcesService) {}
 
   ngOnInit() {
@@ -70,14 +81,14 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
 
   getDeviceName(key: string): string {
     switch (key) {
+      case 'dd569':
+        return 'УТВХ от к.265 магистраль';
+      case 'dd576':
+        return 'Carbon к. 10в1 общий коллектор';
       case 'dd923':
         return 'Котел утилизатор №1';
       case 'dd924':
         return 'Котел утилизатор №2';
-      case 'dd576':
-        return 'Carbon к. 10в1 общий коллектор';
-      case 'dd569':
-        return 'УТВХ от к.265 магистраль';
       case 'de093':
         return 'МПА №2';
       case 'dd972':
