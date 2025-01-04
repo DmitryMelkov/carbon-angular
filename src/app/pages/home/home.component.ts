@@ -52,7 +52,7 @@ export class HomeComponent {
     this.activeView = 'graph-vacuums-general';
   }
 
-  // Метод для отображения графиков давления
+  // Метод для отображения графиков температур
   showGraphTemper(id: string) {
     this.selectedSushilkaId = id;
     this.activeView = 'graph-tempers-general';

@@ -7,6 +7,7 @@ import { SushilkaComponent } from './pages/sushilki/sushilka-current/sushilka.co
 import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka-mnemo.component';
 import { SushilkaGraphVacuumsComponent } from './pages/sushilki/sushilka-graph-davl/sushilka-graph-vacuums.component';
 import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
+import { EnergyResourcesCurrentComponent } from './pages/energy-resources/energy-resources-current/energy-resources-current.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,10 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'sushilka/:id/graph-tempers',
         component: SushilkaGraphTemperComponent,
+      },
+      {
+        path: 'energy-resources/current',
+        component: EnergyResourcesCurrentComponent,
       },
     ]),
     provideHttpClient(),

@@ -1,0 +1,33 @@
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"
+  (loadingComplete)="onLoadingComplete()"></app-loader>
+
+<div class="current-container energy-resources-current" *ngIf="!isLoading">
+  <app-header-current-params [title]="'Текущие параметры узлов учета'"></app-header-current-params>
+
+  <table class="table">
+    <caption class="table__title">Узлы учета</caption>
+    <thead class="table__thead">
+      <tr class="table__tr">
+        <th class="table__th table__left">Устройство</th>
+        <th class="table__th">Гкал/ч</th>
+        <th class="table__th">Температура (°C)</th>
+        <th class="table__th">Давление (бар)</th>
+        <th class="table__th">Куб/ч</th>
+        <th class="table__th">Тонн/ч</th>
+        <th class="table__th">Накопленно тонн</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table__tr" *ngFor="let key of getKeys(energyResources)">
+        <td class="table__td table__left">{{ getDeviceName(key) }}</td>
+        <td class="table__td table__right">{{ energyResources[key].data["Гкал/ч " + energyResources[key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[key].data["Температура " + energyResources[key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[key].data["Давление " + energyResources[key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[key].data["Куб/ч " + energyResources[key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[key].data["Тонн/ч " + energyResources[key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[key].data["Накопленно тонн " + energyResources[key].device] }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
