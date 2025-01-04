@@ -20,15 +20,18 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   // Определяем порядок ключей
-  orderedKeys: string[] = [
-    'dd569',
-    'dd576',
-    'dd923',
-    'dd924',
-    'de093',
-    'dd972',
-    'dd973',
+  orderedKeys: { key: string; typeSize: string }[] = [
+    { key: 'dd569', typeSize: 'Dy 150' },
+    { key: 'dd576', typeSize: 'Dy 150' },
+    { key: 'dd923', typeSize: 'Dy 100' },
+    { key: 'dd924', typeSize: 'Dy 100' },
+    { key: 'de093', typeSize: 'Dy 80' },
+    { key: 'dd972', typeSize: 'Dy 80' },
+    { key: 'dd973', typeSize: 'Dy 80' },
   ];
+
+  mpaKeys: { key: string; typeSize: string }[] = []; // Массив для МПА
+  otherKeys: { key: string; typeSize: string }[] = []; // Массив для остальных
 
   constructor(private energyResourcesService: EnergyResourcesService) {}
 
@@ -57,8 +60,17 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.energyResources = data; // Сохраняем полученные данные
         this.isLoading = false; // Убираем флаг загрузки
+
+        // Фильтруем данные на МПА и остальные
+        this.mpaKeys = this.orderedKeys.filter(
+          (item) => item.key.startsWith('de') || item.key.startsWith('dd97')
+        );
+        this.otherKeys = this.orderedKeys.filter(
+          (item) => !this.mpaKeys.includes(item)
+        );
       });
   }
+
 
   private startPeriodicDataLoading() {
     interval(10000) // Каждые 10 секунд

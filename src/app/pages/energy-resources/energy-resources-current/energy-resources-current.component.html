@@ -5,27 +5,63 @@
   <app-header-current-params [title]="'Текущие параметры узлов учета'"></app-header-current-params>
 
   <table class="table">
-    <caption class="table__title">Узлы учета</caption>
+    <caption class="table__title">Генерация пара</caption>
     <thead class="table__thead">
       <tr class="table__tr">
         <th class="table__th table__left">Наименование узла учета</th>
+        <th class="table__th">Типоразмер</th>
         <th class="table__th">Гкал/ч</th>
         <th class="table__th">Куб/ч</th>
         <th class="table__th">Тонн/ч</th>
-        <th class="table__th">Давление (бар)</th>
+        <th class="table__th">Давление (МПа)</th>
         <th class="table__th">Температура (°C)</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="table__tr" *ngFor="let key of orderedKeys">
-        <td class="table__td table__left">{{ getDeviceName(key) }}</td>
-        <td class="table__td table__right">{{ energyResources[key].data["Гкал/ч " + energyResources[key].device] }}</td>
-        <td class="table__td table__right">{{ energyResources[key].data["Куб/ч " + energyResources[key].device] }}</td>
-        <td class="table__td table__right">{{ energyResources[key].data["Тонн/ч " + energyResources[key].device] }}</td>
-        <td class="table__td table__right">{{ energyResources[key].data["Давление " + energyResources[key].device] }}
-        </td>
-        <td class="table__td table__right">{{ energyResources[key].data["Температура " + energyResources[key].device] }}
-        </td>
+      <tr class="table__tr" *ngFor="let item of otherKeys">
+        <td class="table__td table__left">{{ getDeviceName(item.key) }}</td>
+        <td class="table__td table__right">{{ item.typeSize }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Гкал/ч " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Куб/ч " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Тонн/ч " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Давление " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Температура " +
+          energyResources[item.key].device] }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table">
+    <caption class="table__title">Потребление пара</caption>
+    <thead class="table__thead">
+      <tr class="table__tr">
+        <th class="table__th table__left">Наименование узла учета</th>
+        <th class="table__th">Типоразмер</th>
+        <th class="table__th">Гкал/ч</th>
+        <th class="table__th">Куб/ч</th>
+        <th class="table__th">Тонн/ч</th>
+        <th class="table__th">Давление (МПа)</th>
+        <th class="table__th">Температура (°C)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table__tr" *ngFor="let item of mpaKeys">
+        <td class="table__td table__left">{{ getDeviceName(item.key) }}</td>
+        <td class="table__td table__right">{{ item.typeSize }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Гкал/ч " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Куб/ч " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Тонн/ч " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Давление " +
+          energyResources[item.key].device] }}</td>
+        <td class="table__td table__right">{{ energyResources[item.key].data["Температура " +
+          energyResources[item.key].device] }}</td>
       </tr>
     </tbody>
   </table>
