@@ -1,3 +1,4 @@
+// src/app/app.config.ts
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -8,6 +9,7 @@ import { SushilkaMnemoComponent } from './pages/sushilki/sushilka-mnemo/sushilka
 import { SushilkaGraphVacuumsComponent } from './pages/sushilki/sushilka-graph-davl/sushilka-graph-vacuums.component';
 import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
 import { EnergyResourcesCurrentComponent } from './pages/energy-resources/energy-resources-current/energy-resources-current.component';
+import { EnergyResourcesReportDayComponent } from './pages/energy-resources/energy-resources-report-day/energy-resources-report-day.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +28,10 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'energy-resources/current',
         component: EnergyResourcesCurrentComponent,
+      },
+      {
+        path: 'energy-resources/report-day',
+        component: EnergyResourcesReportDayComponent,
       },
     ]),
     provideHttpClient(),

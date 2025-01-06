@@ -1,0 +1,125 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
+.content {
+  position: relative;
+  max-width: 1450px;
+  padding-left: 10px;
+}
+
+.dynamic-report {
+  margin: 5px 30px;
+  display: flex;
+  flex-direction: column;
+  &__title-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+  }
+  &__title {
+    margin-bottom: 15px;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 600;
+    color: green;
+  }
+  &__date-range {
+    position: relative;
+    max-width: 350px;
+  }
+  &__date-div {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  &__date-label {
+    margin-bottom: 10px;
+  }
+  &__date-input {
+    margin-right: 10px;
+    height: 27px;
+    width: 150px;
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    padding: 2px;
+    border: 1px solid green;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  &__date-input:hover {
+    border-color: green;
+    background-color: #d4d2d2bb;
+    transition: background-color 0.3s ease-in-out;
+  }
+  &__date-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    background-color: #ffffff;
+    color: #000;
+  }
+  &__date-input:disabled {
+    background-color: #e0e0e0;
+    color: #999;
+    border-color: #dcdcdc;
+  }
+  &__date-input::-webkit-calendar-picker-indicator {
+    color: #3498db;
+    cursor: pointer;
+  }
+  &__data-error {
+    display: none;
+    color: red;
+    text-align: center;
+    font-size: 24px;
+  }
+  &__table {
+    position: relative;
+  }
+  &__report-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Фиксированный макет таблицы */
+  }
+  &__report-header {
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 600;
+    color: white;
+    font-family: "Bitter", sans-serif;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+    background-color: green;
+  }
+  &__report-cell {
+    text-align: center;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 400;
+    color: black;
+  }
+  &__report-table th,
+  &__report-table td {
+    border: 1px solid #ddd;
+    padding: 2px;
+  }
+  &__report-table th:first-child, &__report-table td:first-child {
+    white-space: nowrap;
+  }
+}
+
+/* Скрыть спиннеры во всех основных браузерах */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Убираем спиннеры в WebKit-браузерах */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
