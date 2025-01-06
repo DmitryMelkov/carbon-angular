@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ControlButtonComponent } from '../../components/control-button/control-button.component';
 import { GraphicVacuumsGeneralComponent } from './graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicTempersGeneralComponent } from './graphic-tempers-general/graphic-tempers-general.component';
+import { EnergyResourcesCurrentComponent } from '../energy-resources/energy-resources-current/energy-resources-current.component';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ import { GraphicTempersGeneralComponent } from './graphic-tempers-general/graphi
     ControlButtonComponent,
     GraphicVacuumsGeneralComponent,
     GraphicTempersGeneralComponent,
+    EnergyResourcesCurrentComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -32,7 +34,8 @@ export class HomeComponent {
     | 'parameters'
     | 'mnemo'
     | 'graph-vacuums-general'
-    | 'graph-tempers-general' = 'parameters'; // Текущее отображаемое представление
+    | 'graph-tempers-general'
+    | 'energy-resources' = 'parameters'; // Добавьте новое состояние для энергоресурсов
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -56,5 +59,11 @@ export class HomeComponent {
   showGraphTemper(id: string) {
     this.selectedSushilkaId = id;
     this.activeView = 'graph-tempers-general';
+  }
+
+  // Метод для отображения энергоресурсов
+  showEnergyResources() {
+    this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'energy-resources'; // Устанавливаем активное представление
   }
 }

@@ -39,6 +39,27 @@
           <app-graphic-vacuums-general [id]="object.id"></app-graphic-vacuums-general>
         </div>
       </mat-tab>
+      
+
+      <mat-tab class="home__tab">
+        <ng-template mat-tab-label>
+          <button mat-button class="home__tab-button btn-reset">Энергоресурсы</button>
+        </ng-template>
+
+        <div class="home__button-group">
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'energy-resources'"
+            (onClick)="showEnergyResources()">
+            Текущие параметры
+          </app-control-button>
+          <!-- Вы можете добавить сюда другие кнопки для энергоресурсов, если необходимо -->
+        </div>
+
+        <!-- Отображение компонента EnergyResourcesCurrentComponent -->
+        <div *ngIf="activeView === 'energy-resources'" class="home__content">
+          <app-energy-resources-current></app-energy-resources-current>
+        </div>
+      </mat-tab>
     </mat-tab-group>
   </div>
 </div>
