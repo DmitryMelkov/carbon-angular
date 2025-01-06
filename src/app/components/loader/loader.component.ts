@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./loader.component.scss'],
 })
 export class LoaderComponent implements OnInit {
-  @Input() delay: number = 1000; // Задержка отображения прелоудера в миллисекундах
+  @Input() delay: number = 2000; // Задержка отображения прелоудера в миллисекундах
   @Input() loadingText: string = 'Загрузка данных, пожалуйста подождите...';
   @Output() loadingComplete = new EventEmitter<void>(); // Сообщение о завершении загрузки
 

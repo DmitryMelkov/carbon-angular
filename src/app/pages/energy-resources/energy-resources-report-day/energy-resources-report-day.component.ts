@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { EnergyResourcesReportData } from '../../../common/types/energy-resources-report-day-data';
 import { EnergyResourcesReportDayService } from '../../../common/services/energy-resources/energy-resources-report-day.service';
 import { CommonModule } from '@angular/common';
-
+import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
+import { LoaderComponent } from '../../../components/loader/loader.component';
 
 @Component({
   selector: 'app-energy-resources-report-day',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ControlButtonComponent, LoaderComponent],
   templateUrl: './energy-resources-report-day.component.html',
   styleUrls: ['./energy-resources-report-day.component.scss']
 })
@@ -72,10 +73,12 @@ export class EnergyResourcesReportDayComponent implements OnInit {
     return totals;
   }
 
-
   onDateChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedDate = input.value;
-    this.loadDataForSelectedDate();
+  }
+
+  onLoadingComplete(): void {
+    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
   }
 }
