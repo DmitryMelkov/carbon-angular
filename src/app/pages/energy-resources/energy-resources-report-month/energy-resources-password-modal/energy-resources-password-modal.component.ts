@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ModalHeaderComponent } from '../../../../components/modal-header/modal-header.component';
+import { ControlButtonComponent } from '../../../../components/control-button/control-button.component';
 
 @Component({
   selector: 'app-energy-resources-password-modal',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, FormsModule],
+  imports: [CommonModule, MatDialogModule, FormsModule, ModalHeaderComponent, ControlButtonComponent],
   templateUrl: './energy-resources-password-modal.component.html',
   styleUrl: './energy-resources-password-modal.component.scss',
 })
@@ -21,7 +23,7 @@ export class EnergyResourcesPasswordModalComponent {
     this.dialogRef.close(this.password);
   }
 
-  cancel(): void {
+  close(): void {
     this.dialogRef.close();
   }
 }

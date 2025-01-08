@@ -1,0 +1,22 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.not-change-modal {
+  padding: 10px 20px;
+  &__header {
+    min-width: 500px;
+  }
+  &__body {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    overflow-y: auto;
+    min-height: 100px;
+    justify-content: center;
+  }
+  &__descr {
+    margin-left: 10px;
+    @include mixins.text-style(18px, 22px, 500, vars.$hulk);
+  }
+}
