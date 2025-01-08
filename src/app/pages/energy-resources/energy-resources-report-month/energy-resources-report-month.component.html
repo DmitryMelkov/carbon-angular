@@ -1,0 +1,75 @@
+<div class="content">
+  <div class="dynamic-report">
+    <div class="dynamic-report__title-content">
+      <h1 class="dynamic-report__title title-reset">Отчёт по энергоресурсам к.10в1</h1>
+      <div class="dynamic-report__date-range">
+        <div class="dynamic-report__date-label">Выберите месяц для просмотра архива отчета:</div>
+        <div class="dynamic-report__date-div">
+          <input class="dynamic-report__date-input" type="month" [(ngModel)]="selectedMonth">
+          <button class="dynamic-report__btn" (click)="loadDataForSelectedMonth()">Принять</button>
+        </div>
+      </div>
+    </div>
+
+    <h3>Отчет за <span>{{ selectedMonth | date: 'MMMM y' }}</span></h3>
+
+    <div *ngIf="loading" id="loadingWrapper">
+      <div id="loadingText">Загрузка данных, пожалуйста подождите...</div>
+    </div>
+
+    <div class="dynamic-report__table" *ngIf="!loading">
+      <table class="dynamic-report__report-table" id="reportTable">
+        <thead>
+          <tr>
+            <th class="dynamic-report__report-header" rowspan="2">Время</th>
+            <th class="dynamic-report__report-header" colspan="3">Расход пара, Гкал</th>
+            <th class="dynamic-report__report-header" colspan="4">Генерация пара от к.265 и котлов утилизаторов к.10в1, Гкал</th>
+          </tr>
+          <tr>
+            <th class="dynamic-report__report-header">МПА2</th>
+            <th class="dynamic-report__report-header">МПА3</th>
+            <th class="dynamic-report__report-header">МПА4</th>
+            <th class="dynamic-report__report-header">К10В1</th>
+            <th class="dynamic-report__report-header">К265</th>
+            <th class="dynamic-report__report-header">Котел Утил. №1</th>
+            <th class="dynamic-report__report-header">Котел Утил. №2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dayData of reportData">
+            <td class="dynamic-report__report-cell">{{ dayData.day }}</td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DE093">
+            </td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD972">
+            </td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD973">
+            </td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD576">
+            </td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD569">
+            </td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD923">
+            </td>
+            <td class="dynamic-report__report-cell">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD924">
+            </td>
+          </tr>
+          <tr *ngIf="reportData.length === 0">
+            <td colspan="8" style="text-align:center;">Нет данных за выбранный месяц.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="dynamic-report__btn-save">
+        <button class="dynamic-report__btn" (click)="saveChanges()">Сохранить изменения по коррекции</button>
+      </div>
+      <div *ngIf="errorMessage" class="dynamic-report__error-message">{{ errorMessage }}</div>
+    </div>
+  </div>
+</div>

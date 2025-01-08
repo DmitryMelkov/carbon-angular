@@ -11,6 +11,7 @@ import { EnergyResourcesCurrentComponent } from './pages/energy-resources/energy
 import { EnergyResourcesReportDayComponent } from './pages/energy-resources/energy-resources-report-day/energy-resources-report-day.component';
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
+import { EnergyResourcesReportMonthComponent } from './pages/energy-resources/energy-resources-report-month/energy-resources-report-month.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -35,6 +36,10 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'energy-resources/report-day',
         component: EnergyResourcesReportDayComponent,
+      },
+      {
+        path: 'energy-resources/report-month',
+        component: EnergyResourcesReportMonthComponent,
       },
     ]),
     provideHttpClient(),
