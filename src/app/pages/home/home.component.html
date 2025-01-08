@@ -39,7 +39,6 @@
           <app-graphic-vacuums-general [id]="object.id"></app-graphic-vacuums-general>
         </div>
       </mat-tab>
-      
 
       <mat-tab class="home__tab">
         <ng-template mat-tab-label>
@@ -52,12 +51,21 @@
             (onClick)="showEnergyResources()">
             Текущие параметры
           </app-control-button>
-          <!-- Вы можете добавить сюда другие кнопки для энергоресурсов, если необходимо -->
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'daily-report'"
+            (onClick)="showDailyReport()">
+            Суточный отчет
+          </app-control-button>
         </div>
 
         <!-- Отображение компонента EnergyResourcesCurrentComponent -->
         <div *ngIf="activeView === 'energy-resources'" class="home__content">
           <app-energy-resources-current></app-energy-resources-current>
+        </div>
+
+        <!-- Отображение компонента EnergyResourcesReportDayComponent -->
+        <div *ngIf="activeView === 'daily-report'" class="home__content">
+          <app-energy-resources-report-day></app-energy-resources-report-day>
         </div>
       </mat-tab>
     </mat-tab-group>

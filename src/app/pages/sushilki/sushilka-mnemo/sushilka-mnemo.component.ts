@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiData } from '../../../common/types/sushilki-data';
@@ -9,7 +15,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { LoaderComponent } from '../../../components/loader/loader.component';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 
@@ -21,7 +26,6 @@ import { SushilkiService } from '../../../common/services/sushilki/sushilka.serv
     MatTooltipModule,
     MnemoKranComponent,
     MatDialogModule,
-    LoaderComponent,
     ControlButtonComponent,
   ],
   standalone: true,
@@ -42,11 +46,6 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {}
 
-  /**
-   * Формирует динамический ключ для параметров сушилки на основе её номера.
-   * @param baseKey Основной ключ параметра (например, "Мощность горелки").
-   * @returns Динамический ключ (например, "Мощность горелки №1").
-   */
   getDynamicKey(baseKey: string): string {
     return `${baseKey} №${this.sushilkaNumber}`;
   }
@@ -74,12 +73,12 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Загружает данные для текущей сушилки с периодическим обновлением.
-   */
+  //Загружает данные для текущей сушилки с периодическим обновлением.
+
   loadData(): void {
     // Первичная загрузка данных
-    this.sushilkiService.getSushilkaData(this.id)
+    this.sushilkiService
+      .getSushilkaData(this.id)
       .pipe(
         takeUntil(this.destroy$),
         catchError((err) => {
@@ -115,9 +114,7 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     this.destroy$.complete(); // Завершаем поток
   }
 
-  /**
-   * Переключает режим всплывающих подсказок.
-   */
+  //Переключает режим всплывающих подсказок.
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
   }
@@ -141,9 +138,8 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   temperUhodyashihGazov: string =
     'Прибор: Термопара (320мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
 
-  /**
-   * Открывает модальное окно с документацией.
-   */
+
+  //Открывает модальное окно с документацией.
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
       minWidth: '300px',
@@ -151,7 +147,6 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
       data: { content: 'Это тестовый контент для документации объекта.' },
     });
   }
-
 
   private updateData(response: SushilkiData | null): void {
     if (response) {
@@ -161,14 +156,14 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
       const suffix = this.sushilkaNumber; // Получаем номер сушилки
       this.data = {
         temperatures: {
-          "Температура в топке": NaN,
-          "Температура в камере смешения": NaN,
-          "Температура уходящих газов": NaN,
+          'Температура в топке': NaN,
+          'Температура в камере смешения': NaN,
+          'Температура уходящих газов': NaN,
         },
         vacuums: {
-          "Разрежение в топке": '—',
-          "Разрежение в камере выгрузки": '—',
-          "Разрежение воздуха на разбавление": '—',
+          'Разрежение в топке': '—',
+          'Разрежение в камере выгрузки': '—',
+          'Разрежение воздуха на разбавление': '—',
         },
         gorelka: {
           [`Мощность горелки №${suffix}`]: NaN,
@@ -176,18 +171,14 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
           [`Задание температуры №${suffix}`]: NaN,
         } as { [key: string]: number }, // Приводим к типу с динамическими ключами
         im: {
-          "Индикация паротушения": false,
-          "Индикация сбрасыватель": false,
+          'Индикация паротушения': false,
+          'Индикация сбрасыватель': false,
         },
         lastUpdated: '—',
       } as SushilkiData; // Приводим объект к типу SushilkiData
     }
   }
 
-
-  /**
-   * Вызывается при завершении загрузки.
-   */
   onLoadingComplete(): void {
     this.loadData(); // Загружаем данные после завершения загрузки
   }

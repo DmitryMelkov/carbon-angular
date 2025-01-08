@@ -7,6 +7,7 @@ import { ControlButtonComponent } from '../../components/control-button/control-
 import { GraphicVacuumsGeneralComponent } from './graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicTempersGeneralComponent } from './graphic-tempers-general/graphic-tempers-general.component';
 import { EnergyResourcesCurrentComponent } from '../energy-resources/energy-resources-current/energy-resources-current.component';
+import { EnergyResourcesReportDayComponent } from '../energy-resources/energy-resources-report-day/energy-resources-report-day.component';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ import { EnergyResourcesCurrentComponent } from '../energy-resources/energy-reso
     GraphicVacuumsGeneralComponent,
     GraphicTempersGeneralComponent,
     EnergyResourcesCurrentComponent,
+    EnergyResourcesReportDayComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -35,7 +37,8 @@ export class HomeComponent {
     | 'mnemo'
     | 'graph-vacuums-general'
     | 'graph-tempers-general'
-    | 'energy-resources' = 'parameters'; // Добавьте новое состояние для энергоресурсов
+    | 'energy-resources'
+    | 'daily-report' = 'parameters'; // Добавьте новое состояние для суточного отчета
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -65,5 +68,11 @@ export class HomeComponent {
   showEnergyResources() {
     this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
     this.activeView = 'energy-resources'; // Устанавливаем активное представление
+  }
+
+  // Метод для отображения суточного отчета
+  showDailyReport() {
+    this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'daily-report'; // Устанавливаем активное представление
   }
 }

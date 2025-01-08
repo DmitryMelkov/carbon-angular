@@ -1,5 +1,4 @@
-// src/app/app.config.ts
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -10,6 +9,10 @@ import { SushilkaGraphVacuumsComponent } from './pages/sushilki/sushilka-graph-d
 import { SushilkaGraphTemperComponent } from './pages/sushilki/sushilka-graph-temper/sushilka-graph-temper.component';
 import { EnergyResourcesCurrentComponent } from './pages/energy-resources/energy-resources-current/energy-resources-current.component';
 import { EnergyResourcesReportDayComponent } from './pages/energy-resources/energy-resources-report-day/energy-resources-report-day.component';
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
+
+registerLocaleData(localeRu); // Зарегистрируйте локаль
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,6 +38,7 @@ export const appConfig: ApplicationConfig = {
       },
     ]),
     provideHttpClient(),
-    provideAnimations(), // Подключаем анимации правильно
+    provideAnimations(), // Подключаем анимации
+    { provide: LOCALE_ID, useValue: 'ru' }, // Установите локаль по умолчанию
   ],
 };

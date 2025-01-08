@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EnergyResourcesReportData } from '../../../common/types/energy-resources-report-day-data';
 import { EnergyResourcesReportDayService } from '../../../common/services/energy-resources/energy-resources-report-day.service';
 import { CommonModule } from '@angular/common';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-energy-resources-report-day',
   standalone: true,
   imports: [CommonModule, ControlButtonComponent, LoaderComponent],
   templateUrl: './energy-resources-report-day.component.html',
-  styleUrls: ['./energy-resources-report-day.component.scss']
+  styleUrls: ['./energy-resources-report-day.component.scss'],
 })
-export class EnergyResourcesReportDayComponent implements OnInit {
+export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportData[] = [];
-  selectedDate: string = new Date().toISOString().split('T')[0]; // Текущая дата
+  selectedDate: string = new Date().toISOString().split('T')[0];
   isLoading: boolean = false;
   errorMessage: string | null = null;
+  private subscription: Subscription | undefined; // Объявляем переменную для подписки
 
   constructor(private reportService: EnergyResourcesReportDayService) {}
 
@@ -28,23 +30,38 @@ export class EnergyResourcesReportDayComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.reportService.getReportData(this.selectedDate).subscribe({
-      next: (data) => {
-        this.reportData = this.formatDataByTimeSlot(data);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        this.errorMessage = 'Произошла ошибка при загрузке данных. Попробуйте позже.';
-        this.isLoading = false;
-      }
-    });
+    // Сохраняем подписку
+    this.subscription = this.reportService
+      .getReportData(this.selectedDate)
+      .subscribe({
+        next: (data) => {
+          this.reportData = this.formatDataByTimeSlot(data);
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          this.errorMessage =
+            'Произошла ошибка при загрузке данных. Попробуйте позже.';
+          this.isLoading = false;
+        },
+      });
   }
 
-  formatDataByTimeSlot(reportData: EnergyResourcesReportData[]): EnergyResourcesReportData[] {
+  ngOnDestroy(): void {
+    // Отписываемся от подписки, если она существует
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  formatDataByTimeSlot(
+    reportData: EnergyResourcesReportData[]
+  ): EnergyResourcesReportData[] {
     return reportData.sort((a, b) => {
-      const timeA = a.time === '24:00' ? [24, 0] : a.time.split(':').map(Number);
-      const timeB = b.time === '24:00' ? [24, 0] : b.time.split(':').map(Number);
+      const timeA =
+        a.time === '24:00' ? [24, 0] : a.time.split(':').map(Number);
+      const timeB =
+        b.time === '24:00' ? [24, 0] : b.time.split(':').map(Number);
       return timeA[0] - timeB[0] || timeA[1] - timeB[1];
     });
   }

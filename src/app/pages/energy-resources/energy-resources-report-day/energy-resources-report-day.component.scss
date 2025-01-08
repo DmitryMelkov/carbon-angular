@@ -110,8 +110,19 @@
   &__report-table th:first-child, &__report-table td:first-child {
     white-space: nowrap;
   }
+  &__error-message {
+    color: red;
+  }
+  &__total-cell {
+    font-weight: bold;
+    background-color: green;
+    color: white;
+    text-align: center;
+  }
+  &__total-value {
+    background-color: yellow;
+  }
 }
-
 /* Скрыть спиннеры во всех основных браузерах */
 input[type="number"] {
   -moz-appearance: textfield;
