@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportMonthData[] = [];
+  originalData: EnergyResourcesReportMonthData[] = [];
   selectedMonth: string = '';
   loading: boolean = false;
   errorMessage: string | null = null;
@@ -41,17 +42,21 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = null;
 
-    this.subscription = this.reportService.getReportDataMonth(this.selectedMonth).subscribe({
-      next: (data) => {
-        this.reportData = data;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        this.errorMessage = 'Произошла ошибка при загрузке данных. Попробуйте позже.';
-        this.loading = false;
-      },
-    });
+    this.subscription = this.reportService
+      .getReportDataMonth(this.selectedMonth)
+      .subscribe({
+        next: (data) => {
+          this.reportData = data;
+          this.originalData = JSON.parse(JSON.stringify(data)); // Сохраняем копию исходных данных
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          this.errorMessage =
+            'Произошла ошибка при загрузке данных. Попробуйте позже.';
+          this.loading = false;
+        },
+      });
   }
 
   ngOnDestroy(): void {
@@ -72,25 +77,64 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((password) => {
       if (password) {
-        this.reportService.correctReportData(modifications, password).subscribe({
-          next: () => {
-            this.loadDataForSelectedMonth();
-          },
-          error: (error) => {
-            console.error('Ошибка при сохранении изменений:', error);
-            alert('Пароль неверный или произошла ошибка при сохранении.');
-          },
-        });
+        this.reportService
+          .correctReportData(modifications, password)
+          .subscribe({
+            next: () => {
+              console.log('Изменения успешно сохранены.');
+              this.loadDataForSelectedMonth(); // Перезагружаем данные после успешного сохранения
+            },
+            error: (error) => {
+              console.error('Ошибка при сохранении изменений:', error);
+              alert('Пароль неверный или произошла ошибка при сохранении.');
+            },
+          });
+      } else {
+        console.warn('Пароль не был введен.');
       }
     });
   }
 
   collectModifiedData(): any[] {
     const modifications: any[] = [];
-    // Логика для сбора изменений из таблицы
-    this.reportData.forEach((dayData) => {
-      // Добавьте логику для проверки изменений
+
+    this.reportData.forEach((currentData) => {
+      const originalData = this.originalData.find(
+        (data) => data.day === currentData.day
+      );
+      if (originalData) {
+        ['DE093', 'DD972', 'DD973', 'DD576', 'DD569', 'DD923', 'DD924'].forEach(
+          (model) => {
+            const currentValue =
+              currentData[model as keyof EnergyResourcesReportMonthData];
+            const originalValue =
+              originalData[model as keyof EnergyResourcesReportMonthData];
+
+            // Проверка на изменения
+            if (currentValue !== originalValue) {
+              // Убедитесь, что currentValue не является NaN или пустой строкой
+              const valueToSave =
+                currentValue === '' ||
+                currentValue === null ||
+                isNaN(Number(currentValue))
+                  ? 0
+                  : Number(currentValue); // Преобразуем currentValue в число
+
+              modifications.push({
+                day: currentData.day,
+                model: model,
+                value: valueToSave,
+              });
+            }
+          }
+        );
+      } else {
+        console.warn(
+          `Оригинальные данные для дня ${currentData.day} не найдены.`
+        );
+      }
     });
+
     return modifications;
   }
 }
