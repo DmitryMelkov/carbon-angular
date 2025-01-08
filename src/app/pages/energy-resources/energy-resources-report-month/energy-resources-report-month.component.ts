@@ -7,11 +7,13 @@ import { EnergyResourcesNotChangeModalComponent } from './energy-resources-not-c
 import { EnergyResourcesPasswordModalComponent } from './energy-resources-password-modal/energy-resources-password-modal.component';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { LoaderComponent } from '../../../components/loader/loader.component';
+import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 
 @Component({
   selector: 'app-energy-resources-report-month',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoaderComponent, ControlButtonComponent],
   templateUrl: './energy-resources-report-month.component.html',
   styleUrls: ['./energy-resources-report-month.component.scss'],
 })
@@ -19,7 +21,7 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportMonthData[] = [];
   originalData: EnergyResourcesReportMonthData[] = [];
   selectedMonth: string = '';
-  loading: boolean = false;
+  isLoading: boolean = false;
   errorMessage: string | null = null;
   private subscription: Subscription | undefined;
 
@@ -39,7 +41,7 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   }
 
   loadDataForSelectedMonth(): void {
-    this.loading = true;
+    this.isLoading = true;
     this.errorMessage = null;
 
     this.subscription = this.reportService
@@ -48,13 +50,13 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.reportData = data;
           this.originalData = JSON.parse(JSON.stringify(data)); // Сохраняем копию исходных данных
-          this.loading = false;
+          this.isLoading = false;
         },
         error: (error) => {
           console.error('Ошибка при загрузке данных:', error);
           this.errorMessage =
             'Произошла ошибка при загрузке данных. Попробуйте позже.';
-          this.loading = false;
+          this.isLoading = false;
         },
       });
   }
@@ -136,5 +138,9 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
     });
 
     return modifications;
+  }
+
+  onLoadingComplete(): void {
+    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
   }
 }
