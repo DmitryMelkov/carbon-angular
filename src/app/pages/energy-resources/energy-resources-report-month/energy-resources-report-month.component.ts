@@ -23,6 +23,15 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   selectedMonth: string = '';
   isLoading: boolean = false;
   errorMessage: string | null = null;
+  totals: any = {
+    DE093: 0,
+    DD972: 0,
+    DD973: 0,
+    DD576: 0,
+    DD569: 0,
+    DD923: 0,
+    DD924: 0,
+  };
   private subscription: Subscription | undefined;
 
   constructor(
@@ -50,6 +59,7 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.reportData = data;
           this.originalData = JSON.parse(JSON.stringify(data)); // Сохраняем копию исходных данных
+          this.updateTotals(); // Добавьте этот вызов
           this.isLoading = false;
         },
         error: (error) => {
@@ -138,6 +148,27 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
     });
 
     return modifications;
+  }
+
+  updateTotals(): void {
+    this.totals = {
+      DE093: this.calculateTotal('DE093').toFixed(2),
+      DD972: this.calculateTotal('DD972').toFixed(2),
+      DD973: this.calculateTotal('DD973').toFixed(2),
+      DD576: this.calculateTotal('DD576').toFixed(2),
+      DD569: this.calculateTotal('DD569').toFixed(2),
+      DD923: this.calculateTotal('DD923').toFixed(2),
+      DD924: this.calculateTotal('DD924').toFixed(2),
+    };
+  }
+
+  private calculateTotal(model: string): number {
+    return this.reportData.reduce((sum, currentData) => {
+      const value = currentData[model as keyof EnergyResourcesReportMonthData];
+      // Проверяем, является ли значение числом
+      const numericValue = Number(value);
+      return sum + (isNaN(numericValue) ? 0 : numericValue);
+    }, 0);
   }
 
   onLoadingComplete(): void {

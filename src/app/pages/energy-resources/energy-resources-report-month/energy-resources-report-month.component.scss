@@ -145,6 +145,17 @@
     margin-top: 10px;
     margin-bottom: 10px;
   }
+  &__report-cell--total-name {
+    background-color: green;
+    color: white;
+  }
+  &__report-cell--total-name:hover,
+  &__report-cell--total-content:hover {
+    box-shadow: none;
+  }
+  &__report-cell--total-content {
+    background-color: yellow;
+  }
 }
 /* Скрыть спиннеры во всех основных браузерах */
 input[type="number"] {

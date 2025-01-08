@@ -39,29 +39,53 @@
           <tr *ngFor="let dayData of reportData">
             <td class="dynamic-report__report-cell">{{ dayData.day }}</td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DE093">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DE093"
+                (ngModelChange)="updateTotals()">
             </td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD972">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD972"
+                (ngModelChange)="updateTotals()">
             </td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD973">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD973"
+                (ngModelChange)="updateTotals()">
             </td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD576">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD576"
+                (ngModelChange)="updateTotals()">
             </td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD569">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD569"
+                (ngModelChange)="updateTotals()">
             </td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD923">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD923"
+                (ngModelChange)="updateTotals()">
             </td>
             <td class="dynamic-report__report-cell">
-              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD924">
+              <input class="dynamic-report__report-input" type="number" [(ngModel)]="dayData.DD924"
+                (ngModelChange)="updateTotals()">
             </td>
           </tr>
           <tr *ngIf="reportData.length === 0">
             <td colspan="8" style="text-align:center;">Нет данных за выбранный месяц.</td>
+          </tr>
+          <tr>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-name"><strong>Итого:</strong></td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DE093
+              }}</td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DD972
+              }}</td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DD973
+              }}</td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DD576
+              }}</td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DD569
+              }}</td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DD923
+              }}</td>
+            <td class="dynamic-report__report-cell dynamic-report__report-cell--total-content">{{ totals.DD924
+              }}</td>
           </tr>
         </tbody>
       </table>
