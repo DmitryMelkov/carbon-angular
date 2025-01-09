@@ -8,6 +8,7 @@ import { GraphicVacuumsGeneralComponent } from './graphic-vacuums-general/graphi
 import { GraphicTempersGeneralComponent } from './graphic-tempers-general/graphic-tempers-general.component';
 import { EnergyResourcesCurrentComponent } from '../energy-resources/energy-resources-current/energy-resources-current.component';
 import { EnergyResourcesReportDayComponent } from '../energy-resources/energy-resources-report-day/energy-resources-report-day.component';
+import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-resources-report-month/energy-resources-report-month.component';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ import { EnergyResourcesReportDayComponent } from '../energy-resources/energy-re
     GraphicTempersGeneralComponent,
     EnergyResourcesCurrentComponent,
     EnergyResourcesReportDayComponent,
+    EnergyResourcesReportMonthComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -38,7 +40,8 @@ export class HomeComponent {
     | 'graph-vacuums-general'
     | 'graph-tempers-general'
     | 'energy-resources'
-    | 'daily-report' = 'parameters'; // Добавьте новое состояние для суточного отчета
+    | 'daily-report'
+    | 'monthly-report' = 'parameters'; // Добавьте новое состояние для месячного отчета
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -74,5 +77,11 @@ export class HomeComponent {
   showDailyReport() {
     this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
     this.activeView = 'daily-report'; // Устанавливаем активное представление
+  }
+
+  // Метод для отображения месячного отчета
+  showMonthlyReport() {
+    this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'monthly-report'; // Устанавливаем активное представление
   }
 }

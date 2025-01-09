@@ -56,16 +56,23 @@
             (onClick)="showDailyReport()">
             Суточный отчет
           </app-control-button>
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'monthly-report'"
+            (onClick)="showMonthlyReport()">
+            Месячный отчет
+          </app-control-button>
         </div>
 
-        <!-- Отображение компонента EnergyResourcesCurrentComponent -->
         <div *ngIf="activeView === 'energy-resources'" class="home__content">
           <app-energy-resources-current></app-energy-resources-current>
         </div>
 
-        <!-- Отображение компонента EnergyResourcesReportDayComponent -->
         <div *ngIf="activeView === 'daily-report'" class="home__content">
           <app-energy-resources-report-day></app-energy-resources-report-day>
+        </div>
+
+        <div *ngIf="activeView === 'monthly-report'" class="home__content">
+          <app-energy-resources-report-month></app-energy-resources-report-month>
         </div>
       </mat-tab>
     </mat-tab-group>

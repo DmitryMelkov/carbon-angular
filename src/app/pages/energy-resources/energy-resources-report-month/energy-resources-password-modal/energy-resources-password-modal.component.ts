@@ -36,8 +36,6 @@ export class EnergyResourcesPasswordModalComponent {
   }
 
   private isPasswordValid(password: string): boolean {
-    // Здесь вы можете добавить свою логику проверки пароля.
-    // Например, сравнить с заранее известным паролем:
     const correctPassword = '123'; // Замените на ваш правильный пароль
     return password === correctPassword;
   }
