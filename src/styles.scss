@@ -2,6 +2,8 @@
 @use "../src/styles/mixins" as mixins;
 @use "../src/styles/variables" as vars;
 @use "../src/styles/fonts";
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 
 *,
 *::before,
@@ -10,7 +12,7 @@
 }
 
 body {
-  font-family: "Bitter", sans-serif;
+  font-family: "Bitter", sans-serif !important;
 }
 
 body::-webkit-scrollbar {
@@ -129,3 +131,6 @@ body {
   .mat-mdc-tab:active {
   background-color: vars.$lynx-white !important;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -3,10 +3,15 @@
     <div class="dynamic-report__title-content">
       <h1 class="dynamic-report__title title-reset">Отчёт по энергоресурсам к.10в1</h1>
       <div class="dynamic-report__date-range">
-        <div class="dynamic-report__date-label">Выберите месяц для просмотра архива отчета:</div>
         <div class="dynamic-report__date-div">
-          <input class="dynamic-report__date-input" type="month" [(ngModel)]="selectedMonth">
-          <app-control-button (click)="loadDataForSelectedMonth()">Принять</app-control-button>
+          <mat-form-field appearance="fill">
+            <mat-label>Выберите месяц</mat-label>
+            <input matInput [matDatepicker]="picker" [ngModel]="selectedMonth" (ngModelChange)="onMonthChange($event)"
+              type="month" readonly (keydown)="preventKeydown($event)"> <!-- Добавлено readonly и обработчик события -->
+            <mat-datepicker-toggle matSuffix [for]="picker" (click)="openDatepicker()"></mat-datepicker-toggle>
+            <mat-datepicker #picker [opened]="isDatepickerOpen"></mat-datepicker>
+          </mat-form-field>
+
         </div>
       </div>
     </div>

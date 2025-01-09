@@ -12,13 +12,14 @@ import { EnergyResourcesReportDayComponent } from './pages/energy-resources/ener
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import { EnergyResourcesReportMonthComponent } from './pages/energy-resources/energy-resources-report-month/energy-resources-report-month.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter([
-      { path: '', component: HomeComponent }, // Главная страница
+      { path: '', component: HomeComponent },
       { path: 'sushilka/:id/current', component: SushilkaComponent },
       { path: 'sushilka/:id/mnemo', component: SushilkaMnemoComponent },
       {
@@ -43,7 +44,9 @@ export const appConfig: ApplicationConfig = {
       },
     ]),
     provideHttpClient(),
-    provideAnimations(), // Подключаем анимации
-    { provide: LOCALE_ID, useValue: 'ru' }, // Установите локаль по умолчанию
+    provideAnimations(),
+    { provide: LOCALE_ID, useValue: 'ru' },
+    provideAnimationsAsync(),
   ],
 };
+
