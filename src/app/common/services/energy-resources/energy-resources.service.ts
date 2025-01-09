@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
 import { EnergyResourceData } from '../../types/energy-resources-data';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EnergyResourcesService {
-  private apiUrl = 'http://localhost:3002/api/uzliUchetaCarbon';
+  private apiUrl = `${environment.apiUrl}/api/uzliUchetaCarbon`;
 
   constructor(private http: HttpClient) {}
 

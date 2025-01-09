@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
 import { SushilkiData } from '../../types/sushilki-data';
+import { environment } from '../../../../environments/environment';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ export class SushilkiService {
   constructor(private http: HttpClient) {}
 
   getSushilkaData(id: string): Observable<SushilkiData> {
-    return this.http.get<SushilkiData>(`http://localhost:3002/api/${id}-data`).pipe(
+    return this.http.get<SushilkiData>(`${environment.apiUrl}/api/${id}-data`).pipe(
       catchError((error) => {
         console.error(`Ошибка при запросе данных для сушилки ${id}:`, error);
 

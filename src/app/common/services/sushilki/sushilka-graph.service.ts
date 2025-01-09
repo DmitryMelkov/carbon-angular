@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ChartOptions, Chart, ChartTypeRegistry } from 'chart.js';
 import { TemperatureData, VacuumsData } from '../../types/sushilki-data-graph';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class SushilkaDataService {
     sushilkaId: string,
     dataType: 'temperature' | 'vacuum'
   ): Promise<TemperatureData[] | VacuumsData[]> {
-    const url = `http://localhost:3002/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
+    const url = `${environment.apiUrl}/api/${sushilkaId}/data?start=${startTime.toISOString()}&end=${endTime.toISOString()}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -23,7 +24,7 @@ export class SushilkaDataService {
   }
 
   async getServerTime(): Promise<Date> {
-    const response = await fetch('http://localhost:3002/api/server-time');
+    const response = await fetch(`${environment.apiUrl}/api/server-time`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
