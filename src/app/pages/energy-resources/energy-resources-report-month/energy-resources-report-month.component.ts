@@ -31,7 +31,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportMonthData[] = [];
   originalData: EnergyResourcesReportMonthData[] = [];
-  selectedMonth: string = '';
+  selectedMonth: Date = new Date(); // Изменяем тип на Date
   isLoading: boolean = false;
   errorMessage: string | null = null;
   totals: any = {
@@ -44,7 +44,7 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
     DD924: 0,
   };
   private subscription: Subscription | undefined;
-  isDatepickerOpen: boolean = false; // Переменная для управления открытием datepicker
+  isDatepickerOpen: boolean = false;
 
   constructor(
     private reportService: EnergyResourcesReportMonthService,
@@ -57,47 +57,51 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   }
 
   setCurrentMonth(): void {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
-    this.selectedMonth = `${year}-${month}-01`; // Установите день на 1, так как это формат, который вы используете
+    this.selectedMonth = new Date();
+  }
+
+  // Функция для получения названия месяца
+  getMonthName(date: Date): string {
+    const monthNames = [
+      'январь',
+      'февраль',
+      'март',
+      'апрель',
+      'май',
+      'июнь',
+      'июль',
+      'август',
+      'сентябрь',
+      'октябрь',
+      'ноябрь',
+      'декабрь',
+    ];
+    return monthNames[date.getMonth()];
   }
 
   loadDataForSelectedMonth(): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    // Проверяем, что selectedMonth является строкой
-    if (typeof this.selectedMonth === 'string') {
-      const [year, month] = this.selectedMonth.split('-');
+    const year = this.selectedMonth.getFullYear();
+    const month = String(this.selectedMonth.getMonth() + 1).padStart(2, '0');
 
-      // Отправляем только год и месяц на сервер
-      this.subscription = this.reportService
-        .getReportDataMonth(`${year}-${month}`)
-        .subscribe({
-          next: (data) => {
-            this.reportData = data;
-            this.originalData = JSON.parse(JSON.stringify(data)); // Сохраняем копию исходных данных
-            this.updateTotals(); // Добавьте этот вызов
-            this.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Ошибка при загрузке данных:', error);
-            this.errorMessage =
-              'Произошла ошибка при загрузке данных. Попробуйте позже.';
-            this.isLoading = false;
-          },
-        });
-    } else {
-      console.error('Неверный формат selectedMonth:', this.selectedMonth);
-      this.isLoading = false;
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription = this.reportService
+      .getReportDataMonth(`${year}-${month}`)
+      .subscribe({
+        next: (data) => {
+          this.reportData = data;
+          this.originalData = JSON.parse(JSON.stringify(data));
+          this.updateTotals();
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          this.errorMessage =
+            'Произошла ошибка при загрузке данных. Попробуйте позже.';
+          this.isLoading = false;
+        },
+      });
   }
 
   saveChanges(): void {
@@ -117,7 +121,7 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
           .subscribe({
             next: () => {
               console.log('Изменения успешно сохранены.');
-              this.loadDataForSelectedMonth(); // Перезагружаем данные после успешного сохранения
+              this.loadDataForSelectedMonth();
             },
             error: (error) => {
               console.error('Ошибка при сохранении изменений:', error);
@@ -145,15 +149,13 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
             const originalValue =
               originalData[model as keyof EnergyResourcesReportMonthData];
 
-            // Проверка на изменения
             if (currentValue !== originalValue) {
-              // Убедитесь, что currentValue не является NaN или пустой строкой
               const valueToSave =
                 currentValue === '' ||
                 currentValue === null ||
                 isNaN(Number(currentValue))
                   ? 0
-                  : Number(currentValue); // Преобразуем currentValue в число
+                  : Number(currentValue);
 
               modifications.push({
                 day: currentData.day,
@@ -188,27 +190,29 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   private calculateTotal(model: string): number {
     return this.reportData.reduce((sum, currentData) => {
       const value = currentData[model as keyof EnergyResourcesReportMonthData];
-      // Проверяем, является ли значение числом
       const numericValue = Number(value);
       return sum + (isNaN(numericValue) ? 0 : numericValue);
     }, 0);
   }
 
   onMonthChange(event: Date): void {
-    // Проверяем, что event является объектом Date
     if (event instanceof Date) {
-      const year = event.getFullYear();
-      const month = String(event.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
-      this.selectedMonth = `${year}-${month}-01`; // Устанавливаем день на 1
-      this.loadDataForSelectedMonth(); // Загружаем данные для нового месяца
-      this.isDatepickerOpen = false; // Закрываем datepicker после выбора
+      this.selectedMonth = event; // Сохраняем объект Date
+      this.loadDataForSelectedMonth();
+      this.isDatepickerOpen = false;
     } else {
       console.error('Неверный формат месяца:', event);
     }
   }
 
   preventKeydown(event: KeyboardEvent): void {
-    event.preventDefault(); // Запрещаем ввод с клавиатуры
+    event.preventDefault();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   openDatepicker(): void {
@@ -216,6 +220,6 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   }
 
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false;
   }
 }
