@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <h3>Отчет за <span>{{ selectedMonth | date: 'MMMM y' }}</span></h3>
+    <h3 class="dynamic-report__table-header">Отчет за <span>{{ selectedMonth | date: 'MMMM y' }}</span></h3>
 
     <app-loader *ngIf="isLoading" [delay]="1000" [loadingText]="'Загрузка данных, пожалуйста подождите...'"
       (loadingComplete)="onLoadingComplete()"></app-loader>
