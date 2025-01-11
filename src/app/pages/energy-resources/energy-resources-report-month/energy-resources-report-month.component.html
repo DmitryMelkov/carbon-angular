@@ -4,15 +4,10 @@
       <h1 class="dynamic-report__title title-reset">Отчёт по энергоресурсам к.10в1</h1>
       <div class="dynamic-report__date-range">
         <div class="dynamic-report__date-div">
-          <mat-form-field appearance="fill">
-            <mat-label>Выберите месяц</mat-label>
-            <input matInput [matDatepicker]="picker" [ngModel]="selectedMonth" (ngModelChange)="onMonthChange($event)"
-              readonly (keydown)="preventKeydown($event)">
-            <mat-datepicker-toggle matSuffix [for]="picker" (click)="openDatepicker()"></mat-datepicker-toggle>
-            <mat-datepicker #picker [opened]="isDatepickerOpen"></mat-datepicker>
-          </mat-form-field>
+          <app-month-picker (monthChange)="onMonthChange($event)"></app-month-picker>
         </div>
       </div>
+
     </div>
 
     <h3 class="dynamic-report__table-header">Отчет за <span>{{ selectedMonth | date: 'MMMM y' }}</span></h3>

@@ -1,0 +1,8 @@
+<mat-form-field appearance="fill">
+  <mat-label>Выберите месяц</mat-label>
+  <input matInput [matDatepicker]="picker" [(ngModel)]="selectedMonth"
+         (ngModelChange)="onMonthChange($event)"
+         readonly (keydown)="preventKeydown($event)">
+  <mat-datepicker-toggle matSuffix [for]="picker" (click)="openDatepicker()"></mat-datepicker-toggle>
+  <mat-datepicker #picker [opened]="isDatepickerOpen" (closed)="closeDatepicker()"></mat-datepicker>
+</mat-form-field>
