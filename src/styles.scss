@@ -2,8 +2,7 @@
 @use "../src/styles/mixins" as mixins;
 @use "../src/styles/variables" as vars;
 @use "../src/styles/fonts";
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
-
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 *,
 *::before,
@@ -11,8 +10,13 @@
   box-sizing: border-box;
 }
 
+html,
 body {
-  font-family: "Bitter", sans-serif !important;
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Bitter", sans-serif;
 }
 
 body::-webkit-scrollbar {
@@ -22,12 +26,12 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-  background-color: #dfdcdc;
+  background-color: vars.$coconut-white;
   /* цвет дорожки */
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: green;
+  background-color: vars.$hulk;
   /* цвет плашки */
   border-radius: 20px;
   /* закругления плашки */
@@ -64,18 +68,18 @@ body::-webkit-scrollbar-thumb {
 
   &.enabled-hover {
     &:hover {
-      background-color: green;
+      background-color: vars.$hulk;
 
       .mnemo__param-text {
-        color: white;
+        color: vars.$white;
       }
     }
 
     &:active {
-      box-shadow: 0 0 0 3px white, 0 0 0 6px green;
+      box-shadow: 0 0 0 3px vars.$white, 0 0 0 6px vars.$hulk;
 
       .mnemo__param-text {
-        color: white;
+        color: vars.$white;
       }
     }
   }
@@ -85,14 +89,6 @@ body::-webkit-scrollbar-thumb {
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: "Bitter", sans-serif;
-}
 
 .current-container,
 .mnemo-container {
@@ -132,5 +128,14 @@ body {
   background-color: vars.$lynx-white !important;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+//calendar
+.mat-calendar-body-selected {
+  background-color: vars.$hulk !important;
+}
+
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
+  background-color: rgba(vars.$hulk, 0.3) !important;
+}
