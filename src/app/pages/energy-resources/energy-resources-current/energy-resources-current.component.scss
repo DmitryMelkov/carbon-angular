@@ -1,3 +1,6 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
 .energy-resources-current {
   max-width: 900px;
 }
@@ -16,37 +19,28 @@
   text-align: left;
   border-collapse: collapse;
   border-spacing: 5px;
-  background-color: #e7eef4;
-  box-shadow: 0 0 5px 0 black;
+  background-color: vars.$coconut-white;
+  box-shadow: 0 0 5px 0 vars.$black;
   &__title {
     margin-bottom: 10px;
     text-align: center;
     font-family: "Bitter", sans-serif;
-    font-size: 18px;
-    line-height: 25px;
-    font-weight: 700;
-    color: green;
+    @include mixins.text-style(18px, 24px, 700, vars.$hulk);
   }
   &__tr {
     height: 30px;
-    border: 1px solid black;
+    border: 1px solid vars.$black;
   }
   &__th {
     text-align: center;
     font-family: "Bitter", sans-serif;
-    font-size: 18px;
-    line-height: 18px;
-    font-weight: 600;
-    color: black;
+    @include mixins.text-style(18px, 18px, 600, vars.$black);
   }
   &__td {
     letter-spacing: 1px;
     text-align: center;
     font-family: "Bitter", sans-serif;
-    font-size: 16px;
-    line-height: 16px;
-    font-weight: 500;
-    color: black;
+    @include mixins.text-style(16px, 16px, 500, vars.$black);
   }
   &__left {
     padding: 10px;
@@ -55,11 +49,11 @@
     max-width: 200px;
   }
   &__right {
-    color: green;
+    color: vars.$hulk;
     font-weight: 600;
   }
   &__th:not(:last-child),
   &__td:not(:last-child) {
-    border-right: 1px solid black;
+    border-right: 1px solid vars.$black;
   }
 }

@@ -18,10 +18,7 @@
   }
   &__title {
     margin-bottom: 15px;
-    font-size: 24px;
-    line-height: 32px;
-    font-weight: 600;
-    color: green;
+    @include mixins.text-style(24px, 32px, 600, vars.$hulk);
   }
   &__date-range {
     position: relative;
@@ -40,44 +37,47 @@
     height: 27px;
     width: 150px;
     text-align: center;
-    font-family: "Bitter", sans-serif;
     padding: 2px;
-    border: 1px solid green;
-    font-size: 14px;
-    background-color: #f9f9f9;
-    color: #333;
+    @include mixins.text-style(14px, 14px, 400, vars.$carbon);
+    font-family: "Bitter", sans-serif;
+
+    background-color: vars.$doctor;
+    border: 1px solid vars.$hulk;
     outline: none;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
   }
   &__date-input:hover {
-    border-color: green;
-    background-color: #d4d2d2bb;
+    border-color: vars.$hulk;
+    background-color: vars.$day-on-mercury;
     transition: background-color 0.3s ease-in-out;
   }
   &__date-input:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-    background-color: #ffffff;
-    color: #000;
+    border-color: vars.$dayflower;
+    box-shadow: 0 0 5px rgba(vars.$dayflower, 0.5);
+    background-color: vars.$white;
+    color: vars.$black;
   }
   &__date-input:disabled {
-    background-color: #e0e0e0;
-    color: #999;
-    border-color: #dcdcdc;
+    background-color: vars.$christmas-silver;
+    color: vars.$million-grey;
+    border-color: vars.$gainsboro;
   }
   &__date-input::-webkit-calendar-picker-indicator {
-    color: #3498db;
+    color: vars.$dayflower;
     cursor: pointer;
   }
   &__data-error {
     display: none;
-    color: red;
     text-align: center;
-    font-size: 24px;
+    @include mixins.text-style(24px, 24px, 400, vars.$red);
   }
   &__table {
     position: relative;
+  }
+  &__table-header {
+    margin-bottom: 5px;
+    @include mixins.text-style(18px, 18px, 600, vars.$black);
   }
   &__report-table {
     width: 100%;
@@ -85,42 +85,37 @@
     table-layout: fixed; /* Фиксированный макет таблицы */
   }
   &__report-header {
-    font-size: 14px;
-    line-height: 14px;
-    font-weight: 600;
-    color: white;
-    font-family: "Bitter", sans-serif;
     padding: 10px;
     text-align: center;
-    border: 1px solid #ddd;
-    background-color: green;
+    @include mixins.text-style(14px, 14px, 600, vars.$white);
+    font-family: "Bitter", sans-serif;
+    border: 1px solid vars.$steam;
+    background-color: vars.$hulk;
   }
   &__report-cell {
+    @include mixins.text-style(16px, 16px, 400, vars.$black);
     text-align: center;
-    font-size: 16px;
-    line-height: 16px;
-    font-weight: 400;
-    color: black;
   }
   &__report-table th,
   &__report-table td {
-    border: 1px solid #ddd;
+    border: 1px solid vars.$steam;
     padding: 2px;
   }
-  &__report-table th:first-child, &__report-table td:first-child {
+  &__report-table th:first-child,
+  &__report-table td:first-child {
     white-space: nowrap;
   }
   &__error-message {
-    color: red;
+    color: vars.$red;
   }
   &__total-cell {
     font-weight: bold;
-    background-color: green;
-    color: white;
+    background-color: vars.$hulk;
+    color: vars.$white;
     text-align: center;
   }
   &__total-value {
-    background-color: yellow;
+    background-color: vars.$yellow;
   }
 }
 /* Скрыть спиннеры во всех основных браузерах */
