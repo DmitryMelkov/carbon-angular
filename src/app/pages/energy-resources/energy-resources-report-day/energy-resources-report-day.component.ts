@@ -2,23 +2,23 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EnergyResourcesReportData } from '../../../common/types/energy-resources-report-day-data';
 import { EnergyResourcesReportDayService } from '../../../common/services/energy-resources/energy-resources-report-day.service';
 import { CommonModule } from '@angular/common';
-import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { Subscription } from 'rxjs';
+import { MonthPickerComponent } from '../../../components/month-picker/month-picker.component';
 
 @Component({
   selector: 'app-energy-resources-report-day',
   standalone: true,
-  imports: [CommonModule, ControlButtonComponent, LoaderComponent],
+  imports: [CommonModule, LoaderComponent, MonthPickerComponent],
   templateUrl: './energy-resources-report-day.component.html',
   styleUrls: ['./energy-resources-report-day.component.scss'],
 })
 export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportData[] = [];
-  selectedDate: string = new Date().toISOString().split('T')[0];
+  selectedDate: Date = new Date(); // Тип Date
   isLoading: boolean = false;
   errorMessage: string | null = null;
-  private subscription: Subscription | undefined; // Объявляем переменную для подписки
+  private subscription: Subscription | undefined;
 
   constructor(private reportService: EnergyResourcesReportDayService) {}
 
@@ -30,9 +30,10 @@ export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.errorMessage = null;
 
-    // Сохраняем подписку
+    const dateString = this.selectedDate.toISOString().split('T')[0]; // Преобразуем в строку
+
     this.subscription = this.reportService
-      .getReportData(this.selectedDate)
+      .getReportData(dateString)
       .subscribe({
         next: (data) => {
           this.reportData = this.formatDataByTimeSlot(data);
@@ -48,7 +49,6 @@ export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Отписываемся от подписки, если она существует
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -90,12 +90,12 @@ export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
     return totals;
   }
 
-  onDateChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.selectedDate = input.value;
+  onDateChange(date: Date): void {
+    this.selectedDate = date; // Принимаем объект Date
+    this.loadDataForSelectedDate(); // Автоматически загружаем данные
   }
 
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false;
   }
 }

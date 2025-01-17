@@ -5,8 +5,11 @@
       <div class="dynamic-report__date-range">
         <div class="dynamic-report__date-label">Выберите дату для просмотра архива отчета:</div>
         <div class="dynamic-report__date-div">
-          <input class="dynamic-report__date-input" type="date" [value]="selectedDate" (change)="onDateChange($event)">
-          <app-control-button (click)="loadDataForSelectedDate()">Принять</app-control-button>
+          <!-- Используем компонент календаря -->
+          <app-month-picker
+            [selectedMonth]="selectedDate"
+            (monthChange)="onDateChange($event)"
+          ></app-month-picker>
         </div>
       </div>
     </div>
