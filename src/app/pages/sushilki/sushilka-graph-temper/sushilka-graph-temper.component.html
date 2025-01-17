@@ -2,6 +2,9 @@
   <div id="chartContainer" class="dynamic-graph">
     <div class="dynamic-graph__content">
       <canvas class="dynamic-graph__graph" #canvas id="{{sushilkaId}}-canvas"></canvas>
+      <div *ngIf="noDataMessage" class="dynamic-graph__graph-no-data">
+        {{ noDataMessage }}
+      </div>
     </div>
     <div class="dynamic-graph__btns">
       <app-control-button (click)="goBack()">

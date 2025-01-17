@@ -14,12 +14,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkaDataService } from '../../../common/services/sushilki/sushilka-graph.service';
 import { TemperatureData } from '../../../common/types/sushilki-data-graph';
+import { CommonModule } from '@angular/common';
 
 Chart.register(CrosshairPlugin);
 
 @Component({
   selector: 'app-sushilka-graph-temper',
-  imports: [ControlButtonComponent],
+  imports: [CommonModule, ControlButtonComponent],
   standalone: true,
   templateUrl: './sushilka-graph-temper.component.html',
   styleUrls: ['./sushilka-graph-temper.component.scss'],
@@ -32,15 +33,15 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
   private resetTimerId?: any;
-
   private currentTime: Date = new Date();
   private autoUpdateInterval: number = 5000; // 5 секунд
   private timeOffset: number = 0;
   linesVisible: boolean = true;
+  noDataMessage: string | null = null; // Переменная для сообщения
 
   constructor(
     private route: ActivatedRoute,
-    private dataService: SushilkaDataService // Используем новый сервис
+    private dataService: SushilkaDataService
   ) {}
 
   async ngOnInit() {
@@ -96,19 +97,37 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
         // Проверяем, является ли первый элемент типа TemperatureData
         if ('temperatures' in firstDataPoint) {
           const { labels, values1, values2, values3 } =
-            this.dataService.processTemperatureData(sushilkaData as TemperatureData[]);
-          this.updateChart(labels, values1, values2, values3);
+            this.dataService.processTemperatureData(
+              sushilkaData as TemperatureData[]
+            );
+
+          // Проверяем, есть ли данные для отображения
+          const hasData =
+            values1.some((v) => v !== null) ||
+            values2.some((v) => v !== null) ||
+            values3.some((v) => v !== null);
+
+          if (hasData) {
+            this.noDataMessage = null; // Скрываем сообщение
+            this.updateChart(labels, values1, values2, values3);
+          } else {
+            this.noDataMessage = 'Нет данных для отображения';
+            this.destroyChart(); // Уничтожаем график, если он был создан
+          }
         } else {
-          console.warn('Получены данные не температурного типа');
+          this.noDataMessage = 'Получены данные не температурного типа';
+          this.destroyChart();
         }
       } else {
-        console.warn('Нет данных для отображения');
+        this.noDataMessage = 'Нет данных для отображения';
+        this.destroyChart();
       }
     } catch (error) {
       console.error('Ошибка при получении данных:', error);
+      this.noDataMessage = 'Ошибка при загрузке данных';
+      this.destroyChart();
     }
   }
-
 
   private updateChart(
     labels: Date[],
@@ -116,25 +135,34 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
     values2: (number | null)[],
     values3: (number | null)[]
   ) {
-    if (this.chart) {
+    if (!this.chart) {
+      const chartOptions = this.dataService.getChartOptions('temperature');
+      const ctx = this.canvasRef.nativeElement.getContext('2d');
+      if (ctx) {
+        this.chart = this.dataService.createChart(
+          ctx,
+          labels,
+          values1,
+          values2,
+          values3,
+          chartOptions,
+          this.sushilkaId,
+          'temperature'
+        );
+      }
+    } else {
       this.chart.data.labels = labels;
       this.chart.data.datasets[0].data = values1;
       this.chart.data.datasets[1].data = values2;
       this.chart.data.datasets[2].data = values3;
       this.chart.update();
-    } else {
-      const chartOptions = this.dataService.getChartOptions('temperature'); // Указываем тип данных
-      const ctx = this.canvasRef.nativeElement.getContext('2d');
-      this.chart = this.dataService.createChart(
-        ctx!,
-        labels,
-        values1,
-        values2,
-        values3,
-        chartOptions,
-        this.sushilkaId,
-        'temperature' // Указываем тип данных
-      );
+    }
+  }
+
+  private destroyChart() {
+    if (this.chart) {
+      this.chart.destroy();
+      this.chart = null!;
     }
   }
 
