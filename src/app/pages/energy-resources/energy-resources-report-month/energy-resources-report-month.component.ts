@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { MonthPickerComponent } from '../../../components/month-picker/month-picker.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-energy-resources-report-month',
@@ -23,12 +24,20 @@ import { MonthPickerComponent } from '../../../components/month-picker/month-pic
   ],
   templateUrl: './energy-resources-report-month.component.html',
   styleUrls: ['./energy-resources-report-month.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })), // Начальное состояние
+      state('*', style({ opacity: 1 })), // Конечное состояние
+      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
+    ]),
+  ],
 })
 export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportMonthData[] = [];
   originalData: EnergyResourcesReportMonthData[] = [];
   selectedMonth: string = '';
   isLoading: boolean = false;
+  isDataLoaded: boolean = false; // Управление анимацией
   errorMessage: string | null = null;
   totals: any = {
     DE093: 0,
@@ -61,6 +70,7 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
   loadDataForSelectedMonth(): void {
     this.isLoading = true;
     this.errorMessage = null;
+    this.isDataLoaded = false; // Сбрасываем флаг перед загрузкой данных
 
     const [year, month] = this.selectedMonth.split('-');
 
@@ -72,12 +82,14 @@ export class EnergyResourcesReportMonthComponent implements OnInit, OnDestroy {
           this.originalData = JSON.parse(JSON.stringify(data)); // Сохраняем копию исходных данных
           this.updateTotals();
           this.isLoading = false;
+          this.isDataLoaded = true; // Включаем анимацию
         },
         error: (error) => {
           console.error('Ошибка при загрузке данных:', error);
           this.errorMessage =
             'Произошла ошибка при загрузке данных. Попробуйте позже.';
           this.isLoading = false;
+          this.isDataLoaded = true; // Включаем анимацию даже при ошибке
         },
       });
   }

@@ -7,13 +7,20 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
-import { switchMap, catchError, takeUntil } from 'rxjs/operators';
+import { switchMap, catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
 import { SushilkiData } from '../../../common/types/sushilki-data';
 import { SushilkaTableComponent } from '../../../components/sushilka-table/sushilka-table.component';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-sushilka',
@@ -26,6 +33,13 @@ import { SushilkiService } from '../../../common/services/sushilki/sushilka.serv
   ],
   templateUrl: './sushilka.component.html',
   styleUrls: ['./sushilka.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })), // Начальное состояние
+      state('*', style({ opacity: 1 })), // Конечное состояние
+      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
+    ]),
+  ],
 })
 export class SushilkaComponent implements OnInit, OnDestroy {
   @Input() id!: string; // ID сушилки
@@ -33,6 +47,7 @@ export class SushilkaComponent implements OnInit, OnDestroy {
 
   data: SushilkiData | null = null;
   isLoading: boolean = true; // Управление прелоудером
+  isDataLoaded: boolean = false; // Управление анимацией
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   constructor(
@@ -77,7 +92,8 @@ export class SushilkaComponent implements OnInit, OnDestroy {
           console.error('Ошибка при первичной загрузке данных:', error);
           this.isLoading = false;
           return of(null);
-        })
+        }),
+        delay(1000) 
       )
       .subscribe((response) => {
         this.updateData(response);
@@ -129,6 +145,7 @@ export class SushilkaComponent implements OnInit, OnDestroy {
         lastUpdated: '—',
       } as SushilkiData;
     }
+    this.isDataLoaded = true; // Данные загружены, включаем анимацию
   }
 
   onLoadingComplete(): void {

@@ -7,7 +7,6 @@
           <app-month-picker (monthChange)="onMonthChange($event)"></app-month-picker>
         </div>
       </div>
-
     </div>
 
     <h3 class="dynamic-report__table-header">Отчет за <span>{{ selectedMonth | date: 'MMMM y' }}</span></h3>
@@ -15,7 +14,7 @@
     <app-loader *ngIf="isLoading" [delay]="1000" [loadingText]="'Загрузка данных, пожалуйста подождите...'"
       (loadingComplete)="onLoadingComplete()"></app-loader>
 
-    <div class="dynamic-report__table" *ngIf="!isLoading">
+    <div class="dynamic-report__table" *ngIf="!isLoading" [@fadeIn]="isDataLoaded ? '*' : 'void'">
       <table class="dynamic-report__report-table" id="reportTable">
         <thead>
           <tr>

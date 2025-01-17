@@ -18,7 +18,7 @@
 
     <app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Загрузка данных, пожалуйста подождите...'" (loadingComplete)="onLoadingComplete()"></app-loader>
 
-    <div class="dynamic-report__table" *ngIf="!isLoading">
+    <div class="dynamic-report__table" *ngIf="!isLoading" [@fadeIn]="isDataLoaded ? '*' : 'void'">
       <table class="dynamic-report__report-table">
         <thead>
           <tr>

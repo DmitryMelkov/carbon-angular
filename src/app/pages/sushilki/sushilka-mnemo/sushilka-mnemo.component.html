@@ -1,4 +1,6 @@
-<div class="mnemo-container">
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'" (loadingComplete)="onLoadingComplete()"></app-loader>
+
+<div class="mnemo-container" *ngIf="!isLoading" [@fadeIn]="isImageLoaded ? '*' : 'void'">
   <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
 
   <div class="mnemo">
@@ -12,7 +14,7 @@
       </app-control-button>
     </div>
 
-    <img class="mnemo__img" src="/img/sushilka.jpg">
+    <img class="mnemo__img" src="/img/sushilka.jpg" (load)="onImageLoad()">
 
     <div class="mnemo__gif mnemo__gif-1" *ngIf="(data?.gorelka?.['Мощность горелки №1'] || 0) > 5">
       <img src="/img/fire-gif.gif" alt="img">

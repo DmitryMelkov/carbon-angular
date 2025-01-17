@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { Subscription } from 'rxjs';
 import { MonthPickerComponent } from '../../../components/month-picker/month-picker.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-energy-resources-report-day',
@@ -12,11 +13,19 @@ import { MonthPickerComponent } from '../../../components/month-picker/month-pic
   imports: [CommonModule, LoaderComponent, MonthPickerComponent],
   templateUrl: './energy-resources-report-day.component.html',
   styleUrls: ['./energy-resources-report-day.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })), // Начальное состояние
+      state('*', style({ opacity: 1 })), // Конечное состояние
+      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
+    ]),
+  ],
 })
 export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
   reportData: EnergyResourcesReportData[] = [];
   selectedDate: Date = new Date(); // Тип Date
   isLoading: boolean = false;
+  isDataLoaded: boolean = false; // Управление анимацией
   errorMessage: string | null = null;
   private subscription: Subscription | undefined;
 
@@ -29,6 +38,7 @@ export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
   loadDataForSelectedDate(): void {
     this.isLoading = true;
     this.errorMessage = null;
+    this.isDataLoaded = false; // Сбрасываем флаг перед загрузкой данных
 
     const dateString = this.selectedDate.toISOString().split('T')[0]; // Преобразуем в строку
 
@@ -38,12 +48,14 @@ export class EnergyResourcesReportDayComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.reportData = this.formatDataByTimeSlot(data);
           this.isLoading = false;
+          this.isDataLoaded = true; // Включаем анимацию
         },
         error: (error) => {
           console.error('Ошибка при загрузке данных:', error);
           this.errorMessage =
             'Произошла ошибка при загрузке данных. Попробуйте позже.';
           this.isLoading = false;
+          this.isDataLoaded = true; // Включаем анимацию даже при ошибке
         },
       });
   }

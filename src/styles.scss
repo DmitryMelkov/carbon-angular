@@ -89,7 +89,6 @@ body::-webkit-scrollbar-thumb {
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-
 .current-container,
 .mnemo-container {
   padding-left: 10px;
@@ -138,4 +137,13 @@ body::-webkit-scrollbar-thumb {
     .mat-calendar-body-comparison-identical
   ) {
   background-color: rgba(vars.$hulk, 0.3) !important;
+}
+
+//angular-material
+.mat-body,
+.mat-body-2,
+.mat-typography .mat-body,
+.mat-typography .mat-body-2,
+.mat-typography {
+  font-family:  "Bitter", sans-serif !important;
 }

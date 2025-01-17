@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiData } from '../../../common/types/sushilki-data';
 import { Subscription, switchMap, interval, Subject, of } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, delay } from 'rxjs/operators'; // Добавляем delay
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
@@ -17,6 +17,14 @@ import { DocumentationModalComponent } from './documentation-modal/documentation
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
+import { LoaderComponent } from '../../../components/loader/loader.component';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-sushilka-mnemo',
@@ -27,10 +35,18 @@ import { SushilkiService } from '../../../common/services/sushilki/sushilka.serv
     MnemoKranComponent,
     MatDialogModule,
     ControlButtonComponent,
+    LoaderComponent,
   ],
   standalone: true,
   templateUrl: './sushilka-mnemo.component.html',
   styleUrls: ['./sushilka-mnemo.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })), // Начальное состояние
+      state('*', style({ opacity: 1 })), // Конечное состояние
+      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
+    ]),
+  ],
 })
 export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   data: SushilkiData | null = null;
@@ -39,6 +55,7 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   isLoading: boolean = true; // Управление прелоудером
   isTooltipsEnabled: boolean = true;
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
+  isImageLoaded: boolean = false;
 
   constructor(
     private sushilkiService: SushilkiService,
@@ -73,9 +90,9 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Загружает данные для текущей сушилки с периодическим обновлением.
-
   loadData(): void {
+    this.isLoading = true;
+
     // Первичная загрузка данных
     this.sushilkiService
       .getSushilkaData(this.id)
@@ -85,7 +102,8 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
           console.error('Ошибка первичной загрузки данных:', err);
           this.isLoading = false;
           return of(null);
-        })
+        }),
+        delay(1000) // Добавляем задержку в 2 секунды
       )
       .subscribe((response) => {
         this.updateData(response);
@@ -99,13 +117,11 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         catchError((err) => {
           console.error('Ошибка загрузки данных:', err);
-          this.isLoading = false;
           return of(null);
         })
       )
       .subscribe((response) => {
         this.updateData(response);
-        this.isLoading = false;
       });
   }
 
@@ -137,7 +153,6 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
 
   temperUhodyashihGazov: string =
     'Прибор: Термопара (320мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
-
 
   //Открывает модальное окно с документацией.
   openDocumentation(): void {
@@ -179,7 +194,11 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     }
   }
 
+  onImageLoad(): void {
+    this.isImageLoaded = true;
+  }
+
   onLoadingComplete(): void {
-    this.loadData(); // Загружаем данные после завершения загрузки
+    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
   }
 }

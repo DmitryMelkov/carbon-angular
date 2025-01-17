@@ -4,8 +4,15 @@ import { EnergyResourceData } from '../../../common/types/energy-resources-data'
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { interval, Subject, of } from 'rxjs';
-import { takeUntil, catchError, switchMap } from 'rxjs/operators';
+import { takeUntil, catchError, switchMap, delay } from 'rxjs/operators';
 import { LoaderComponent } from '../../../components/loader/loader.component';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-energy-resources-current',
@@ -13,10 +20,18 @@ import { LoaderComponent } from '../../../components/loader/loader.component';
   imports: [CommonModule, HeaderCurrentParamsComponent, LoaderComponent],
   templateUrl: './energy-resources-current.component.html',
   styleUrls: ['./energy-resources-current.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })), // Начальное состояние
+      state('*', style({ opacity: 1 })), // Конечное состояние
+      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
+    ]),
+  ],
 })
 export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   energyResources: Record<string, EnergyResourceData> = {};
   isLoading: boolean = true; // Флаг загрузки
+  isDataLoaded: boolean = false; // Управление анимацией
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   // Определяем порядок ключей
@@ -55,11 +70,13 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
           console.error('Ошибка при загрузке данных:', error);
           this.isLoading = false; // Убираем флаг загрузки
           return of({}); // Возвращаем пустой объект в случае ошибки
-        })
+        }),
+        delay(1000)
       )
       .subscribe((data) => {
         this.energyResources = data; // Сохраняем полученные данные
         this.isLoading = false; // Убираем флаг загрузки
+        this.isDataLoaded = true; // Включаем анимацию
 
         // Фильтруем данные на МПА и остальные
         this.mpaKeys = this.orderedKeys.filter(
@@ -70,7 +87,6 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
         );
       });
   }
-
 
   private startPeriodicDataLoading() {
     interval(10000) // Каждые 10 секунд
