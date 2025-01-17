@@ -145,5 +145,11 @@ body::-webkit-scrollbar-thumb {
 .mat-typography .mat-body,
 .mat-typography .mat-body-2,
 .mat-typography {
-  font-family:  "Bitter", sans-serif !important;
+  font-family: "Bitter", sans-serif !important;
+}
+
+//preloader
+.mat-mdc-progress-spinner .mdc-circular-progress__determinate-circle,
+.mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
+  stroke: vars.$hulk !important;
 }
