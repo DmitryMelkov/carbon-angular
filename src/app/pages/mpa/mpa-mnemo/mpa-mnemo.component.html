@@ -229,7 +229,8 @@
         </div>
         <div class="mnemo__param mnemo__param-val-p brd-transparent">
           <span class="mnemo__param-text nbl-p-val">
-
+            {{ data?.pressures?.[getDynamicKey('Давление низ ближний левый')] || '—' }}
+            кг/м2
           </span>
         </div>
       </div>
@@ -244,8 +245,10 @@
 
         </div>
         <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text nbp-p-val"> </span>
-          <span class="mnemo__param-naimenov">кг/м2</span>
+          <span class="mnemo__param-text nbp-p-val">
+            {{ data?.pressures?.[getDynamicKey('Давление низ ближний правый')] || '—' }}
+            кг/м2
+          </span>
         </div>
       </div>
     </div>
@@ -254,12 +257,16 @@
       <div class="mnemo__param-box-db">
         <div class="mnemo__param-descr mnemo__param-descr-right">ДБ</div>
         <div class="mnemo__param mnemo__param-val vrl-t brd-bottom-transparent">
-          <span class="mnemo__param-text db-t-val"> </span>
-          <span class="mnemo__param-naimenov"></span>
+          <span class="mnemo__param-text db-t-val">
+            {{ data?.temperatures?.[getDynamicKey('Температура дымовой боров')] || '—' }}
+            °C
+          </span>
         </div>
         <div class="mnemo__param mnemo__param-val-vozduh">
-          <span class="mnemo__param-text db-p-val"> </span>
-          <span class="mnemo__param-naimenov">кгс/м2</span>
+          <span class="mnemo__param-text db-p-val">
+            {{ data?.pressures?.[getDynamicKey('Разрежение дымовой боров')] || '—' }}
+            кг/м2
+          </span>
         </div>
       </div>
     </div>
@@ -267,8 +274,10 @@
     <div class="mnemo__param-box ks">
       <div class="mnemo__param-descr mnemo__param-descr-right">КС</div>
       <div class="mnemo__param mnemo__param-val vrl-t">
-        <span class="mnemo__param-text ks-t-val"> </span>
-        <span class="mnemo__param-naimenov"></span>
+        <span class="mnemo__param-text ks-t-val">
+          {{ data?.temperatures?.[getDynamicKey('Температура камера сгорания')] || '—' }}
+          °C
+        </span>
       </div>
     </div>
 
@@ -278,8 +287,10 @@
           Воздух левый
         </div>
         <div class="mnemo__param mnemo__param-val-vozduh">
-          <span class="mnemo__param-text vozduh-left-val"> </span>
-          <span class="mnemo__param-naimenov">кгс/м2</span>
+          <span class="mnemo__param-text vozduh-left-val">
+            {{ data?.pressures?.[getDynamicKey('Давление воздух левый')] || '—' }}
+            кг/м2
+          </span>
         </div>
       </div>
     </div>
@@ -290,8 +301,10 @@
           Воздух правый
         </div>
         <div class="mnemo__param mnemo__param-val-vozduh">
-          <span class="mnemo__param-text vozduh-right-val"> </span>
-          <span class="mnemo__param-naimenov">кгс/м2</span>
+          <span class="mnemo__param-text vozduh-right-val">
+            {{ data?.pressures?.[getDynamicKey('Давление воздух правый')] || '—' }}
+            кг/м2
+          </span>
         </div>
       </div>
     </div>

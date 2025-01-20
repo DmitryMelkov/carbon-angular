@@ -16,7 +16,7 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-  selector: 'app-documentation-modal',
+  selector: 'app-documentation-modal-sushilka',
   standalone: true,
   imports: [
     CommonModule,
