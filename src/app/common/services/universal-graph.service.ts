@@ -6,7 +6,31 @@ import 'chartjs-adapter-date-fns';
   providedIn: 'root',
 })
 export class UniversalGraphService {
+
+  private readonly defaultColors: string[] = [
+    '#FF6384', // Красный
+    '#36A2EB', // Синий
+    '#FFCE56', // Желтый
+    '#4BC0C0', // Бирюзовый
+    '#9966FF', // Фиолетовый
+    '#FF9F40', // Оранжевый
+    '#C9CBCF', // Серый
+    '#77DD77', // Светло-зеленый
+    '#FF6961', // Светло-красный
+    '#AEC6CF', // Светло-голубой
+    '#FDFD96', // Светло-желтый
+    '#B39EB5', // Светло-фиолетовый
+    '#FFB347', // Светло-оранжевый
+    '#CB99C9', // Розовый
+    '#836953', // Коричневый
+  ];
+
   constructor() {}
+
+   // Получить цвет по индексу
+   getColor(index: number): string {
+    return this.defaultColors[index % this.defaultColors.length];
+  }
 
   async getData(
     apiUrl: string,
@@ -186,17 +210,17 @@ export class UniversalGraphService {
   createDatasets(
     parameterNames: string[],
     values: (number | null)[][],
-    colors: string[]
+    colors?: string[] // Делаем параметр colors опциональным
   ) {
     return parameterNames.map((name, index) => ({
       label: name,
       data: values[index],
-      borderColor: colors[index],
+      borderColor: colors ? colors[index] : this.getColor(index), // Используем переданные цвета или цвета по умолчанию
       fill: false,
-      pointRadius: 1, // Убираем точки
-      borderWidth: 2, // Толщина линии
+      pointRadius: 1,
+      borderWidth: 2,
       backgroundColor: 'transparent',
-      spanGaps: false, // Разрывы
+      spanGaps: false,
     }));
   }
 }

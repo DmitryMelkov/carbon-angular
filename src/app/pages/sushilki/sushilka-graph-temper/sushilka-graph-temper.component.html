@@ -1,24 +1,11 @@
-<div class="dynamic-graph__container">
-  <div id="chartContainer" class="dynamic-graph">
-    <div class="dynamic-graph__content">
-      <canvas class="dynamic-graph__graph" #canvas id="{{sushilkaId}}-canvas"></canvas>
-      <div *ngIf="noDataMessage" class="dynamic-graph__graph-no-data">
-        {{ noDataMessage }}
-      </div>
-    </div>
-    <div class="dynamic-graph__btns">
-      <app-control-button (click)="goBack()">
-        Назад
-      </app-control-button>
-      <app-control-button (click)="goForward()">
-        Вперёд
-      </app-control-button>
-      <app-control-button (click)="resetToCurrentTime()">
-        Вернуться к текущим значениям
-      </app-control-button>
-      <app-control-button (click)="toggleLinesVisibility()">
-        Скрыть/Показать все
-      </app-control-button>
-    </div>
-  </div>
-</div>
+
+<app-universal-graph
+  [apiUrl]="'http://localhost:3002/api/' + sushilkaId + '/data'"
+  [parameterNames]="['Температура в топке', 'Температура в камере смешения', 'Температура уходящих газов']"
+  [dataKey]="'temperatures'"
+  [yAxisTitle]="'Температуры, градусы'"
+  [title]="'Сушилка №' + sushilkaNumber + ': Температура'"
+  [yAxisRange]="{ min: 0, max: 600 }"
+  [sushilkaId]="sushilkaId"
+  [timeRange]="timeRange"
+></app-universal-graph>

@@ -1,37 +1,10 @@
-<div class="dynamic-graph__container">
-  <div id="chartContainer" class="dynamic-graph">
-    <div class="dynamic-graph__content">
-      <canvas class="dynamic-graph__graph" #canvas id="{{sushilkaId}}-canvas"></canvas>
-      <div *ngIf="noDataMessage" class="dynamic-graph__graph-no-data">
-        {{ noDataMessage }}
-      </div>
-    </div>
-    <div class="dynamic-graph__btns">
-      <app-control-button (click)="goBack()">
-        Назад
-      </app-control-button>
-      <app-control-button (click)="goForward()">
-        Вперёд
-      </app-control-button>
-      <app-control-button (click)="resetToCurrentTime()">
-        Вернуться к текущим значениям
-      </app-control-button>
-      <app-control-button (click)="toggleLinesVisibility()">
-        Скрыть/Показать все
-      </app-control-button>
-    </div>
-  </div>
-</div>
-
-
 <app-universal-graph
-  [apiUrl]="'http://localhost:3002/api/sushilka1/data'"
+  [apiUrl]="'http://localhost:3002/api/' + sushilkaId + '/data'"
   [parameterNames]="['Разрежение в топке', 'Разрежение в камере выгрузки', 'Разрежение воздуха на разбавление']"
   [dataKey]="'vacuums'"
   [yAxisTitle]="'Разрежение, кгс/см²'"
-  [colors]="['red', 'purple', 'cyan']"
-  [title]="'Сушилка №1: Давление'"
+  [title]="'Сушилка №' + sushilkaNumber + ': Разрежение'"
   [yAxisRange]="{ min: -50, max: 500 }"
-  [sushilkaId]="'sushilka1'"
-  [timeRange]="30"
+  [sushilkaId]="sushilkaId"
+  [timeRange]="timeRange"
 ></app-universal-graph>

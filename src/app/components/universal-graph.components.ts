@@ -5,6 +5,8 @@ import {
   ViewChild,
   ElementRef,
   Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -88,7 +90,7 @@ import { UniversalGraphService } from '../common/services/universal-graph.servic
     `,
   ],
 })
-export class UniversalGraphComponent implements OnInit, OnDestroy {
+export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('canvas', { static: true })
   canvasRef!: ElementRef<HTMLCanvasElement>;
 
@@ -96,11 +98,10 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   @Input() parameterNames!: string[];
   @Input() dataKey!: string;
   @Input() yAxisTitle!: string;
-  @Input() colors!: string[];
   @Input() title!: string;
   @Input() yAxisRange!: { min: number; max: number };
   @Input() sushilkaId!: string;
-  @Input() timeRange: number = 30;
+  @Input() timeRange: number = 10; // По умолчанию 10 минут
 
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
@@ -116,6 +117,12 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     await this.loadData();
     this.startAutoUpdate();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['timeRange']) {
+      this.loadData(); // Перезагружаем данные при изменении timeRange
+    }
   }
 
   ngOnDestroy() {
@@ -160,7 +167,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
 
     if (!this.chart) {
       const chartOptions = this.graphService.getChartOptions(this.yAxisTitle, this.title);
-      const datasets = this.graphService.createDatasets(this.parameterNames, values, this.colors);
+      const datasets = this.graphService.createDatasets(this.parameterNames, values);
 
       this.chart = new Chart(ctx, {
         type: 'line',
