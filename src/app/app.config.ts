@@ -16,6 +16,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { EnergyResourcesGraphPressureComponent } from './pages/energy-resources/energy-resources-graph-pressure/energy-resources-graph-pressure.component';
 import { MpaComponent } from './pages/mpa/mpa-current/mpa.component';
 import { MpaMnemoComponent } from './pages/mpa/mpa-mnemo/mpa-mnemo.component';
+import { EnergyResourcesGraphConsumptionComponent } from './pages/energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -48,6 +49,10 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'energy-resources/graph-pressure',
         component: EnergyResourcesGraphPressureComponent,
+      },
+      {
+        path: 'energy-resources/graph-consumption',
+        component: EnergyResourcesGraphConsumptionComponent,
       },
       {
         path: 'mpa/:id/current',

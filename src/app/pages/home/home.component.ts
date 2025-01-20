@@ -9,6 +9,8 @@ import { GraphicTempersGeneralComponent } from './graphic-tempers-general/graphi
 import { EnergyResourcesCurrentComponent } from '../energy-resources/energy-resources-current/energy-resources-current.component';
 import { EnergyResourcesReportDayComponent } from '../energy-resources/energy-resources-report-day/energy-resources-report-day.component';
 import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-resources-report-month/energy-resources-report-month.component';
+import { EnergyResourcesGraphPressureComponent } from '../energy-resources/energy-resources-graph-pressure/energy-resources-graph-pressure.component';
+import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +26,8 @@ import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-
     EnergyResourcesCurrentComponent,
     EnergyResourcesReportDayComponent,
     EnergyResourcesReportMonthComponent,
+    EnergyResourcesGraphPressureComponent,
+    EnergyResourcesGraphConsumptionComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -41,7 +45,9 @@ export class HomeComponent {
     | 'graph-tempers-general'
     | 'energy-resources'
     | 'daily-report'
-    | 'monthly-report' = 'parameters'; // Добавьте новое состояние для месячного отчета
+    | 'monthly-report'
+    | 'energy-resources-graph-pressure'
+    | 'energy-resources-graph-consumption' = 'parameters'; // Добавляем новое состояние
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -83,5 +89,16 @@ export class HomeComponent {
   showMonthlyReport() {
     this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
     this.activeView = 'monthly-report'; // Устанавливаем активное представление
+  }
+
+  // Метод для отображения графиков давления в энергоресурсах
+  showEnergyResourcesGraphPressure() {
+    this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'energy-resources-graph-pressure'; // Устанавливаем активное представление
+  }
+
+  showEnergyResourcesGraphConsumption() {
+    this.selectedSushilkaId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'energy-resources-graph-consumption'; // Устанавливаем активное представление
   }
 }

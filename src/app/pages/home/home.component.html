@@ -61,6 +61,16 @@
             (onClick)="showMonthlyReport()">
             Месячный отчет
           </app-control-button>
+          <app-control-button class="home__button"
+            [isActive]="activeView === 'energy-resources-graph-pressure'"
+            (onClick)="showEnergyResourcesGraphPressure()">
+            Графики давления
+          </app-control-button>
+          <app-control-button class="home__button"
+          [isActive]="activeView === 'energy-resources-graph-consumption'"
+          (onClick)="showEnergyResourcesGraphConsumption()">
+          Графики расхода
+        </app-control-button>
         </div>
 
         <div *ngIf="activeView === 'energy-resources'" class="home__content">
@@ -73,6 +83,14 @@
 
         <div *ngIf="activeView === 'monthly-report'" class="home__content">
           <app-energy-resources-report-month></app-energy-resources-report-month>
+        </div>
+
+        <div *ngIf="activeView === 'energy-resources-graph-pressure'" class="home__content">
+          <app-energy-resources-graph-pressure></app-energy-resources-graph-pressure>
+        </div>
+
+        <div *ngIf="activeView === 'energy-resources-graph-consumption'" class="home__content">
+          <app-energy-resources-graph-consumption></app-energy-resources-graph-consumption>
         </div>
       </mat-tab>
     </mat-tab-group>
