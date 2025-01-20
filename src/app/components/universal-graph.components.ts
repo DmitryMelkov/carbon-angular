@@ -92,25 +92,24 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true })
   canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  // Входные параметры
-  @Input() apiUrl!: string; // URL API
-  @Input() parameterNames!: string[]; // Названия параметров
-  @Input() dataKey!: string; // Ключ данных (например, 'temperatures' или 'vacuums')
-  @Input() yAxisTitle!: string; // Название оси Y
-  @Input() colors!: string[]; // Цвета линий
-  @Input() title!: string; // Заголовок графика
-  @Input() yAxisRange!: { min: number; max: number }; // Диапазон оси Y
-  @Input() sushilkaId!: string; // Идентификатор сушилки
-  @Input() timeRange: number = 30; // Временной диапазон в минутах
+  @Input() apiUrl!: string;
+  @Input() parameterNames!: string[];
+  @Input() dataKey!: string;
+  @Input() yAxisTitle!: string;
+  @Input() colors!: string[];
+  @Input() title!: string;
+  @Input() yAxisRange!: { min: number; max: number };
+  @Input() sushilkaId!: string;
+  @Input() timeRange: number = 30;
 
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
   private resetTimerId?: any;
   private currentTime: Date = new Date();
-  private autoUpdateInterval: number = 5000; // 5 секунд
-  private timeOffset: number = 0; // Смещение времени
-  linesVisible: boolean = true; // Видимость линий
-  noDataMessage: string | null = null; // Сообщение об отсутствии данных
+  private autoUpdateInterval: number = 5000;
+  private timeOffset: number = 0;
+  linesVisible: boolean = true;
+  noDataMessage: string | null = null;
 
   constructor(private graphService: UniversalGraphService) {}
 
@@ -125,38 +124,21 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
     if (this.chart) this.chart.destroy();
   }
 
-  //Загружает данные и обновляет график.
-
   private async loadData() {
     try {
-      // Обновляем текущее время
       this.currentTime = new Date();
 
-      // Вычисляем временной диапазон
       const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-      const startTime = new Date(
-        endTime.getTime() - this.timeRange * 60 * 1000
-      );
+      const startTime = new Date(endTime.getTime() - this.timeRange * 60 * 1000);
 
-      // Загружаем данные
-      const data = await this.graphService.getData(
-        this.apiUrl,
-        startTime,
-        endTime
-      );
-      const { labels, values } = this.graphService.processData(
-        data,
-        this.parameterNames,
-        this.dataKey
-      );
+      const data = await this.graphService.getData(this.apiUrl, startTime, endTime);
+      const { labels, values } = this.graphService.processData(data, this.parameterNames, this.dataKey);
 
       if (values.some((dataset) => dataset.some((v) => v !== null))) {
         this.noDataMessage = null;
 
-        // Проверяем, выходят ли новые данные за пределы текущего диапазона
         const lastLabel = labels[labels.length - 1];
         if (lastLabel && lastLabel.getTime() > endTime.getTime()) {
-          // Смещаем график вперед
           this.timeOffset += lastLabel.getTime() - endTime.getTime();
         }
 
@@ -172,134 +154,21 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getChartOptions(): ChartOptions {
-    return {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-            unit: 'minute',
-            tooltipFormat: 'HH:mm',
-            displayFormats: {
-              minute: 'HH:mm',
-            },
-          },
-        },
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: this.yAxisTitle,
-          },
-        },
-      },
-      plugins: {
-        title: {
-          display: true,
-          text: this.title,
-          font: {
-            size: 16,
-            weight: 'bold',
-          },
-        },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          callbacks: {
-            label: (tooltipItem) => {
-              const label = tooltipItem.dataset.label || '';
-              const value = tooltipItem.raw;
-              return `${label}: ${value}`;
-            },
-          },
-        },
-        legend: {
-          position: 'right',
-          labels: {
-            generateLabels: (chart) => {
-              const originalLabels =
-                Chart.defaults.plugins.legend.labels.generateLabels(chart);
-              return originalLabels.map((label) => {
-                const datasetIndex = label.datasetIndex;
-
-                if (
-                  datasetIndex !== undefined &&
-                  chart.data.datasets[datasetIndex]
-                ) {
-                  const datasetData = chart.data.datasets[datasetIndex].data;
-                  const lastValue = datasetData[datasetData.length - 1];
-
-                  // Формируем текст в нужном порядке: значение / наименование
-                  const name = label.text; // Наименование параметра
-
-                  if (lastValue !== null) {
-                    label.text = `${lastValue} ${
-                      this.yAxisTitle.includes('градусы') ? '°C' : 'кгс/см2'
-                    } | ${name}`;
-                  } else {
-                    label.text = `(нет данных) | ${name}`;
-                  }
-                }
-                return label;
-              });
-            },
-          },
-          onClick: (event: any, legendItem) => {
-            this.handleLegendClick(event, legendItem, this.chart);
-          },
-        },
-      },
-      elements: {
-        point: {
-          radius: 0, // Убираем точки
-        },
-        line: {
-          borderWidth: 2, // Толщина линии
-        },
-      },
-      responsive: true,
-      maintainAspectRatio: false,
-    };
-  }
-
-  private handleLegendClick(
-    event: any,
-    legendItem: any,
-    chart: Chart<keyof ChartTypeRegistry>
-  ) {
-    if (event.native) {
-      event.native.stopPropagation();
-    }
-
-    const datasetIndex = legendItem.datasetIndex;
-    if (datasetIndex !== undefined) {
-      const dataset = chart.data.datasets[datasetIndex];
-      dataset.hidden = !dataset.hidden;
-      chart.update();
-    }
-  }
-
   private updateChart(labels: Date[], values: (number | null)[][]) {
     const ctx = this.canvasRef.nativeElement.getContext('2d');
     if (!ctx) return;
 
     if (!this.chart) {
+      const chartOptions = this.graphService.getChartOptions(this.yAxisTitle, this.title);
+      const datasets = this.graphService.createDatasets(this.parameterNames, values, this.colors);
+
       this.chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: labels,
-          datasets: this.parameterNames.map((name, index) => ({
-            label: name,
-            data: values[index],
-            borderColor: this.colors[index],
-            fill: false,
-            pointRadius: 1, // Убираем точки
-            borderWidth: 2, // Толщина линии
-            backgroundColor: 'transparent',
-            spanGaps: false, // Разрывы
-          })),
+          datasets: datasets,
         },
-        options: this.getChartOptions(),
+        options: chartOptions,
       });
     } else {
       this.chart.data.labels = labels;
@@ -310,32 +179,29 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Запускает автоматическое обновление данных.
   private startAutoUpdate() {
     this.intervalId = setInterval(() => {
       this.loadData();
-    }, this.autoUpdateInterval); // Обновление каждые 5 секунд
+    }, this.autoUpdateInterval);
   }
 
   goBack() {
-    this.timeOffset -= 15 * 60 * 1000; // Смещаем на 15 минут назад
+    this.timeOffset -= 15 * 60 * 1000;
     this.loadData();
-    this.resetToCurrentTimeAfterDelay(); // Сброс к текущему времени через 10 секунд
+    this.resetToCurrentTimeAfterDelay();
   }
 
   goForward() {
-    this.timeOffset += 15 * 60 * 1000; // Смещаем на 15 минут вперед
+    this.timeOffset += 15 * 60 * 1000;
     this.loadData();
-    this.resetToCurrentTimeAfterDelay(); // Сброс к текущему времени через 10 секунд
+    this.resetToCurrentTimeAfterDelay();
   }
 
-  //Сбрасывает график к текущему времени.
   resetToCurrentTime() {
     this.timeOffset = 0;
     this.loadData();
   }
 
-  //Переключает видимость всех линий на графике.
   toggleLinesVisibility() {
     this.linesVisible = !this.linesVisible;
     if (this.chart) {
@@ -346,13 +212,11 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Устанавливает таймер для сброса к текущему времени.
   private resetToCurrentTimeAfterDelay() {
     this.clearResetTimer();
-    this.resetTimerId = setTimeout(() => this.resetToCurrentTime(), 10000); // Сброс через 10 секунд
+    this.resetTimerId = setTimeout(() => this.resetToCurrentTime(), 10000);
   }
 
-  //Очищает таймер сброса.
   private clearResetTimer() {
     if (this.resetTimerId) {
       clearTimeout(this.resetTimerId);
@@ -360,7 +224,6 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Уничтожает график.
   private destroyChart() {
     if (this.chart) {
       this.chart.destroy();
