@@ -134,7 +134,7 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
   }
 
   // Подсказки для параметров
-  kameraSmeshenia: string =
+  vrlTemper: string =
     'Прибор: Термопара (1000мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
 
   topkaTemper: string =

@@ -45,7 +45,8 @@
       <div class="mnemo__param-box-vr">
         <div class="mnemo__param-descr mnemo__param-descr-left">ВРЛ</div>
         <div class="mnemo__param mnemo__param-val vrl-t">
-          <span class="mnemo__param-text vrl-t-val">
+          <span class="mnemo__param-text vrl-t-val" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="vrlTemper"
+          matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
             {{ data?.temperatures?.[getDynamicKey('Температура верх регенератора левый')] || '—' }}
             °C
           </span>

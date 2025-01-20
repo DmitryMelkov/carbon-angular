@@ -1,88 +1,87 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
 .mnemo {
   position: relative;
   width: 1316px;
   margin: 0 auto;
   margin-top: 10px;
-}
 
-.mnemo__img {
-  width: 1316px;
-}
+  &__img {
+    width: 1316px;
+  }
 
-.mnemo__param {
-  margin: 0;
-  position: absolute;
-  z-index: 2;
-  border: 1px solid green;
-}
+  &__gif {
+    position: absolute;
+    z-index: 1;
 
-.mnemo__param-val {
-  width: 55px;
-  background-color: rgb(218, 215, 215);
-  padding: 2px;
-  font-size: 16px;
-}
+    &-1 img {
+      width: 35px;
+    }
+  }
 
-.mnemo__param-text {
-  font-size: 13px;
-  line-height: 14px;
-  color: black;
-  font-weight: 600;
-}
+  &__param {
+    margin: 0;
+    position: absolute;
+    z-index: 2;
+    border: 1px solid vars.$hulk;
 
-.mnemo__param-naimenov {
-  font-size: 13px;
-  line-height: 14px;
-  color: black;
-  font-weight: 600;
-}
+    &-val {
+      width: 55px;
+      background-color: rgb(218, 215, 215);
+      padding: 2px;
+      font-size: 16px;
+    }
 
-.mnemo__param-descr {
-  position: absolute;
-  font-size: 14px;
-  line-height: 14px;
-  color: rgb(10, 59, 10);
-  font-weight: 600;
-  text-align: center;
-}
+    &-text {
+      @include mixins.text-style(13px, 14px, 600, vars.$black);
+    }
 
-.mnemo__param-descr-left {
-  width: 40px;
-  color: black;
-  background-color: #00ac92;
-  padding: 5px 0px;
-}
+    &-descr {
+      position: absolute;
+      @include mixins.text-style(14px, 14px, 600, rgb(10, 59, 10));
+      text-align: center;
 
-.mnemo__param-descr-right {
-  width: 40px;
-  color: black;
-  background-color: orange;
-  padding: 5px 0px;
-}
+      &-left {
+        width: 40px;
+        color: vars.$black;
+        background-color: vars.$hobgoblin;
+        padding: 5px 0px;
+      }
 
-.mnemo__param-descr-vozduh {
-  color: black;
-  background-color: orange;
-  padding: 3px;
-}
+      &-right {
+        width: 40px;
+        color: vars.$black;
+        background-color: vars.$orange;
+        padding: 5px 0px;
+      }
 
-.mnemo__param-descr-borov {
-  font-size: 12px;
-  width: 60px;
-  padding: 3px;
-  padding-left: 0;
-  padding-right: 0;
-  background-color: rgb(173, 173, 173);
-  color: black;
+      &-vozduh {
+        color: vars.$black;
+        background-color: vars.$orange;
+        padding: 3px;
+      }
+
+      &-borov {
+        font-size: 12px;
+        width: 60px;
+        padding: 3px;
+        padding-left: 0;
+        padding-right: 0;
+        background-color: rgb(173, 173, 173);
+        color: vars.$black;
+      }
+    }
+  }
 }
 
 .mnemo__gif {
   position: absolute;
   z-index: 1;
-}
 
-.mnemo__gif-1 img {
-  width: 35px;
+  &-1 img {
+    width: 35px;
+  }
 }
 
 .regenerator-text {
@@ -123,33 +122,8 @@
 
 .mnemo__param-val-vozduh {
   width: 100px;
-
   padding: 2px;
   background-color: rgb(168, 243, 168);
-}
-
-.borov-13-temp-clue {
-  width: 250px;
-  top: -68px;
-  left: -61px;
-}
-
-.borov-13-p-clue {
-  width: 250px;
-  top: -68px;
-  left: 0px;
-}
-
-.borov-14-temp-clue {
-  width: 250px;
-  top: -14px;
-  left: -61px;
-}
-
-.borov-14-p-clue {
-  width: 250px;
-  top: -14px;
-  left: 0px;
 }
 
 /* ---------------------------------- */
@@ -191,86 +165,60 @@
 }
 
 .vd {
-  position: absolute;
-  top: 7.5%;
-  left: 12.8%;
+  @include mixins.position(absolute, 7.5%, null, null, 12.8%);
 }
 
 .vb {
-  position: absolute;
-  top: 7.5%;
-  left: 35.4%;
+  @include mixins.position(absolute, 7.5%, null, null, 35.4%);
 }
 
 .sd {
-  position: absolute;
-  top: 32%;
-  left: 12.8%;
+  @include mixins.position(absolute, 32%, null, null, 12.8%);
+
 }
 
 .sb {
-  position: absolute;
-  top: 32%;
-  left: 29.3%;
+  @include mixins.position(absolute, 32%, null, null, 29.3%);
 }
 
 .nd {
-  position: absolute;
-  bottom: 29.6%;
-  left: 12.8%;
+  @include mixins.position(absolute, null, null, 29.6%, 12.8%);
 }
 
 .nb {
-  position: absolute;
-  bottom: 29.6%;
-  left: 29.3%;
+  @include mixins.position(absolute, null, null, 29.6%, 29.3%);
 }
 
 .dym-borov-text {
-  bottom: 39%;
-  right: 26%;
+  @include mixins.position(null, null, 26%, 39%, null);
 }
 
 .db {
-  position: absolute;
-  bottom: 7.1%;
-  right: 26%;
+  @include mixins.position(absolute, null, 26%, 7.1%, null);
 }
 
 .ks {
-  position: absolute;
-  bottom: 29.6%;
-  left: 7%;
+  @include mixins.position(absolute, null, null, 29.6%, 7%);
 }
 
 .vozduh-left {
-  position: absolute;
-  bottom: 19%;
-  left: 12.8%;
+  @include mixins.position(absolute, null, null, 19%, 12.8%);
 }
 
 .vozduh-right {
-  position: absolute;
-  bottom: 19%;
-  left: 34.56%;
+  @include mixins.position(absolute, null, null, 19%, 34.56%);
 }
 
 .p-vozduh-left {
-  position: absolute;
-  bottom: 53.4%;
-  left: 12.86%;
+  @include mixins.position(absolute, null, null, 53.4%, 12.86%);
 }
 
 .p-vozduh-right {
-  position: absolute;
-  bottom: 53.4%;
-  left: 29.3%;
+  @include mixins.position(absolute, null, null, 53.4%, 29.3%);
 }
 
 .zilindr {
-  position: absolute;
-  bottom: 30%;
-  right: 3%;
+  @include mixins.position(absolute, null, null, 30%, 3%);
 }
 
 .mnemo__param-descr-zilindr {
@@ -306,10 +254,13 @@
   }
 }
 
+::ng-deep .custom-tooltip {
+  white-space: pre-line; /* Поддержка переносов строк */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
 .table-mpa {
-  position: absolute;
-  right: 3%;
-  top: 10%;
+  @include mixins.position(absolute, 10%, 3%, null, null);
   z-index: 1;
 }
 
@@ -399,153 +350,6 @@
   background-color: green;
 }
 
-.vrl-t-clue {
-  top: -69px;
-  left: -76px;
-}
-
-.vrp-t-clue {
-  top: -69px;
-  left: -26px;
-}
-
-.vdl-t-clue {
-  top: -69px;
-  left: -46px;
-}
-
-.vdl-p-clue {
-  width: 200px;
-  top: -45px;
-  left: 35px;
-}
-
-.vdp-t-clue {
-  top: -13px;
-  left: -45px;
-}
-
-.vdp-p-clue {
-  width: 200px;
-  top: 11px;
-  left: 35px;
-}
-
-.vbl-t-clue {
-  width: 225px;
-  top: -69px;
-  left: -44px;
-}
-
-.vbp-t-clue {
-  top: -13px;
-  left: -44px;
-}
-
-.sdl-t-clue {
-  top: -67px;
-  left: -46px;
-}
-
-.sdl-p-clue {
-  width: 200px;
-  top: -44px;
-  left: 35px;
-}
-
-.sdp-t-clue {
-  top: -13px;
-  left: -46px;
-}
-
-.sdp-p-clue {
-  width: 200px;
-  top: 11px;
-  left: 35px;
-}
-
-.sbl-t-clue {
-  top: -67px;
-  left: -46px;
-}
-
-.sbl-p-clue {
-  width: 200px;
-  top: -44px;
-  left: 35px;
-}
-
-.sbp-t-clue {
-  top: -13px;
-  left: -46px;
-}
-
-.sbp-p-clue {
-  width: 200px;
-  top: 11px;
-  left: 35px;
-}
-
-.ndl-t-clue {
-  top: -67px;
-  left: -46px;
-}
-
-.ndp-t-clue {
-  top: -13px;
-  left: -46px;
-}
-
-.nbl-t-clue {
-  top: -67px;
-  left: -46px;
-}
-
-.nbl-p-clue {
-  width: 200px;
-  top: -44px;
-  left: 35px;
-}
-
-.nbp-t-clue {
-  top: -13px;
-  left: -46px;
-}
-
-.nbp-p-clue {
-  width: 200px;
-  top: 11px;
-  left: 35px;
-}
-
-.db-t-clue {
-  top: -67px;
-  left: -61px;
-}
-
-.db-p-clue {
-  width: 200px;
-  top: -44px;
-  left: -47px;
-}
-
-.ks-t-clue {
-  top: -67px;
-  left: -83px;
-}
-
-.vozduh-left-clue {
-  width: 200px;
-  top: -72px;
-  left: -47px;
-}
-
-.vozduh-right-clue {
-  width: 200px;
-  top: -72px;
-  left: -36px;
-}
-
 .brd-transparent {
   border-left: transparent;
 }
@@ -600,7 +404,6 @@
     padding: 5px 2px 5px 0px;
     height: 30px;
   }
-
 
   .table__th {
     font-size: 13px;
@@ -662,163 +465,5 @@
     position: absolute;
     bottom: 19%;
     left: 34.9%;
-  }
-
-  .mnemo__param-clue {
-    width: 197px
-  }
-
-  .mnemo__param-clue-div {
-    font-size: 12px;
-  }
-
-  .mnemo__param-clue-span {
-    font-size: 12px;
-  }
-
-  .vrl-t-clue {
-    top: -74px;
-    left: -65px;
-  }
-
-  .vrp-t-clue {
-    top: -74px;
-    left: -17px;
-  }
-
-  .vdl-t-clue {
-    top: -74px;
-    left: -47px;
-  }
-
-  .vdl-p-clue {
-    width: 175px;
-    top: -51px;
-    left: 22px;
-  }
-
-  .vdp-t-clue {
-    top: -28px;
-    left: -47px;
-  }
-
-  .vdp-p-clue {
-    width: 175px;
-    top: -5px;
-    left: 22px;
-  }
-
-  .vbl-t-clue {
-    top: -74px;
-    left: -47px;
-  }
-
-  .vbp-t-clue {
-    top: -28px;
-    left: -47px;
-  }
-
-  .sdl-t-clue {
-    top: -74px;
-    left: -47px;
-  }
-
-  .sdl-p-clue {
-    width: 175px;
-    top: -51px;
-    left: 22px;
-  }
-
-  .sdp-t-clue {
-    top: -28px;
-    left: -47px;
-  }
-
-  .sdp-p-clue {
-    width: 175px;
-    top: -5px;
-    left: 22px;
-  }
-
-  .sbl-t-clue {
-    top: -74px;
-    left: -47px;
-  }
-
-  .sbl-p-clue {
-    width: 175px;
-    top: -51px;
-    left: 22px;
-  }
-
-  .sbp-t-clue {
-    top: -28px;
-    left: -47px;
-  }
-
-  .sbp-p-clue {
-    width: 175px;
-    top: -5px;
-    left: 22px;
-  }
-
-  .ndl-t-clue {
-    top: -74px;
-    left: -47px;
-  }
-
-  .ndp-t-clue {
-    top: -28px;
-    left: -47px;
-  }
-
-  .nbl-t-clue {
-    top: -74px;
-    left: -48px;
-  }
-
-  .nbl-p-clue {
-    width: 175px;
-    top: -51px;
-    left: 22px;
-  }
-
-  .nbp-t-clue {
-    top: -28px;
-    left: -47px;
-  }
-
-  .nbp-p-clue {
-    width: 175px;
-    top: -5px;
-    left: 22px;
-  }
-
-  .db-t-clue {
-    top: -74px;
-    left: -61px;
-  }
-
-  .db-p-clue {
-    width: 175px;
-    top: -54px;
-    left: -47px;
-  }
-
-  .ks-t-clue {
-    top: -74px;
-    left: -76px;
-  }
-
-  .vozduh-left-clue {
-    width: 175px;
-    top: -78px;
-    left: -47px;
-  }
-
-  .vozduh-right-clue {
-    width: 175px;
-    top: -78px;
-    left: -45px;
   }
 }

@@ -1,7 +1,20 @@
 // Миксин для текстовых стилей
-@mixin text-style($font-size, $line-height, $font-weight, $color) {
+@mixin text-style($font-size: null, $line-height: null, $font-weight: null, $color: null) {
   font-size: $font-size;
   line-height: $line-height;
   font-weight: $font-weight;
   color: $color;
+}
+
+@mixin size($width: null, $height: null) {
+  width: $width;
+  height: $height;
+}
+
+@mixin position($position: null, $top: null, $right: null, $bottom: null, $left: null) {
+  position: $position;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
 }
