@@ -1,17 +1,12 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UniversalGraphComponent } from '../../../components/universal-graph.components';
 
 @Component({
   selector: 'app-sushilka-graph-temper',
-  imports: [CommonModule, UniversalGraphComponent],
   standalone: true,
+  imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './sushilka-graph-temper.component.html',
   styleUrls: ['./sushilka-graph-temper.component.scss'],
 })
@@ -21,14 +16,35 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
 
   sushilkaNumber: string = ''; // Номер сушилки
 
+  // Массивы для универсального компонента
+  apiUrls: string[] = [];
+  parameterNamesList: string[][] = [];
+  dataKeys: string[] = [];
+
   constructor(private route: ActivatedRoute) {}
 
   async ngOnInit() {
     // Если sushilkaId не передан через @Input, берем его из маршрута
-    this.sushilkaId = this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
+    this.sushilkaId =
+      this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
 
     // Извлекаем номер сушилки
     this.sushilkaNumber = this.sushilkaId.replace('sushilka', '');
+
+    // Формируем массивы для универсального компонента
+    this.apiUrls = [
+      `http://localhost:3002/api/${this.sushilkaId}/data`, // Первый API
+    ];
+
+    this.parameterNamesList = [
+      [
+        'Температура в топке',
+        'Температура в камере смешения',
+        'Температура уходящих газов',
+      ], // Параметры для первого API
+    ];
+
+    this.dataKeys = ['temperatures']; // Ключи для данных из API
   }
 
   ngOnDestroy() {

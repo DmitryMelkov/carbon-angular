@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UniversalGraphComponent } from '../../../components/universal-graph.components';
@@ -21,19 +16,36 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
 
   sushilkaNumber: string = ''; // Номер сушилки
 
+  // Массивы для универсального компонента
+  apiUrls: string[] = [];
+  parameterNamesList: string[][] = [];
+  dataKeys: string[] = [];
+
   constructor(private route: ActivatedRoute) {}
 
   async ngOnInit() {
     // Если sushilkaId не передан через @Input, берем его из маршрута
-    this.sushilkaId = this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
+    this.sushilkaId =
+      this.sushilkaId || this.route.snapshot.paramMap.get('id') || '';
 
     // Извлекаем номер сушилки
     this.sushilkaNumber = this.sushilkaId.replace('sushilka', '');
+
+    // Формируем массивы для универсального компонента
+    this.apiUrls = [`http://localhost:3002/api/${this.sushilkaId}/data`];
+
+    this.parameterNamesList = [
+      [
+        'Разрежение в топке',
+        'Разрежение в камере выгрузки',
+        'Разрежение воздуха на разбавление',
+      ], // Параметры для первого API
+    ];
+
+    this.dataKeys = ['vacuums']; // Ключи для данных из API
   }
 
   ngOnDestroy() {
     // Логика очистки, если необходима
   }
 }
-
-

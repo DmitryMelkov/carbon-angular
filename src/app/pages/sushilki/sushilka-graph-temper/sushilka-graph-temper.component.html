@@ -1,11 +1,10 @@
-
 <app-universal-graph
-  [apiUrl]="'http://localhost:3002/api/' + sushilkaId + '/data'"
-  [parameterNames]="['Температура в топке', 'Температура в камере смешения', 'Температура уходящих газов']"
-  [dataKey]="'temperatures'"
+  [apiUrls]="apiUrls"
+  [parameterNamesList]="parameterNamesList"
+  [dataKeys]="dataKeys"
   [yAxisTitle]="'Температуры, градусы'"
   [title]="'Сушилка №' + sushilkaNumber + ': Температура'"
   [yAxisRange]="{ min: 0, max: 600 }"
-  [sushilkaId]="sushilkaId"
+  [graphId]="sushilkaId"
   [timeRange]="timeRange"
 ></app-universal-graph>

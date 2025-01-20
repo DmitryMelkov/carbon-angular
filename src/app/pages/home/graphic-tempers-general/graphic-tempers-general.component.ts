@@ -4,10 +4,10 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
 
 @Component({
   selector: 'app-graphic-tempers-general',
+  templateUrl: './graphic-tempers-general.component.html',
+  styleUrls: ['./graphic-tempers-general.component.scss'],
   standalone: true,
   imports: [ControlButtonComponent, UniversalGraphComponent],
-  templateUrl: './graphic-tempers-general.component.html',
-  styleUrl: './graphic-tempers-general.component.scss'
 })
 export class GraphicTempersGeneralComponent {
   timeRange: number = 10; // Устанавливаем 10 минут по умолчанию
@@ -20,6 +20,32 @@ export class GraphicTempersGeneralComponent {
   // Номера сушилок
   sushilka1Number: string = this.sushilka1Id.replace('sushilka', '');
   sushilka2Number: string = this.sushilka2Id.replace('sushilka', '');
+
+  // Массивы для сушилки 1
+  sushilka1ApiUrls: string[] = [
+    `http://localhost:3002/api/${this.sushilka1Id}/data`, // Первый API
+  ];
+  sushilka1ParameterNamesList: string[][] = [
+    [
+      'Температура в топке',
+      'Температура в камере смешения',
+      'Температура уходящих газов',
+    ], // Параметры для первого API
+  ];
+  sushilka1DataKeys: string[] = ['temperatures', 'data']; // Ключи для данных из API
+
+  // Массивы для сушилки 2
+  sushilka2ApiUrls: string[] = [
+    `http://localhost:3002/api/${this.sushilka2Id}/data`, // Первый API
+  ];
+  sushilka2ParameterNamesList: string[][] = [
+    [
+      'Температура в топке',
+      'Температура в камере смешения',
+      'Температура уходящих газов',
+    ], // Параметры для первого API
+  ];
+  sushilka2DataKeys: string[] = ['temperatures', 'data']; // Ключи для данных из API
 
   // Установка временного диапазона
   setTimeRange(minutes: number) {

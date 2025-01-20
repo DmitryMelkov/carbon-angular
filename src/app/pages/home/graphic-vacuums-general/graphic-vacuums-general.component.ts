@@ -21,6 +21,32 @@ export class GraphicVacuumsGeneralComponent {
   sushilka1Number: string = this.sushilka1Id.replace('sushilka', '');
   sushilka2Number: string = this.sushilka2Id.replace('sushilka', '');
 
+  // Массивы для сушилки 1
+  sushilka1ApiUrls: string[] = [
+    `http://localhost:3002/api/${this.sushilka1Id}/data`, // Первый API
+  ];
+  sushilka1ParameterNamesList: string[][] = [
+    [
+      'Разрежение в топке',
+      'Разрежение в камере выгрузки',
+      'Разрежение воздуха на разбавление',
+    ], // Параметры для первого API
+  ];
+  sushilka1DataKeys: string[] = ['vacuums', 'data']; // Ключи для данных из API
+
+  // Массивы для сушилки 2
+  sushilka2ApiUrls: string[] = [
+    `http://localhost:3002/api/${this.sushilka2Id}/data`, // Первый API
+  ];
+  sushilka2ParameterNamesList: string[][] = [
+    [
+      'Разрежение в топке',
+      'Разрежение в камере выгрузки',
+      'Разрежение воздуха на разбавление',
+    ], // Параметры для первого API
+  ];
+  sushilka2DataKeys: string[] = ['vacuums', 'data']; // Ключи для данных из API
+
   // Установка временного диапазона
   setTimeRange(minutes: number) {
     this.timeRange = minutes;

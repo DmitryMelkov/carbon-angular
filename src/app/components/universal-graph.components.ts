@@ -25,7 +25,7 @@ import { UniversalGraphService } from '../common/services/universal-graph.servic
           <canvas
             class="dynamic-graph__graph"
             #canvas
-            id="{{ sushilkaId }}-canvas"
+            id="{{ graphId }}-canvas"
           ></canvas>
           <div *ngIf="noDataMessage" class="dynamic-graph__graph-no-data">
             {{ noDataMessage }}
@@ -94,13 +94,13 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('canvas', { static: true })
   canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  @Input() apiUrl!: string;
-  @Input() parameterNames!: string[];
-  @Input() dataKey!: string;
+  @Input() apiUrls!: string[];
+  @Input() parameterNamesList!: string[][];
+  @Input() dataKeys!: string[];
   @Input() yAxisTitle!: string;
   @Input() title!: string;
   @Input() yAxisRange!: { min: number; max: number };
-  @Input() sushilkaId!: string;
+  @Input() graphId!: string;
   @Input() timeRange: number = 10; // По умолчанию 10 минут
 
   private chart!: Chart<keyof ChartTypeRegistry>;
@@ -138,18 +138,29 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
       const startTime = new Date(endTime.getTime() - this.timeRange * 60 * 1000);
 
-      const data = await this.graphService.getData(this.apiUrl, startTime, endTime);
-      const { labels, values } = this.graphService.processData(data, this.parameterNames, this.dataKey);
+      const dataPromises = this.apiUrls.map((apiUrl, index) =>
+        this.graphService.getData(apiUrl, startTime, endTime)
+      );
 
-      if (values.some((dataset) => dataset.some((v) => v !== null))) {
+      const allData = await Promise.all(dataPromises);
+
+      const allLabels: Date[] = [];
+      const allValues: (number | null)[][] = [];
+
+      allData.forEach((data, index) => {
+        const { labels, values } = this.graphService.processData(
+          data,
+          this.parameterNamesList[index],
+          this.dataKeys[index]
+        );
+
+        allLabels.push(...labels);
+        allValues.push(...values);
+      });
+
+      if (allValues.some((dataset) => dataset.some((v) => v !== null))) {
         this.noDataMessage = null;
-
-        const lastLabel = labels[labels.length - 1];
-        if (lastLabel && lastLabel.getTime() > endTime.getTime()) {
-          this.timeOffset += lastLabel.getTime() - endTime.getTime();
-        }
-
-        this.updateChart(labels, values);
+        this.updateChart(allLabels, allValues);
       } else {
         this.noDataMessage = 'Нет данных для отображения';
         this.destroyChart();
@@ -166,8 +177,16 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
     if (!ctx) return;
 
     if (!this.chart) {
-      const chartOptions = this.graphService.getChartOptions(this.yAxisTitle, this.title);
-      const datasets = this.graphService.createDatasets(this.parameterNames, values);
+      const chartOptions = this.graphService.getChartOptions(
+        this.yAxisTitle,
+        this.title
+      );
+
+      // Создаем датасеты с использованием метода из сервиса
+      const datasets = this.graphService.createDatasets(
+        this.parameterNamesList.flat(), // Преобразуем массив массивов в один массив
+        values
+      );
 
       this.chart = new Chart(ctx, {
         type: 'line',
@@ -179,8 +198,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       });
     } else {
       this.chart.data.labels = labels;
-      this.parameterNames.forEach((_, index) => {
-        this.chart.data.datasets[index].data = values[index];
+      this.chart.data.datasets.forEach((dataset, index) => {
+        dataset.data = values[index];
       });
       this.chart.update();
     }

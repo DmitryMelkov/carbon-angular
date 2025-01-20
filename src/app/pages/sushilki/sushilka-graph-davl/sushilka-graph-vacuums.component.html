@@ -1,10 +1,10 @@
 <app-universal-graph
-  [apiUrl]="'http://localhost:3002/api/' + sushilkaId + '/data'"
-  [parameterNames]="['Разрежение в топке', 'Разрежение в камере выгрузки', 'Разрежение воздуха на разбавление']"
-  [dataKey]="'vacuums'"
+  [apiUrls]="apiUrls"
+  [parameterNamesList]="parameterNamesList"
+  [dataKeys]="dataKeys"
   [yAxisTitle]="'Разрежение, кгс/см²'"
   [title]="'Сушилка №' + sushilkaNumber + ': Разрежение'"
   [yAxisRange]="{ min: -50, max: 500 }"
-  [sushilkaId]="sushilkaId"
+  [graphId]="sushilkaId"
   [timeRange]="timeRange"
 ></app-universal-graph>

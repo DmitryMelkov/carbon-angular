@@ -14,13 +14,13 @@
     <!-- График для сушилки 1 -->
     <div class="graph-general__content">
       <app-universal-graph
-        [apiUrl]="'http://localhost:3002/api/' + sushilka1Id + '/data'"
-        [parameterNames]="['Температура в топке', 'Температура в камере смешения', 'Температура уходящих газов']"
-        [dataKey]="'temperatures'"
+        [apiUrls]="sushilka1ApiUrls"
+        [parameterNamesList]="sushilka1ParameterNamesList"
+        [dataKeys]="sushilka1DataKeys"
         [yAxisTitle]="'Температуры, градусы'"
         [title]="'Сушилка №' + sushilka1Number + ': Температура'"
         [yAxisRange]="{ min: 0, max: 600 }"
-        [sushilkaId]="sushilka1Id"
+        [graphId]="sushilka1Id"
         [timeRange]="timeRange"
       ></app-universal-graph>
     </div>
@@ -28,13 +28,13 @@
     <!-- График для сушилки 2 -->
     <div class="graph-general__content">
       <app-universal-graph
-        [apiUrl]="'http://localhost:3002/api/' + sushilka2Id + '/data'"
-        [parameterNames]="['Температура в топке', 'Температура в камере смешения', 'Температура уходящих газов']"
-        [dataKey]="'temperatures'"
+        [apiUrls]="sushilka2ApiUrls"
+        [parameterNamesList]="sushilka2ParameterNamesList"
+        [dataKeys]="sushilka2DataKeys"
         [yAxisTitle]="'Температуры, градусы'"
         [title]="'Сушилка №' + sushilka2Number + ': Температура'"
         [yAxisRange]="{ min: 0, max: 600 }"
-        [sushilkaId]="sushilka2Id"
+        [graphId]="sushilka2Id"
         [timeRange]="timeRange"
       ></app-universal-graph>
     </div>
