@@ -15,13 +15,14 @@ import { ControlButtonComponent } from '../../../components/control-button/contr
 import { SushilkaDataService } from '../../../common/services/sushilki/sushilka-graph.service';
 import { VacuumsData } from '../../../common/types/sushilki-data-graph';
 import { CommonModule } from '@angular/common';
+import { UniversalGraphComponent } from '../../../components/universal-graph.components';
 
 Chart.register(CrosshairPlugin);
 
 @Component({
   selector: 'app-sushilka-graph-vacuums',
   standalone: true,
-  imports: [CommonModule, ControlButtonComponent],
+  imports: [CommonModule, ControlButtonComponent, UniversalGraphComponent],
   templateUrl: './sushilka-graph-vacuums.component.html',
   styleUrls: ['./sushilka-graph-vacuums.component.scss'],
 })

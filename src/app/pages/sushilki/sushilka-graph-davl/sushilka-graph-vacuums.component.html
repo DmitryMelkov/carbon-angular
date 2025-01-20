@@ -22,3 +22,16 @@
     </div>
   </div>
 </div>
+
+
+<app-universal-graph
+  [apiUrl]="'http://localhost:3002/api/sushilka1/data'"
+  [parameterNames]="['Разрежение в топке', 'Разрежение в камере выгрузки', 'Разрежение воздуха на разбавление']"
+  [dataKey]="'vacuums'"
+  [yAxisTitle]="'Разрежение, кгс/см²'"
+  [colors]="['red', 'purple', 'cyan']"
+  [title]="'Сушилка №1: Давление'"
+  [yAxisRange]="{ min: -50, max: 500 }"
+  [sushilkaId]="'sushilka1'"
+  [timeRange]="30"
+></app-universal-graph>
