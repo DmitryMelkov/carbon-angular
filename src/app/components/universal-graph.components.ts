@@ -107,6 +107,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   private intervalId?: any;
   private resetTimerId?: any;
   private currentTime: Date = new Date();
+  private autoUpdateInterval: number = 5000; // 5 секунд
   private timeOffset: number = 0; // Смещение времени
   linesVisible: boolean = true; // Видимость линий
   noDataMessage: string | null = null; // Сообщение об отсутствии данных
@@ -128,11 +129,16 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
 
   private async loadData() {
     try {
+      // Обновляем текущее время
+      this.currentTime = new Date();
+
+      // Вычисляем временной диапазон
       const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
       const startTime = new Date(
         endTime.getTime() - this.timeRange * 60 * 1000
       );
 
+      // Загружаем данные
       const data = await this.graphService.getData(
         this.apiUrl,
         startTime,
@@ -146,6 +152,14 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
 
       if (values.some((dataset) => dataset.some((v) => v !== null))) {
         this.noDataMessage = null;
+
+        // Проверяем, выходят ли новые данные за пределы текущего диапазона
+        const lastLabel = labels[labels.length - 1];
+        if (lastLabel && lastLabel.getTime() > endTime.getTime()) {
+          // Смещаем график вперед
+          this.timeOffset += lastLabel.getTime() - endTime.getTime();
+        }
+
         this.updateChart(labels, values);
       } else {
         this.noDataMessage = 'Нет данных для отображения';
@@ -203,11 +217,15 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
           position: 'right',
           labels: {
             generateLabels: (chart) => {
-              const originalLabels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+              const originalLabels =
+                Chart.defaults.plugins.legend.labels.generateLabels(chart);
               return originalLabels.map((label) => {
                 const datasetIndex = label.datasetIndex;
 
-                if (datasetIndex !== undefined && chart.data.datasets[datasetIndex]) {
+                if (
+                  datasetIndex !== undefined &&
+                  chart.data.datasets[datasetIndex]
+                ) {
                   const datasetData = chart.data.datasets[datasetIndex].data;
                   const lastValue = datasetData[datasetData.length - 1];
 
@@ -215,7 +233,9 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
                   const name = label.text; // Наименование параметра
 
                   if (lastValue !== null) {
-                    label.text = `${lastValue} ${this.yAxisTitle.includes('градусы') ? '°C' : 'кгс/см2'} | ${name}`;
+                    label.text = `${lastValue} ${
+                      this.yAxisTitle.includes('градусы') ? '°C' : 'кгс/см2'
+                    } | ${name}`;
                   } else {
                     label.text = `(нет данных) | ${name}`;
                   }
@@ -242,7 +262,11 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
     };
   }
 
-  private handleLegendClick(event: any, legendItem: any, chart: Chart<keyof ChartTypeRegistry>) {
+  private handleLegendClick(
+    event: any,
+    legendItem: any,
+    chart: Chart<keyof ChartTypeRegistry>
+  ) {
     if (event.native) {
       event.native.stopPropagation();
     }
@@ -269,7 +293,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
             data: values[index],
             borderColor: this.colors[index],
             fill: false,
-            pointRadius: 0, // Убираем точки
+            pointRadius: 1, // Убираем точки
             borderWidth: 2, // Толщина линии
             backgroundColor: 'transparent',
             spanGaps: false, // Разрывы
@@ -287,36 +311,31 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   }
 
   //Запускает автоматическое обновление данных.
-
   private startAutoUpdate() {
-    this.intervalId = setInterval(() => this.loadData(), 5000); // Обновление каждые 5 секунд
+    this.intervalId = setInterval(() => {
+      this.loadData();
+    }, this.autoUpdateInterval); // Обновление каждые 5 секунд
   }
-
-  //Перемещает график назад на 15 минут.
 
   goBack() {
-    this.timeOffset -= 15 * 60 * 1000;
+    this.timeOffset -= 15 * 60 * 1000; // Смещаем на 15 минут назад
     this.loadData();
-    this.resetToCurrentTimeAfterDelay();
+    this.resetToCurrentTimeAfterDelay(); // Сброс к текущему времени через 10 секунд
   }
 
-  //Перемещает график вперед на 15 минут.
-
   goForward() {
-    this.timeOffset += 15 * 60 * 1000;
+    this.timeOffset += 15 * 60 * 1000; // Смещаем на 15 минут вперед
     this.loadData();
-    this.resetToCurrentTimeAfterDelay();
+    this.resetToCurrentTimeAfterDelay(); // Сброс к текущему времени через 10 секунд
   }
 
   //Сбрасывает график к текущему времени.
-
   resetToCurrentTime() {
     this.timeOffset = 0;
     this.loadData();
   }
 
   //Переключает видимость всех линий на графике.
-
   toggleLinesVisibility() {
     this.linesVisible = !this.linesVisible;
     if (this.chart) {
@@ -328,10 +347,9 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   }
 
   //Устанавливает таймер для сброса к текущему времени.
-
   private resetToCurrentTimeAfterDelay() {
     this.clearResetTimer();
-    this.resetTimerId = setTimeout(() => this.resetToCurrentTime(), 10000);
+    this.resetTimerId = setTimeout(() => this.resetToCurrentTime(), 10000); // Сброс через 10 секунд
   }
 
   //Очищает таймер сброса.
@@ -343,7 +361,6 @@ export class UniversalGraphComponent implements OnInit, OnDestroy {
   }
 
   //Уничтожает график.
-
   private destroyChart() {
     if (this.chart) {
       this.chart.destroy();
