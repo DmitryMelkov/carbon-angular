@@ -39,6 +39,6 @@ export class EnergyResourcesGraphConsumptionComponent {
   ]; // Ключи для данных из API
   yAxisTitle: string = 'Расход, тонн/ч';
   title: string = 'График расхода пара';
-  yAxisRange: { min: number; max: number } = { min: 0, max: 5 }; // Диапазон значений оси Y
-  timeRange: number = 10; // Временной диапазон по умолчанию (10 минут)
+  yAxisRange: { min: number; max: number } = { min: 0, max: 5 }; 
+  timeRange: number = 30;
 }

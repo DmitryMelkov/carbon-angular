@@ -101,7 +101,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @Input() title!: string;
   @Input() yAxisRange!: { min: number; max: number };
   @Input() graphId!: string;
-  @Input() timeRange: number = 10; // По умолчанию 10 минут
+  @Input() timeRange: number = 10;
+  @Input() animate: boolean = true;
 
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
@@ -179,12 +180,12 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.chart) {
       const chartOptions = this.graphService.getChartOptions(
         this.yAxisTitle,
-        this.title
+        this.title,
+        this.animate // Передаем параметр анимации
       );
 
-      // Создаем датасеты с использованием метода из сервиса
       const datasets = this.graphService.createDatasets(
-        this.parameterNamesList.flat(), // Преобразуем массив массивов в один массив
+        this.parameterNamesList.flat(),
         values
       );
 
@@ -201,7 +202,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       this.chart.data.datasets.forEach((dataset, index) => {
         dataset.data = values[index];
       });
-      this.chart.update();
+      this.chart.update(); // Обновляем график
     }
   }
 

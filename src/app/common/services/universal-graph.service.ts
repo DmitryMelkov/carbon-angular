@@ -97,8 +97,12 @@ export class UniversalGraphService {
   }
 
   // Возвращает настройки графика
-  getChartOptions(yAxisTitle: string, title: string): ChartOptions {
+  getChartOptions(yAxisTitle: string, title: string, animate: boolean = true): ChartOptions {
     return {
+      animation: animate ? {
+        duration: 1000, // Длительность анимации
+        easing: 'easeInOutQuad', // Тип анимации
+      } : false, // Отключаем анимацию, если animate = false
       scales: {
         x: {
           type: 'time',
@@ -154,8 +158,7 @@ export class UniversalGraphService {
                   const datasetData = chart.data.datasets[datasetIndex].data;
                   const lastValue = datasetData[datasetData.length - 1];
 
-                  // Формируем текст в нужном порядке: значение / наименование
-                  const name = label.text; // Наименование параметра
+                  const name = label.text;
 
                   if (lastValue !== null) {
                     label.text = `${lastValue} ${
@@ -170,17 +173,16 @@ export class UniversalGraphService {
             },
           },
           onClick: (event: any, legendItem, chart) => {
-            // Используем chart.chart для доступа к основному объекту графика
             this.handleLegendClick(event, legendItem, chart.chart);
           },
         },
       },
       elements: {
         point: {
-          radius: 0, // Убираем точки
+          radius: 0,
         },
         line: {
-          borderWidth: 2, // Толщина линии
+          borderWidth: 2,
         },
       },
       responsive: true,

@@ -40,6 +40,6 @@ export class EnergyResourcesGraphPressureComponent {
   ]; // Ключи для данных из API
   yAxisTitle: string = 'Давление, кгс/см²';
   title: string = 'График давления узлов учета';
-  yAxisRange: { min: number; max: number } = { min: 0, max: 500 }; // Диапазон значений оси Y
-  timeRange: number = 10; // Временной диапазон по умолчанию (10 минут)
+  yAxisRange: { min: number; max: number } = { min: 0, max: 500 };
+  timeRange: number = 30;
 }
