@@ -8,7 +8,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
+import { Chart, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { CommonModule } from '@angular/common';
 import { ControlButtonComponent } from './control-button/control-button.component';
@@ -137,7 +137,9 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       this.currentTime = new Date();
 
       const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-      const startTime = new Date(endTime.getTime() - this.timeRange * 60 * 1000);
+      const startTime = new Date(
+        endTime.getTime() - this.timeRange * 60 * 1000
+      );
 
       const dataPromises = this.apiUrls.map((apiUrl, index) =>
         this.graphService.getData(apiUrl, startTime, endTime)
@@ -181,7 +183,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       const chartOptions = this.graphService.getChartOptions(
         this.yAxisTitle,
         this.title,
-        this.animate // Передаем параметр анимации
+        this.animate
       );
 
       const datasets = this.graphService.createDatasets(
@@ -202,7 +204,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       this.chart.data.datasets.forEach((dataset, index) => {
         dataset.data = values[index];
       });
-      this.chart.update(); // Обновляем график
+      this.chart.update();
     }
   }
 
