@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UniversalGraphComponent } from '../../../components/universal-graph.components';
+import { environment } from '../../../../environments/environment'; // Импортируем environment
 
 @Component({
   selector: 'app-sushilka-graph-vacuums',
@@ -10,7 +11,7 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
   templateUrl: './sushilka-graph-vacuums.component.html',
   styleUrls: ['./sushilka-graph-vacuums.component.scss'],
 })
-export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
+export class SushilkaGraphVacuumsComponent implements OnInit {
   @Input() sushilkaId!: string;
   @Input() timeRange: number = 30;
 
@@ -32,7 +33,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     this.sushilkaNumber = this.sushilkaId.replace('sushilka', '');
 
     // Формируем массивы для универсального компонента
-    this.apiUrls = [`http://localhost:3002/api/${this.sushilkaId}/data`];
+    this.apiUrls = [`${environment.apiUrl}/api/${this.sushilkaId}/data`];
 
     this.parameterNamesList = [
       [
@@ -43,9 +44,5 @@ export class SushilkaGraphVacuumsComponent implements OnInit, OnDestroy {
     ];
 
     this.dataKeys = ['vacuums']; // Ключи для данных из API
-  }
-
-  ngOnDestroy() {
-    // Логика очистки, если необходима
   }
 }

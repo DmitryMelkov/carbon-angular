@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { UniversalGraphComponent } from '../../../components/universal-graph.components';
+import { environment } from '../../../../environments/environment';
+
 
 @Component({
   selector: 'app-graphic-vacuums-general',
@@ -23,7 +25,7 @@ export class GraphicVacuumsGeneralComponent {
 
   // Массивы для сушилки 1
   sushilka1ApiUrls: string[] = [
-    `http://localhost:3002/api/${this.sushilka1Id}/data`, // Первый API
+    `${environment.apiUrl}/api/${this.sushilka1Id}/data`,
   ];
   sushilka1ParameterNamesList: string[][] = [
     [
@@ -36,7 +38,7 @@ export class GraphicVacuumsGeneralComponent {
 
   // Массивы для сушилки 2
   sushilka2ApiUrls: string[] = [
-    `http://localhost:3002/api/${this.sushilka2Id}/data`, // Первый API
+    `${environment.apiUrl}/api/${this.sushilka2Id}/data`,
   ];
   sushilka2ParameterNamesList: string[][] = [
     [

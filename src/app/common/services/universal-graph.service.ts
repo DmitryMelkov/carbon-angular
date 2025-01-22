@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
+import crosshairPlugin from 'chartjs-plugin-crosshair';
 import 'chartjs-adapter-date-fns';
 
+Chart.register(crosshairPlugin);
 @Injectable({
   providedIn: 'root',
 })
 export class UniversalGraphService {
-
   private readonly defaultColors: string[] = [
     '#FF6384', // Красный
     '#36A2EB', // Синий
@@ -27,8 +28,8 @@ export class UniversalGraphService {
 
   constructor() {}
 
-   // Получить цвет по индексу
-   getColor(index: number): string {
+  // Получить цвет по индексу
+  getColor(index: number): string {
     return this.defaultColors[index % this.defaultColors.length];
   }
 
@@ -73,9 +74,12 @@ export class UniversalGraphService {
       if (previousTime) {
         const timeDiff = currentTime.getTime() - previousTime.getTime();
         const missingIntervals = Math.floor(timeDiff / (60 * 1000)); // Пропущенные минуты
-        if (timeDiff > 60 * 1000) { // Если пропуск больше 1 минуты
+        if (timeDiff > 60 * 1000) {
+          // Если пропуск больше 1 минуты
           for (let i = 1; i < missingIntervals; i++) {
-            const missingTime = new Date(previousTime.getTime() + i * 60 * 1000);
+            const missingTime = new Date(
+              previousTime.getTime() + i * 60 * 1000
+            );
             labels.push(missingTime);
             parameterNames.forEach((_, index) => {
               values[index].push(null); // Добавляем null для каждого параметра
@@ -97,8 +101,18 @@ export class UniversalGraphService {
   }
 
   // Возвращает настройки графика
-  getChartOptions(yAxisTitle: string, title: string): ChartOptions {
+  getChartOptions(
+    yAxisTitle: string,
+    title: string,
+    animate: boolean = true
+  ): ChartOptions {
     return {
+      animation: animate
+        ? {
+            duration: 1000,
+            easing: 'easeInOutQuad',
+          }
+        : false,
       scales: {
         x: {
           type: 'time',
@@ -119,6 +133,18 @@ export class UniversalGraphService {
         },
       },
       plugins: {
+        crosshair: {
+          line: {
+            color: 'green', // Цвет линии
+            width: 1, // Толщина линии
+          },
+          sync: {
+            enabled: false, // Отключаем синхронизацию между несколькими графиками
+          },
+          zoom: {
+            enabled: false, // Отключаем зум
+          },
+        },
         title: {
           display: true,
           text: title,
@@ -128,6 +154,7 @@ export class UniversalGraphService {
           },
         },
         tooltip: {
+          enabled: true,
           mode: 'index',
           intersect: false,
           callbacks: {
@@ -144,43 +171,43 @@ export class UniversalGraphService {
             generateLabels: (chart) => {
               const originalLabels =
                 Chart.defaults.plugins.legend.labels.generateLabels(chart);
-              return originalLabels.map((label: { datasetIndex?: number; text: string }) => {
-                const datasetIndex = label.datasetIndex;
+              return originalLabels.map(
+                (label: { datasetIndex?: number; text: string }) => {
+                  const datasetIndex = label.datasetIndex;
 
-                if (
-                  datasetIndex !== undefined &&
-                  chart.data.datasets[datasetIndex]
-                ) {
-                  const datasetData = chart.data.datasets[datasetIndex].data;
-                  const lastValue = datasetData[datasetData.length - 1];
+                  if (
+                    datasetIndex !== undefined &&
+                    chart.data.datasets[datasetIndex]
+                  ) {
+                    const datasetData = chart.data.datasets[datasetIndex].data;
+                    const lastValue = datasetData[datasetData.length - 1];
 
-                  // Формируем текст в нужном порядке: значение / наименование
-                  const name = label.text; // Наименование параметра
+                    const name = label.text;
 
-                  if (lastValue !== null) {
-                    label.text = `${lastValue} ${
-                      yAxisTitle.includes('градусы') ? '°C' : 'кгс/см2'
-                    } | ${name}`;
-                  } else {
-                    label.text = `(нет данных) | ${name}`;
+                    if (lastValue !== null) {
+                      label.text = `${lastValue} ${
+                        yAxisTitle.includes('градусы') ? '°C' : 'кгс/см2'
+                      } | ${name}`;
+                    } else {
+                      label.text = `(нет данных) | ${name}`;
+                    }
                   }
+                  return label;
                 }
-                return label;
-              });
+              );
             },
           },
           onClick: (event: any, legendItem, chart) => {
-            // Используем chart.chart для доступа к основному объекту графика
             this.handleLegendClick(event, legendItem, chart.chart);
           },
         },
       },
       elements: {
         point: {
-          radius: 0, // Убираем точки
+          radius: 0,
         },
         line: {
-          borderWidth: 2, // Толщина линии
+          borderWidth: 2,
         },
       },
       responsive: true,

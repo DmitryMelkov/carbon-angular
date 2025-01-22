@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UniversalGraphComponent } from '../../../components/universal-graph.components';
+import { environment } from '../../../../environments/environment'; // Импортируем environment
 
 @Component({
   selector: 'app-sushilka-graph-temper',
@@ -10,7 +11,7 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
   templateUrl: './sushilka-graph-temper.component.html',
   styleUrls: ['./sushilka-graph-temper.component.scss'],
 })
-export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
+export class SushilkaGraphTemperComponent implements OnInit {
   @Input() sushilkaId!: string;
   @Input() timeRange: number = 30;
 
@@ -33,7 +34,7 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
 
     // Формируем массивы для универсального компонента
     this.apiUrls = [
-      `http://localhost:3002/api/${this.sushilkaId}/data`, // Первый API
+      `${environment.apiUrl}/api/${this.sushilkaId}/data`,
     ];
 
     this.parameterNamesList = [
@@ -45,9 +46,5 @@ export class SushilkaGraphTemperComponent implements OnInit, OnDestroy {
     ];
 
     this.dataKeys = ['temperatures']; // Ключи для данных из API
-  }
-
-  ngOnDestroy() {
-    // Логика очистки, если необходима
   }
 }

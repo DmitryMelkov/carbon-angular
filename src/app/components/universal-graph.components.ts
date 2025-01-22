@@ -8,7 +8,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
+import { Chart, ChartTypeRegistry } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { CommonModule } from '@angular/common';
 import { ControlButtonComponent } from './control-button/control-button.component';
@@ -101,7 +101,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @Input() title!: string;
   @Input() yAxisRange!: { min: number; max: number };
   @Input() graphId!: string;
-  @Input() timeRange: number = 10; // По умолчанию 10 минут
+  @Input() timeRange: number = 10;
+  @Input() animate: boolean = true;
 
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
@@ -136,7 +137,9 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       this.currentTime = new Date();
 
       const endTime = new Date(this.currentTime.getTime() + this.timeOffset);
-      const startTime = new Date(endTime.getTime() - this.timeRange * 60 * 1000);
+      const startTime = new Date(
+        endTime.getTime() - this.timeRange * 60 * 1000
+      );
 
       const dataPromises = this.apiUrls.map((apiUrl, index) =>
         this.graphService.getData(apiUrl, startTime, endTime)
@@ -179,12 +182,12 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.chart) {
       const chartOptions = this.graphService.getChartOptions(
         this.yAxisTitle,
-        this.title
+        this.title,
+        this.animate
       );
 
-      // Создаем датасеты с использованием метода из сервиса
       const datasets = this.graphService.createDatasets(
-        this.parameterNamesList.flat(), // Преобразуем массив массивов в один массив
+        this.parameterNamesList.flat(),
         values
       );
 
