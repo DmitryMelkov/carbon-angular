@@ -24,6 +24,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { MpaTable } from "./table/table.component";
 
 @Component({
   selector: 'app-mpa-mnemo',
@@ -34,7 +35,8 @@ import {
     MatDialogModule,
     ControlButtonComponent,
     LoaderComponent,
-  ],
+    MpaTable
+],
   standalone: true,
   templateUrl: './mpa-mnemo.component.html',
   styleUrls: ['./mpa-mnemo.component.scss'],
@@ -134,23 +136,12 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
   }
 
   // Подсказки для параметров
-  vrlTemper: string =
-    'Прибор: Термопара (1000мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
+  tooltipTemper: string =
+  'Прибор: Термопара (1000мм)\nДиапазон: 0...+1300°C\nГрадуировка: ХА (К)';
 
-  topkaTemper: string =
-    'Прибор: Термопара (1000мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
+  tooltipDavlenie: string = 'Прибор: ПРОМА-ИДМ\nТоковый выход: 4-20 мА\n';
 
-  topkaDavl: string =
-    'Прибор: ПД-1.ТН1\nДиапазон: -0,125...+0,125 кПа\nГрадуировка: 4-20 мА';
-
-  vosduhNaRazbavl: string =
-    'Прибор: ПД-1.Н1\nДиапазон: 0...5 кПа\nГрадуировка: 4-20 мА';
-
-  kameraVigruzki: string =
-    'Прибор: ПД-1Т\nДиапазон: 0...-200 Па\nГрадуировка: 4-20 мА';
-
-  temperUhodyashihGazov: string =
-    'Прибор: Термопара (320мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
+  tooltipDB: string = 'Прибор: ПД-1.Т1\nДиапазон: 0...-250 Па\nТоковый выход: 4-20 мА';;
 
   //Открывает модальное окно с документацией.
   openDocumentation(): void {
@@ -213,6 +204,11 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
       } as MpaData;
     }
   }
+
+  toNumber(value: any): number {
+    return Number(value) || 0;
+  }
+  
   onImageLoad(): void {
     this.isImageLoaded = true;
   }

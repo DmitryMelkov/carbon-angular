@@ -1,0 +1,62 @@
+<table class="table">
+  <caption class="table__title">
+    Потребление пара
+  </caption>
+  <thead class="table__thead">
+    <tr class="table__tr">
+      <th class="table__th table__left">Параметры</th>
+      <th *ngFor="let mpa of mpaKeys" class="table__th">
+        {{ getDeviceName(mpa.key) }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Типоразмер -->
+    <tr class="table__tr">
+      <td class="table__td table__left">Типоразмер</td>
+      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+        {{ mpa.typeSize }}
+      </td>
+    </tr>
+
+    <!-- Теплота, Гкал/час -->
+    <tr class="table__tr">
+      <td class="table__td table__left">Теплота, Гкал/час</td>
+      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+        {{ getDataValue(mpa.key, "Гкал/ч") }}
+      </td>
+    </tr>
+
+    <!-- Объем, м3/час -->
+    <tr class="table__tr">
+      <td class="table__td table__left">Объем, м3/час</td>
+      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+        {{ getDataValue(mpa.key, "Куб/ч") }}
+      </td>
+    </tr>
+
+    <!-- Масса, т/час -->
+    <tr class="table__tr">
+      <td class="table__td table__left">Масса, т/час</td>
+      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+        {{ getDataValue(mpa.key, "Тонн/ч") }}
+      </td>
+    </tr>
+
+    <!-- Давление, МПа -->
+    <tr class="table__tr">
+      <td class="table__td table__left">Давление, МПа</td>
+      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+        {{ getDataValue(mpa.key, "Давление") }}
+      </td>
+    </tr>
+
+    <!-- Температура -->
+    <tr class="table__tr">
+      <td class="table__td table__left">Температура</td>
+      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+        {{ getDataValue(mpa.key, "Температура") }}
+      </td>
+    </tr>
+  </tbody>
+</table>

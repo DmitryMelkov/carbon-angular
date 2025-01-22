@@ -35,7 +35,9 @@
     <img class="mnemo__img" src="/img/pech-mpa.jpg" (load)="onImageLoad()" />
 
     <div class="mnemo__gif mnemo__gif-2">
-      <img src="/img/ventilator.png" alt="img" />
+      <img
+      [ngStyle]="{'animation-play-state': toNumber(data?.pressures?.[getDynamicKey('Давление воздух правый')]) > 10 ? 'running' : 'paused'}"
+      src="/img/ventilator.png" alt="img">
     </div>
 
     <div class="mnemo__param-descr regenerator-text">Регенератор</div>
@@ -44,9 +46,15 @@
     <div class="mnemo__param-box vr">
       <div class="mnemo__param-box-vr">
         <div class="mnemo__param-descr mnemo__param-descr-left">ВРЛ</div>
-        <div class="mnemo__param mnemo__param-val vrl-t">
-          <span class="mnemo__param-text vrl-t-val" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="vrlTemper"
-          matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура верх регенератора левый')] || '—' }}
             °C
           </span>
@@ -55,8 +63,15 @@
       </div>
       <div class="mnemo__param-box-vr">
         <div class="mnemo__param-descr mnemo__param-descr-right">ВРП</div>
-        <div class="mnemo__param mnemo__param-val vrp-t brd-transparent">
-          <span class="mnemo__param-text vrp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val brd-transparent"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура верх регенератора правый')] || '—' }}
             °C
           </span>
@@ -69,14 +84,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 9</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-left">ВДЛ</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text vdl-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура верх дальний левый')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text vdl-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление верх дальний левый')] || '—' }}
             кг/м2
           </span>
@@ -85,14 +114,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 10</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-right">ВДП</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text vdp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура верх дальний правый')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text vdp-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление верх дальний правый')] || '—' }}
             кг/м2
           </span>
@@ -104,8 +147,15 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 11</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-left">ВБЛ</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text vbl-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура верх ближний левый')] || '—' }}
             °C
           </span>
@@ -115,8 +165,15 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 12</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-right">ВБП</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text vbp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура верх ближний правый')] || '—' }}
             °C
           </span>
@@ -128,14 +185,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 5</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-left">СДЛ</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text sdl-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура середина дальняя левый')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text sdl-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление середина дальняя левый')] || '—' }}
             кг/м2
           </span>
@@ -144,14 +215,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 6</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-right">СДП</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text sdp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура середина дальняя правый')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text sdp-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление середина дальняя правый')] || '—' }}
             кг/м2
           </span>
@@ -163,14 +248,26 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 7</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-left">СБЛ</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text sbl-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура середина ближняя левый')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text sbl-p-val">
+        <div class="mnemo__param mnemo__param-val-p"
+        [class.enabled-hover]="isTooltipsEnabled"
+        [matTooltip]="tooltipDavlenie"
+        matTooltipPosition="above"
+        matTooltipClass="custom-tooltip"
+        [matTooltipDisabled]="!isTooltipsEnabled">
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление середина ближняя левый')] || '—' }}
             кг/м2
           </span>
@@ -179,14 +276,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 8</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-right">СБП</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text sbp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура середина ближняя правый')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text sbp-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление середина ближняя правый')] || '—' }}
             кг/м2
           </span>
@@ -198,8 +309,15 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 1</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-left">НДЛ</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text ndl-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура низ дальний левый')] || '—' }}
             °C
           </span>
@@ -208,8 +326,15 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 2</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-right">НДП</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text ndp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура низ дальний правый')] || '—' }}
             °C
           </span>
@@ -221,15 +346,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 3</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-left">НБЛ</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text nbl-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура низ ближний левый')] || '—' }}
             °C
           </span>
-
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text nbl-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление низ ближний левый')] || '—' }}
             кг/м2
           </span>
@@ -238,15 +376,28 @@
       <div class="mnemo__param-descr mnemo__param-descr-borov">Боров 4</div>
       <div class="mnemo__param-flex">
         <div class="mnemo__param-descr mnemo__param-descr-right">НБП</div>
-        <div class="mnemo__param mnemo__param-val">
-          <span class="mnemo__param-text nbp-t-val">
+        <div
+          class="mnemo__param mnemo__param-val"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура низ ближний правый')] || '—' }}
             °C
           </span>
-
         </div>
-        <div class="mnemo__param mnemo__param-val-p brd-transparent">
-          <span class="mnemo__param-text nbp-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-p"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление низ ближний правый')] || '—' }}
             кг/м2
           </span>
@@ -257,14 +408,28 @@
     <div class="mnemo__param-box db">
       <div class="mnemo__param-box-db">
         <div class="mnemo__param-descr mnemo__param-descr-right">ДБ</div>
-        <div class="mnemo__param mnemo__param-val vrl-t brd-bottom-transparent">
-          <span class="mnemo__param-text db-t-val">
+        <div
+          class="mnemo__param mnemo__param-val brd-bottom-transparent"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipTemper"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.temperatures?.[getDynamicKey('Температура дымовой боров')] || '—' }}
             °C
           </span>
         </div>
-        <div class="mnemo__param mnemo__param-val-vozduh">
-          <span class="mnemo__param-text db-p-val">
+        <div
+          class="mnemo__param mnemo__param-val-vozduh"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDB"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Разрежение дымовой боров')] || '—' }}
             кг/м2
           </span>
@@ -274,8 +439,15 @@
 
     <div class="mnemo__param-box ks">
       <div class="mnemo__param-descr mnemo__param-descr-right">КС</div>
-      <div class="mnemo__param mnemo__param-val vrl-t">
-        <span class="mnemo__param-text ks-t-val">
+      <div
+        class="mnemo__param mnemo__param-val"
+        [class.enabled-hover]="isTooltipsEnabled"
+        [matTooltip]="tooltipTemper"
+        matTooltipPosition="above"
+        matTooltipClass="custom-tooltip"
+        [matTooltipDisabled]="!isTooltipsEnabled"
+      >
+        <span class="mnemo__param-text">
           {{ data?.temperatures?.[getDynamicKey('Температура камера сгорания')] || '—' }}
           °C
         </span>
@@ -283,90 +455,44 @@
     </div>
 
     <div class="mnemo__param-box vozduh-left">
-      <div class="mnemo__param-box-vozduh-left">
         <div class="mnemo__param-descr mnemo__param-descr-vozduh">
           Воздух левый
         </div>
-        <div class="mnemo__param mnemo__param-val-vozduh">
-          <span class="mnemo__param-text vozduh-left-val">
+        <div
+          class="mnemo__param mnemo__param-val-vozduh"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление воздух левый')] || '—' }}
             кг/м2
           </span>
         </div>
-      </div>
     </div>
 
     <div class="mnemo__param-box vozduh-right">
-      <div class="mnemo__param-box-vozduh-right">
         <div class="mnemo__param-descr mnemo__param-descr-vozduh">
           Воздух правый
         </div>
-        <div class="mnemo__param mnemo__param-val-vozduh">
-          <span class="mnemo__param-text vozduh-right-val">
+        <div
+          class="mnemo__param mnemo__param-val-vozduh"
+          [class.enabled-hover]="isTooltipsEnabled"
+          [matTooltip]="tooltipDavlenie"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+          [matTooltipDisabled]="!isTooltipsEnabled"
+        >
+          <span class="mnemo__param-text">
             {{ data?.pressures?.[getDynamicKey('Давление воздух правый')] || '—' }}
             кг/м2
           </span>
         </div>
-      </div>
     </div>
 
-    <table class="table table-mpa">
-      <caption class="table__title">
-        Потребление пара
-      </caption>
-      <thead class="table__thead">
-        <tr class="table__tr">
-          <th class="table__th table__left">Параметры</th>
-          <th class="table__th">МПА-1</th>
-          <th class="table__th">МПА-2</th>
-          <th class="table__th">МПА-3</th>
-          <th class="table__th">МПА-4</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table__tr">
-          <td class="table__td table__left">Типоразмер</td>
-          <td class="table__td table__right">Dy80</td>
-          <td class="table__td table__right">Dy80</td>
-          <td class="table__td table__right">Dy80</td>
-          <td class="table__td table__right">Dy80</td>
-        </tr>
-        <tr class="table__tr">
-          <td class="table__td table__left">Теплота, Гкал/час</td>
-          <td class="table__td table__right"></td>
-          <td class="table__td table__right heat-de093"></td>
-          <td class="table__td table__right heat-dd972"></td>
-          <td class="table__td table__right heat-dd973"></td>
-        </tr>
-        <tr class="table__tr">
-          <td class="table__td table__left">Объем, м3/час</td>
-          <td class="table__td table__right"></td>
-          <td class="table__td table__right volume-de093"></td>
-          <td class="table__td table__right volume-dd972"></td>
-          <td class="table__td table__right volume-dd973"></td>
-        </tr>
-        <tr class="table__tr">
-          <td class="table__td table__left">Масса, т/час</td>
-          <td class="table__td table__right"></td>
-          <td class="table__td table__right mass-de093"></td>
-          <td class="table__td table__right mass-dd972"></td>
-          <td class="table__td table__right mass-dd973"></td>
-        </tr>
-        <tr class="table__tr">
-          <td class="table__td table__left">Давление, МПа</td>
-          <td class="table__td table__right"></td>
-          <td class="table__td table__right pressure-de093"></td>
-          <td class="table__td table__right pressure-dd972"></td>
-          <td class="table__td table__right pressure-dd973"></td>
-        </tr>
-        <tr class="table__tr">
-          <td class="table__td table__left">Температура,</td>
-          <td class="table__td table__right"></td>
-          <td class="table__td table__right temperature-de093"></td>
-          <td class="table__td table__right temperature-dd972"></td>
-          <td class="table__td table__right temperature-dd973"></td>
-        </tr>
-      </tbody>
-    </table>
+    <app-table-mpa class="table-mpa"></app-table-mpa>
+
   </div>
 </div>

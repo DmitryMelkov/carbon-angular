@@ -1,0 +1,61 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.table {
+  border-collapse: collapse;
+  border-spacing: 5px;
+  background-color: #e7eef4;
+  box-shadow: 0 0 5px 0 vars.$black;
+
+  &__title {
+    margin-bottom: 10px;
+    text-align: center;
+    @include mixins.text-style(20px, 25px, 700, vars.$hulk);
+  }
+
+  &__tr {
+    height: 30px;
+    border: 1px solid vars.$black;
+  }
+
+  &__th {
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    @include mixins.text-style(18px, 18px, 800, vars.$black);
+  }
+
+  &__td {
+    letter-spacing: 1px;
+    text-align: center;
+    @include mixins.text-style(16px, 16px, 500, vars.$black);
+  }
+
+  &__left {
+    padding: 10px;
+    text-align: left;
+  }
+
+  &__right {
+    color: vars.$hulk;
+    font-weight: 600;
+  }
+
+
+  @media (max-width:1280px) {
+    &__th {
+      font-size: 13px;
+      line-height: 13px;
+    }
+
+    &__td {
+      font-size: 11px;
+      line-height: 11px;
+    }
+  }
+}
+
+.table__th:not(:last-child),
+.table__td:not(:last-child) {
+  border-right: 1px solid vars.$black;
+}
