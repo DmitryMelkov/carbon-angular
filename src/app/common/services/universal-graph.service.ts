@@ -104,7 +104,8 @@ export class UniversalGraphService {
   getChartOptions(
     yAxisTitle: string,
     title: string,
-    animate: boolean = true
+    animate: boolean = true,
+    units: string | string[] = '' // Может быть строкой или массивом строк
   ): ChartOptions {
     return {
       animation: animate
@@ -135,14 +136,14 @@ export class UniversalGraphService {
       plugins: {
         crosshair: {
           line: {
-            color: 'green', // Цвет линии
-            width: 1, // Толщина линии
+            color: 'green',
+            width: 1,
           },
           sync: {
-            enabled: false, // Отключаем синхронизацию между несколькими графиками
+            enabled: false,
           },
           zoom: {
-            enabled: false, // Отключаем зум
+            enabled: false,
           },
         },
         title: {
@@ -161,7 +162,10 @@ export class UniversalGraphService {
             label: (tooltipItem) => {
               const label = tooltipItem.dataset.label || '';
               const value = tooltipItem.raw;
-              return `${label}: ${value}`;
+              const unit = Array.isArray(units)
+                ? units[tooltipItem.datasetIndex] || '' // Если units — массив, берем элемент по индексу
+                : units; // Если units — строка, используем её для всех параметров
+              return `${label}: ${value} ${unit}`; // Добавляем единицы измерения в tooltip
             },
           },
         },
@@ -183,11 +187,12 @@ export class UniversalGraphService {
                     const lastValue = datasetData[datasetData.length - 1];
 
                     const name = label.text;
+                    const unit = Array.isArray(units)
+                      ? units[datasetIndex] || '' // Если units — массив, берем элемент по индексу
+                      : units; // Если units — строка, используем её для всех параметров
 
                     if (lastValue !== null) {
-                      label.text = `${lastValue} ${
-                        yAxisTitle.includes('градусы') ? '°C' : 'кгс/см2'
-                      } | ${name}`;
+                      label.text = `${lastValue} ${unit} | ${name}`; // Используем единицы измерения
                     } else {
                       label.text = `(нет данных) | ${name}`;
                     }

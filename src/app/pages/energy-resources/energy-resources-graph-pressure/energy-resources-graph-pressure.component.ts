@@ -30,6 +30,15 @@ export class EnergyResourcesGraphPressureComponent {
     ['Давление DD923'],
     ['Давление DD924'],
   ];
+  customNames: string[][] = [
+    ['МПА2'],
+    ['МПА3'],
+    ['МПА4'],
+    ['к.10в1'],
+    ['От к.265 до к.10в1'],
+    ['Котел утилизатор №1'],
+    ['Котел утилизатор №2'],
+  ];
   dataKeys: string[] = ['data', 'data', 'data', 'data', 'data', 'data', 'data']; // Ключи для данных из API
   yAxisTitle: string = 'Давление, кгс/см²';
   title: string = 'График давления узлов учета';

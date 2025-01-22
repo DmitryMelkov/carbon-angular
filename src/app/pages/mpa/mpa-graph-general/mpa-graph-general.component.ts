@@ -97,9 +97,11 @@ export class GraphicMpaGeneralComponent {
       'СДЛ',
       'СДП',
       'ВДЛ',
-      'ВДП'
+      'ВДП',
     ],
   ];
+
+  mpaPressuresUnits: string[] = ['кгс/см2'];
 
   mpa2PressureDataKeys: string[] = ['pressures', 'data']; // Ключи для данных из API
 

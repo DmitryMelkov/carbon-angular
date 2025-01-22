@@ -104,6 +104,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @Input() graphId!: string;
   @Input() timeRange: number = 10;
   @Input() animate: boolean = true;
+  @Input() units: string | string[] = ''; // Может быть строкой или массивом строк
 
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
@@ -176,6 +177,16 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  private getUnitForParameter(index: number): string {
+    if (Array.isArray(this.units)) {
+      // Если units — это массив, возвращаем элемент по индексу
+      return this.units[index] || '';
+    } else {
+      // Если units — это строка, возвращаем её для всех параметров
+      return this.units;
+    }
+  }
+
   private updateChart(labels: Date[], values: (number | null)[][]) {
     const ctx = this.canvasRef.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -184,7 +195,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       const chartOptions = this.graphService.getChartOptions(
         this.yAxisTitle,
         this.title,
-        this.animate
+        this.animate,
+        this.units // Передаем units (строку или массив)
       );
 
       const datasets = this.graphService.createDatasets(

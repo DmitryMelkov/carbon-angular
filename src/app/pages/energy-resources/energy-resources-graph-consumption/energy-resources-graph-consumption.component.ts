@@ -29,6 +29,15 @@ export class EnergyResourcesGraphConsumptionComponent {
     ['Тонн/ч DD923'],
     ['Тонн/ч DD924'],
   ];
+  customNames: string[][] = [
+    ['МПА2'],
+    ['МПА3'],
+    ['МПА4'],
+    ['к.10в1'],
+    ['От к.265 до к.10в1'],
+    ['Котел утилизатор №1'],
+    ['Котел утилизатор №2'],
+  ];
   dataKeys: string[] = ['data', 'data', 'data', 'data', 'data', 'data', 'data']; // Ключи для данных из API
   yAxisTitle: string = 'Расход, тонн/ч';
   title: string = 'График расхода пара';
