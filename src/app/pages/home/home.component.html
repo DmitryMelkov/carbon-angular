@@ -1,45 +1,68 @@
 <div class="home">
   <div class="home__container">
-    <mat-tab-group class="home__tab-group" (selectedTabChange)="selectedSushilkaId = $event.tab.textLabel">
+    <mat-tab-group class="home__tab-group" (selectedTabChange)="selectedObjectId = $event.tab.textLabel">
+      <!-- Сушилки и МПА -->
       <mat-tab *ngFor="let object of objectData" class="home__tab">
         <ng-template mat-tab-label>
           <button mat-button class="home__tab-button btn-reset">{{ object.name }}</button>
         </ng-template>
         <div class="home__button-group">
           <app-control-button class="home__button"
-            [isActive]="activeView === 'parameters' && selectedSushilkaId === object.id"
+            [isActive]="activeView === 'parameters' && selectedObjectId === object.id"
             (onClick)="showParameters(object.id)">
             Текущие параметры
           </app-control-button>
           <app-control-button class="home__button"
-            [isActive]="activeView === 'mnemo' && selectedSushilkaId === object.id" (onClick)="showMnemo(object.id)">
+            [isActive]="activeView === 'mnemo' && selectedObjectId === object.id" (onClick)="showMnemo(object.id)">
             Мнемосхема
           </app-control-button>
+
+          <!-- Кнопка для графиков МПА -->
           <app-control-button class="home__button"
-            [isActive]="activeView === 'graph-tempers-general' && selectedSushilkaId === object.id"
+            *ngIf="object.type === 'mpa'"
+            [isActive]="activeView === 'graph-mpa-general' && selectedObjectId === object.id"
+            (onClick)="showGraphMpaGeneral(object.id)">
+            Графики
+          </app-control-button>
+
+          <!-- Кнопки для сушилок -->
+          <app-control-button class="home__button"
+            *ngIf="object.type === 'sushilka'"
+            [isActive]="activeView === 'graph-tempers-general' && selectedObjectId === object.id"
             (onClick)="showGraphTemper(object.id)">
             Графики температур
           </app-control-button>
           <app-control-button class="home__button"
-            [isActive]="activeView === 'graph-vacuums-general' && selectedSushilkaId === object.id"
+            *ngIf="object.type === 'sushilka'"
+            [isActive]="activeView === 'graph-vacuums-general' && selectedObjectId === object.id"
             (onClick)="showGraphPressure(object.id)">
             Графики давления
           </app-control-button>
         </div>
-        <div *ngIf="activeView === 'parameters' && selectedSushilkaId === object.id" class="home__content">
-          <app-sushilka [id]="object.id"></app-sushilka>
+
+        <!-- Контент для графиков МПА -->
+        <div *ngIf="activeView === 'graph-mpa-general' && selectedObjectId === object.id && object.type === 'mpa'" class="home__content">
+          <app-graphic-mpa-general [id]="object.id"></app-graphic-mpa-general>
         </div>
-        <div *ngIf="activeView === 'mnemo' && selectedSushilkaId === object.id" class="home__content">
-          <app-sushilka-mnemo [id]="object.id"></app-sushilka-mnemo>
+
+        <!-- Остальной контент -->
+        <div *ngIf="activeView === 'parameters' && selectedObjectId === object.id" class="home__content">
+          <app-sushilka *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka>
+          <app-mpa *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa>
         </div>
-        <div *ngIf="activeView === 'graph-tempers-general' && selectedSushilkaId === object.id" class="home__content">
+        <div *ngIf="activeView === 'mnemo' && selectedObjectId === object.id" class="home__content">
+          <app-sushilka-mnemo *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka-mnemo>
+          <app-mpa-mnemo *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa-mnemo>
+        </div>
+        <div *ngIf="activeView === 'graph-tempers-general' && selectedObjectId === object.id && object.type === 'sushilka'" class="home__content">
           <app-graphic-tempers-general [id]="object.id"></app-graphic-tempers-general>
         </div>
-        <div *ngIf="activeView === 'graph-vacuums-general' && selectedSushilkaId === object.id" class="home__content">
+        <div *ngIf="activeView === 'graph-vacuums-general' && selectedObjectId === object.id && object.type === 'sushilka'" class="home__content">
           <app-graphic-vacuums-general [id]="object.id"></app-graphic-vacuums-general>
         </div>
       </mat-tab>
 
+      <!-- Энергоресурсы -->
       <mat-tab class="home__tab">
         <ng-template mat-tab-label>
           <button mat-button class="home__tab-button btn-reset">Энергоресурсы</button>
@@ -67,10 +90,10 @@
             Графики давления
           </app-control-button>
           <app-control-button class="home__button"
-          [isActive]="activeView === 'energy-resources-graph-consumption'"
-          (onClick)="showEnergyResourcesGraphConsumption()">
-          Графики расхода
-        </app-control-button>
+            [isActive]="activeView === 'energy-resources-graph-consumption'"
+            (onClick)="showEnergyResourcesGraphConsumption()">
+            Графики расхода
+          </app-control-button>
         </div>
 
         <div *ngIf="activeView === 'energy-resources'" class="home__content">

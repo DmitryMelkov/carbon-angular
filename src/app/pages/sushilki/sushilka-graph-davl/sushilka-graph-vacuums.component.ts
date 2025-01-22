@@ -24,6 +24,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) {}
 
+
   async ngOnInit() {
     // Если sushilkaId не передан через @Input, берем его из маршрута
     this.sushilkaId =
@@ -33,7 +34,7 @@ export class SushilkaGraphVacuumsComponent implements OnInit {
     this.sushilkaNumber = this.sushilkaId.replace('sushilka', '');
 
     // Формируем массивы для универсального компонента
-    this.apiUrls = [`${environment.apiUrl}/api/${this.sushilkaId}/data`];
+    this.apiUrls = [`${environment.apiUrl}/api/sushilka${this.sushilkaId}/data`];
 
     this.parameterNamesList = [
       [

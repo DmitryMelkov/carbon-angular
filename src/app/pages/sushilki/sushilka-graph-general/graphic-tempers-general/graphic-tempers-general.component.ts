@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
-import { UniversalGraphComponent } from '../../../components/universal-graph.components';
-import { environment } from '../../../../environments/environment';
-
+import { ControlButtonComponent } from '../../../../components/control-button/control-button.component';
+import { UniversalGraphComponent } from '../../../../components/universal-graph.components';
+import { environment } from '../../../../../environments/environment'; // Импортируем environment
 
 @Component({
-  selector: 'app-graphic-vacuums-general',
-  templateUrl: './graphic-vacuums-general.component.html',
-  styleUrls: ['./graphic-vacuums-general.component.scss'],
+  selector: 'app-graphic-tempers-general',
+  templateUrl: './graphic-tempers-general.component.html',
+  styleUrls: ['./graphic-tempers-general.component.scss'],
   standalone: true,
   imports: [ControlButtonComponent, UniversalGraphComponent],
 })
-export class GraphicVacuumsGeneralComponent {
+export class GraphicTempersGeneralComponent {
   timeRange: number = 10; // Устанавливаем 10 минут по умолчанию
   activeButton: number = 10; // Устанавливаем активную кнопку по умолчанию на 10 минут
 
@@ -29,12 +28,12 @@ export class GraphicVacuumsGeneralComponent {
   ];
   sushilka1ParameterNamesList: string[][] = [
     [
-      'Разрежение в топке',
-      'Разрежение в камере выгрузки',
-      'Разрежение воздуха на разбавление',
+      'Температура в топке',
+      'Температура в камере смешения',
+      'Температура уходящих газов',
     ], // Параметры для первого API
   ];
-  sushilka1DataKeys: string[] = ['vacuums', 'data']; // Ключи для данных из API
+  sushilka1DataKeys: string[] = ['temperatures', 'data']; // Ключи для данных из API
 
   // Массивы для сушилки 2
   sushilka2ApiUrls: string[] = [
@@ -42,12 +41,12 @@ export class GraphicVacuumsGeneralComponent {
   ];
   sushilka2ParameterNamesList: string[][] = [
     [
-      'Разрежение в топке',
-      'Разрежение в камере выгрузки',
-      'Разрежение воздуха на разбавление',
+      'Температура в топке',
+      'Температура в камере смешения',
+      'Температура уходящих газов',
     ], // Параметры для первого API
   ];
-  sushilka2DataKeys: string[] = ['vacuums', 'data']; // Ключи для данных из API
+  sushilka2DataKeys: string[] = ['temperatures', 'data']; // Ключи для данных из API
 
   // Установка временного диапазона
   setTimeRange(minutes: number) {

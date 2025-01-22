@@ -12,15 +12,18 @@ export class MpaService {
   constructor(private http: HttpClient) {}
 
   getMpaData(id: string): Observable<MpaData> {
-    return this.http.get<MpaData>(`${environment.apiUrl}/api/mpa${id}-data`).pipe(
+    // Проверяем, начинается ли id с "mpa", если нет, добавляем
+    const formattedId = id.startsWith('mpa') ? id : `mpa${id}`;
+
+    return this.http.get<MpaData>(`${environment.apiUrl}/api/${formattedId}-data`).pipe(
       catchError((error) => {
-        console.error(`Ошибка при запросе данных для мпа ${id}:`, error);
+        console.error(`Ошибка при запросе данных для мпа ${formattedId}:`, error);
 
         // Формируем номер МПА на основе ID
-        const suffix = id.replace('mpa', ''); // Получаем номер МПа
+        const suffix = formattedId.replace('mpa', ''); // Получаем номер МПа
         return of({
           temperatures: {
-            [`Температура Верх регенератора левый МПА${suffix}`]: NaN,
+            [`Температура верх регенератора левый МПА${suffix}`]: NaN,
             [`Температура верх ближний левый МПА${suffix}`]: NaN,
             [`Температура верх дальний левый МПА${suffix}`]: NaN,
             [`Температура середина ближняя левый МПА${suffix}`]: NaN,

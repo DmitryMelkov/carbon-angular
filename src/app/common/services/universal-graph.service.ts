@@ -237,10 +237,11 @@ export class UniversalGraphService {
   createDatasets(
     parameterNames: string[],
     values: (number | null)[][],
-    colors?: string[] // Делаем параметр colors опциональным
+    customNames?: string[], // Новый параметр для пользовательских названий
+    colors?: string[] // Опциональный параметр для цветов
   ) {
     return parameterNames.map((name, index) => ({
-      label: name,
+      label: customNames && customNames[index] ? customNames[index] : name, // Используем customNames, если они есть
       data: values[index],
       borderColor: colors ? colors[index] : this.getColor(index), // Используем переданные цвета или цвета по умолчанию
       fill: false,

@@ -96,6 +96,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() apiUrls!: string[];
   @Input() parameterNamesList!: string[][];
+  @Input() customNames?: string[][];
   @Input() dataKeys!: string[];
   @Input() yAxisTitle!: string;
   @Input() title!: string;
@@ -188,7 +189,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
 
       const datasets = this.graphService.createDatasets(
         this.parameterNamesList.flat(),
-        values
+        values,
+        this.customNames?.flat()
       );
 
       this.chart = new Chart(ctx, {
@@ -203,6 +205,9 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
       this.chart.data.labels = labels;
       this.chart.data.datasets.forEach((dataset, index) => {
         dataset.data = values[index];
+        if (this.customNames && this.customNames.flat()[index]) {
+          dataset.label = this.customNames.flat()[index];
+        }
       });
       this.chart.update();
     }

@@ -34,7 +34,7 @@ export class SushilkaGraphTemperComponent implements OnInit {
 
     // Формируем массивы для универсального компонента
     this.apiUrls = [
-      `${environment.apiUrl}/api/${this.sushilkaId}/data`,
+      `${environment.apiUrl}/api/sushilka${this.sushilkaId}/data`,
     ];
 
     this.parameterNamesList = [

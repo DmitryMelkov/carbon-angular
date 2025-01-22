@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
-import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
-import { UniversalGraphComponent } from '../../../components/universal-graph.components';
-import { environment } from '../../../../environments/environment'; // Импортируем environment
+import { ControlButtonComponent } from '../../../../components/control-button/control-button.component';
+import { UniversalGraphComponent } from '../../../../components/universal-graph.components';
+import { environment } from '../../../../../environments/environment';
+
 
 @Component({
-  selector: 'app-graphic-tempers-general',
-  templateUrl: './graphic-tempers-general.component.html',
-  styleUrls: ['./graphic-tempers-general.component.scss'],
+  selector: 'app-graphic-vacuums-general',
+  templateUrl: './graphic-vacuums-general.component.html',
+  styleUrls: ['./graphic-vacuums-general.component.scss'],
   standalone: true,
   imports: [ControlButtonComponent, UniversalGraphComponent],
 })
-export class GraphicTempersGeneralComponent {
+export class GraphicVacuumsGeneralComponent {
   timeRange: number = 10; // Устанавливаем 10 минут по умолчанию
   activeButton: number = 10; // Устанавливаем активную кнопку по умолчанию на 10 минут
 
@@ -24,16 +25,16 @@ export class GraphicTempersGeneralComponent {
 
   // Массивы для сушилки 1
   sushilka1ApiUrls: string[] = [
-    `${environment.apiUrl}/api/${this.sushilka1Id}/data`, 
+    `${environment.apiUrl}/api/${this.sushilka1Id}/data`,
   ];
   sushilka1ParameterNamesList: string[][] = [
     [
-      'Температура в топке',
-      'Температура в камере смешения',
-      'Температура уходящих газов',
+      'Разрежение в топке',
+      'Разрежение в камере выгрузки',
+      'Разрежение воздуха на разбавление',
     ], // Параметры для первого API
   ];
-  sushilka1DataKeys: string[] = ['temperatures', 'data']; // Ключи для данных из API
+  sushilka1DataKeys: string[] = ['vacuums', 'data']; // Ключи для данных из API
 
   // Массивы для сушилки 2
   sushilka2ApiUrls: string[] = [
@@ -41,12 +42,12 @@ export class GraphicTempersGeneralComponent {
   ];
   sushilka2ParameterNamesList: string[][] = [
     [
-      'Температура в топке',
-      'Температура в камере смешения',
-      'Температура уходящих газов',
+      'Разрежение в топке',
+      'Разрежение в камере выгрузки',
+      'Разрежение воздуха на разбавление',
     ], // Параметры для первого API
   ];
-  sushilka2DataKeys: string[] = ['temperatures', 'data']; // Ключи для данных из API
+  sushilka2DataKeys: string[] = ['vacuums', 'data']; // Ключи для данных из API
 
   // Установка временного диапазона
   setTimeRange(minutes: number) {
