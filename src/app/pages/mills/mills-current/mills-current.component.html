@@ -1,0 +1,74 @@
+<div *ngIf="isLoading" class="loader-container">
+  <app-loader></app-loader>
+</div>
+
+<div class="current-container mills-current" *ngIf="!isLoading" @fadeIn>
+  <app-header-current-params [title]="'Мельницы'"></app-header-current-params>
+
+  <div class="tables">
+    <!-- Таблица для Mill 10b -->
+    <table class="table">
+      <caption class="table__title">Текущие параметры вибрации мельниц (мм/с) У.П. к.10б</caption>
+      <thead class="table__thead">
+        <tr class="table__tr">
+          <th class="table__th" colspan="3">Мельница ШБМ №3</th>
+          <th class="table__th" colspan="3">Мельница YGM-9517</th>
+          <th class="table__th" colspan="3">Мельница YCVOK-130</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table__tr">
+          <td class="table__td">Осевое</td>
+          <td class="table__td">Вертикальное</td>
+          <td class="table__td">Поперечное</td>
+          <td class="table__td">Фронтальное</td>
+          <td class="table__td">Осевое</td>
+          <td class="table__td">Поперечное</td>
+          <td class="table__td">Фронтальное</td>
+          <td class="table__td">Поперечное</td>
+          <td class="table__td">Осевое</td>
+        </tr>
+        <tr class="table__tr">
+          <td class="table__td table__right">{{ getMill10bValue('Осевое ШБМ3') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Вертикальное ШБМ3') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Поперечное ШБМ3') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Фронтальное YGM9517') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Осевое YGM9517') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Поперечное YGM9517') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Фронтальное YCVOK130') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Поперечное YCVOK130') }}</td>
+          <td class="table__td table__right">{{ getMill10bValue('Осевое YCVOK130') }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Таблица для Mill 1 и Mill 2 -->
+    <table class="table">
+      <caption class="table__title">Текущие параметры вибрации мельниц (мм/с) Carbon к.296</caption>
+      <thead class="table__thead">
+        <tr class="table__tr">
+          <th class="table__th" colspan="3">Мельница №1</th>
+          <th class="table__th" colspan="3">Мельница №2</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table__tr">
+          <td class="table__td">Фронтальное</td>
+          <td class="table__td">Поперечное</td>
+          <td class="table__td">Осевое</td>
+          <td class="table__td">Фронтальное</td>
+          <td class="table__td">Поперечное</td>
+          <td class="table__td">Осевое</td>
+        </tr>
+        <tr class="table__tr">
+          <td class="table__td table__right">{{ getMill1Value('Фронтальное Мельница 1') }}</td>
+          <td class="table__td table__right">{{ getMill1Value('Поперечное Мельница 1') }}</td>
+          <td class="table__td table__right">{{ getMill1Value('Осевое Мельница 1') }}</td>
+          <td class="table__td table__right">{{ getMill2Value('Фронтальное Мельница 2') }}</td>
+          <td class="table__td table__right">{{ getMill2Value('Поперечное Мельница 2') }}</td>
+          <td class="table__td table__right">{{ getMill2Value('Осевое Мельница 2') }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

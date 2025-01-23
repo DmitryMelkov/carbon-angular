@@ -14,6 +14,7 @@ import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-
 import { EnergyResourcesGraphPressureComponent } from '../energy-resources/energy-resources-graph-pressure/energy-resources-graph-pressure.component';
 import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
 import { GraphicMpaGeneralComponent } from "../mpa/mpa-graph-general/mpa-graph-general.component";
+import { MillsCurrentComponent } from '../mills/mills-current/mills-current.component';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +34,8 @@ import { GraphicMpaGeneralComponent } from "../mpa/mpa-graph-general/mpa-graph-g
     EnergyResourcesReportMonthComponent,
     EnergyResourcesGraphPressureComponent,
     EnergyResourcesGraphConsumptionComponent,
-    GraphicMpaGeneralComponent
+    GraphicMpaGeneralComponent,
+    MillsCurrentComponent
 ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -56,7 +58,8 @@ export class HomeComponent {
     | 'daily-report'
     | 'monthly-report'
     | 'energy-resources-graph-pressure'
-    | 'energy-resources-graph-consumption' = 'parameters';
+    | 'energy-resources-graph-consumption'
+    | 'mills-current' = 'parameters'; // Добавление нового типа для мельниц
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -115,4 +118,12 @@ export class HomeComponent {
     this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
     this.activeView = 'energy-resources-graph-consumption';
   }
+
+
+
+    // Метод для отображения текущих параметров мельниц
+    showMillsCurrent() {
+      this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+      this.activeView = 'mills-current';
+    }
 }

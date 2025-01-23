@@ -18,6 +18,7 @@ import { MpaComponent } from './pages/mpa/mpa-current/mpa.component';
 import { MpaMnemoComponent } from './pages/mpa/mpa-mnemo/mpa-mnemo.component';
 import { GraphicMpaGeneralComponent } from './pages/mpa/mpa-graph-general/mpa-graph-general.component';
 import { EnergyResourcesGraphConsumptionComponent } from './pages/energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
+import { MillsCurrentComponent } from './pages/mills/mills-current/mills-current.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -66,7 +67,11 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'mpa/grah-general',
         component: GraphicMpaGeneralComponent,
-      }
+      },
+      {
+        path: 'mills/current',
+        component: MillsCurrentComponent,
+      },
     ]),
     provideHttpClient(),
     provideAnimations(),
