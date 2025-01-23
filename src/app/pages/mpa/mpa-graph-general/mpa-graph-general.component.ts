@@ -18,6 +18,12 @@ export class GraphicMpaGeneralComponent {
   mpa2Id: string = 'mpa2';
   mpa3Id: string = 'mpa3';
 
+  // Уникальные идентификаторы для графиков
+  mpa2IdTemper: string = 'mpa2-temper';
+  mpa2IdPressure: string = 'mpa2-pressure';
+  mpa3IdTemper: string = 'mpa3-temper';
+  mpa3IdPressure: string = 'mpa3-pressure';
+
   // Номера МПА
   mpa2Number: string = this.mpa2Id.replace('mpa', '');
   mpa3Number: string = this.mpa3Id.replace('mpa', '');

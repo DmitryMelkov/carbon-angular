@@ -24,6 +24,8 @@ import { Mill2GraphComponent } from './pages/mills/mill2-graph/mill2-graph.compo
 import { MillSBM3Component } from './pages/mills/mill-sbm3/mill-sbm3.component';
 import { MillYGM9517Component } from './pages/mills/mill-ygm9517/mill-ygm9517.component';
 import { MillYCVOK130Component } from './pages/mills/mill-ycvok130/mill-ycvok130.component';
+import { ReactorComponent } from './pages/reactors/reactors-current/reactors.component';
+import { ReactorMnemoComponent } from './pages/reactors/reactors-mnemo/reactors-mnemo.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -97,6 +99,14 @@ export const appConfig: ApplicationConfig = {
         path: 'mills/graph-ycvok130',
         component: MillYCVOK130Component,
       },
+      {
+        path: 'reactors/current',
+        component: ReactorComponent,
+      },
+      {
+        path: 'reactors/mnemo',
+        component: ReactorMnemoComponent,
+      }
     ]),
     provideHttpClient(),
     provideAnimations(),

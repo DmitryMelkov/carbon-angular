@@ -28,7 +28,7 @@
           [yAxisTitle]="'Температуры, градусы'"
           [title]="'МПА №' + mpa2Number + ': Температура'"
           [yAxisRange]="{ min: 0, max: 1200 }"
-          [graphId]="mpa2Id"
+          [graphId]="mpa2IdTemper"
           [timeRange]="timeRange"
           [animate]="false"
         ></app-universal-graph>
@@ -44,7 +44,7 @@
           [yAxisTitle]="'Давление/разрежение'"
           [title]="'МПА №' + mpa2Number + ': Давление/разрежение'"
           [yAxisRange]="{ min: -30, max: 180 }"
-          [graphId]="mpa2Id"
+          [graphId]="mpa2IdPressure"
           [timeRange]="timeRange"
           [animate]="false"
         ></app-universal-graph>
@@ -63,7 +63,7 @@
           [yAxisTitle]="'Температуры, градусы'"
           [title]="'МПА №' + mpa3Number + ': Температура'"
           [yAxisRange]="{ min: 0, max: 1200 }"
-          [graphId]="mpa3Id"
+          [graphId]="mpa3IdTemper"
           [timeRange]="timeRange"
           [animate]="false"
         ></app-universal-graph>
@@ -77,9 +77,9 @@
           [units]="'кгс/м2'"
           [dataKeys]="mpa3PressureDataKeys"
           [yAxisTitle]="'Давление/разрежение'"
-          [title]="'МПА №' + mpa2Number + ': Давление/разрежение'"
+          [title]="'МПА №' + mpa3Number + ': Давление/разрежение'"
           [yAxisRange]="{ min: -30, max: 180 }"
-          [graphId]="mpa3Id"
+          [graphId]="mpa3IdPressure"
           [timeRange]="timeRange"
           [animate]="false"
         ></app-universal-graph>

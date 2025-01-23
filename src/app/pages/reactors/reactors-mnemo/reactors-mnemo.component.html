@@ -1,0 +1,122 @@
+<app-loader
+  *ngIf="isLoading"
+  [delay]="2000"
+  [loadingText]="'Подождите, идет загрузка данных...'"
+  (loadingComplete)="onLoadingComplete()"
+></app-loader>
+
+<div
+  class="mnemo-container"
+  *ngIf="!isLoading"
+  [@fadeIn]="isImageLoaded ? '*' : 'void'"
+>
+  <app-header-current-params [title]="'Корпус 296'"></app-header-current-params>
+
+  <div class="mnemo">
+    <div class="reactors">
+
+      <div class="reaktor">
+        <div class="reaktor-meshalka">
+          <img
+            class="reaktor-dvig"
+            src="/img/dvigatel.png"
+            (load)="onImageLoad()"
+          />
+          <div class="reactor-dvig-platform"></div>
+        </div>
+        <div class="reaktor-emkost">
+          <div class="mnemo__param-descr">Смоляной реактор №1</div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text reaktor-1-t-val">
+              {{ data?.temperatures?.['Температура реактора 45/1'] || '—' }} °C
+            </span>
+          </div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text reaktor-1-h-val">
+              {{ data?.levels?.['Уровень реактора 45/1'] || '—' }} мм
+            </span>
+          </div>
+        </div>
+        <div class="reaktor-niz"></div>
+      </div>
+
+      <div class="reaktor">
+        <div class="reaktor-meshalka">
+          <img
+            class="reaktor-dvig"
+            src="/img/dvigatel.png"
+            (load)="onImageLoad()"
+          />
+          <div class="reactor-dvig-platform"></div>
+        </div>
+        <div class="reaktor-emkost">
+          <div class="mnemo__param-descr">Смоляной реактор №2</div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text">
+              {{ data?.temperatures?.['Температура реактора 45/2'] || '—' }} °C
+            </span>
+          </div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text">
+              {{ data?.levels?.['Уровень реактора 45/2'] || '—' }} мм
+            </span>
+          </div>
+        </div>
+        <div class="reaktor-niz"></div>
+      </div>
+
+      <div class="reaktor">
+        <div class="reaktor-meshalka">
+          <img
+            class="reaktor-dvig"
+            src="/img/dvigatel.png"
+            (load)="onImageLoad()"
+          />
+          <div class="reactor-dvig-platform"></div>
+        </div>
+        <div class="reaktor-emkost">
+          <div class="mnemo__param-descr">Смоляной реактор №3</div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text">
+              {{ data?.temperatures?.['Температура реактора 45/3'] || '—' }} °C
+             </span>
+          </div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text">
+              {{ data?.levels?.['Уровень реактора 45/3'] || '—' }} мм
+            </span>
+          </div>
+        </div>
+        <div class="reaktor-niz"></div>
+      </div>
+
+      <div class="reaktor">
+        <div class="reaktor-meshalka">
+          <img
+            class="reaktor-dvig"
+            src="/img/dvigatel.png"
+            (load)="onImageLoad()"
+          />
+          <div class="reactor-dvig-platform"></div>
+        </div>
+        <div class="reaktor-emkost">
+          <div class="mnemo__param-descr">Смоляной реактор №4</div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text">
+              {{ data?.temperatures?.['Температура реактора 45/4'] || '—' }} °C
+            </span>
+          </div>
+          <div class="mnemo__param mnemo__param-val">
+            <span class="mnemo__param-text">
+              {{ data?.levels?.['Уровень реактора 45/4'] || '—' }} мм
+            </span>
+          </div>
+        </div>
+        <div class="reaktor-niz"></div>
+      </div>
+
+    </div>
+    <div class="reaktors-connect"></div>
+  </div>
+
+</div>
