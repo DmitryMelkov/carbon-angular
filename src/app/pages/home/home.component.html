@@ -126,10 +126,55 @@
             (onClick)="showMillsCurrent()">
             Текущие параметры
           </app-control-button>
+
+          <app-control-button class="home__button" [isActive]="activeView === 'mill1-graph'"
+            (onClick)="showMill1Graph()">
+            График мельницы №1
+          </app-control-button>
+
+          <app-control-button class="home__button" [isActive]="activeView === 'mill2-graph'"
+            (onClick)="showMill2Graph()">
+            График мельницы №2
+          </app-control-button>
+
+          <app-control-button class="home__button" [isActive]="activeView === 'millsbm3-graph'"
+            (onClick)="showMillsbm3Graph()">
+            График ШБМ №3
+          </app-control-button>
+
+          <app-control-button class="home__button" [isActive]="activeView === 'millygm9517-graph'"
+            (onClick)="showMillygm9517Graph()">
+            График YGM-9517
+          </app-control-button>
+
+          <app-control-button class="home__button" [isActive]="activeView === 'millycvok130-graph'"
+          (onClick)="showMillycvok130Graph()">
+          График YCVOK-130
+        </app-control-button>
         </div>
 
         <div *ngIf="activeView === 'mills-current'" class="home__content">
           <app-mills-current></app-mills-current>
+        </div>
+
+        <div *ngIf="activeView === 'mill1-graph'" class="home__content">
+          <app-mill1-graph></app-mill1-graph>
+        </div>
+
+        <div *ngIf="activeView === 'mill2-graph'" class="home__content">
+          <app-mill2-graph></app-mill2-graph>
+        </div>
+
+        <div *ngIf="activeView === 'millsbm3-graph'" class="home__content">
+          <app-mill-sbm3></app-mill-sbm3>
+        </div>
+
+        <div *ngIf="activeView === 'millygm9517-graph'" class="home__content">
+          <app-mill-ygm9517></app-mill-ygm9517>
+        </div>
+
+        <div *ngIf="activeView === 'millycvok130-graph'" class="home__content">
+          <app-mill-ycvok130></app-mill-ycvok130>
         </div>
       </mat-tab>
     </mat-tab-group>

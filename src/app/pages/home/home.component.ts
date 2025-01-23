@@ -13,8 +13,13 @@ import { EnergyResourcesReportDayComponent } from '../energy-resources/energy-re
 import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-resources-report-month/energy-resources-report-month.component';
 import { EnergyResourcesGraphPressureComponent } from '../energy-resources/energy-resources-graph-pressure/energy-resources-graph-pressure.component';
 import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
-import { GraphicMpaGeneralComponent } from "../mpa/mpa-graph-general/mpa-graph-general.component";
+import { GraphicMpaGeneralComponent } from '../mpa/mpa-graph-general/mpa-graph-general.component';
 import { MillsCurrentComponent } from '../mills/mills-current/mills-current.component';
+import { Mill1GraphComponent } from '../mills/mill1-graph/mill1-graph.component';
+import { Mill2GraphComponent } from '../mills/mill2-graph/mill2-graph.component';
+import { MillSBM3Component } from '../mills/mill-sbm3/mill-sbm3.component';
+import { MillYGM9517Component } from '../mills/mill-ygm9517/mill-ygm9517.component';
+import { MillYCVOK130Component } from '../mills/mill-ycvok130/mill-ycvok130.component';
 
 @Component({
   selector: 'app-home',
@@ -35,8 +40,13 @@ import { MillsCurrentComponent } from '../mills/mills-current/mills-current.comp
     EnergyResourcesGraphPressureComponent,
     EnergyResourcesGraphConsumptionComponent,
     GraphicMpaGeneralComponent,
-    MillsCurrentComponent
-],
+    MillsCurrentComponent,
+    Mill1GraphComponent,
+    Mill2GraphComponent,
+    MillSBM3Component,
+    MillYGM9517Component,
+    MillYCVOK130Component
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -59,7 +69,12 @@ export class HomeComponent {
     | 'monthly-report'
     | 'energy-resources-graph-pressure'
     | 'energy-resources-graph-consumption'
-    | 'mills-current' = 'parameters'; // Добавление нового типа для мельниц
+    | 'mills-current'
+    | 'mill1-graph'
+    | 'mill2-graph'
+    | 'millsbm3-graph'
+    | 'millygm9517-graph'
+    | 'millycvok130-graph' = 'parameters';
 
   // Метод для отображения текущих параметров
   showParameters(id: string) {
@@ -119,11 +134,39 @@ export class HomeComponent {
     this.activeView = 'energy-resources-graph-consumption';
   }
 
+  // Метод для отображения текущих параметров мельниц
+  showMillsCurrent() {
+    this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'mills-current';
+  }
 
+  // Метод для отображения графиков мельницы 1
+  showMill1Graph() {
+    this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'mill1-graph';
+  }
 
-    // Метод для отображения текущих параметров мельниц
-    showMillsCurrent() {
+  // Метод для отображения графиков мельницы 2
+  showMill2Graph() {
+    this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'mill2-graph';
+  }
+
+  // Метод для отображения графиков мельницы ШБМ №3
+  showMillsbm3Graph() {
+    this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'millsbm3-graph';
+  }
+
+  // Метод для отображения графиков мельницы ШБМ №3
+  showMillygm9517Graph() {
+    this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'millygm9517-graph';
+  }
+
+    // Метод для отображения графиков мельницы ШБМ №3
+    showMillycvok130Graph() {
       this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
-      this.activeView = 'mills-current';
+      this.activeView = 'millycvok130-graph';
     }
 }

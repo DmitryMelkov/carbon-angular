@@ -19,6 +19,11 @@ import { MpaMnemoComponent } from './pages/mpa/mpa-mnemo/mpa-mnemo.component';
 import { GraphicMpaGeneralComponent } from './pages/mpa/mpa-graph-general/mpa-graph-general.component';
 import { EnergyResourcesGraphConsumptionComponent } from './pages/energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
 import { MillsCurrentComponent } from './pages/mills/mills-current/mills-current.component';
+import { Mill1GraphComponent } from './pages/mills/mill1-graph/mill1-graph.component';
+import { Mill2GraphComponent } from './pages/mills/mill2-graph/mill2-graph.component';
+import { MillSBM3Component } from './pages/mills/mill-sbm3/mill-sbm3.component';
+import { MillYGM9517Component } from './pages/mills/mill-ygm9517/mill-ygm9517.component';
+import { MillYCVOK130Component } from './pages/mills/mill-ycvok130/mill-ycvok130.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -71,6 +76,26 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'mills/current',
         component: MillsCurrentComponent,
+      },
+      {
+        path: 'mills/graph-mill1',
+        component: Mill1GraphComponent,
+      },
+      {
+        path: 'mills/graph-mill2',
+        component: Mill2GraphComponent,
+      },
+      {
+        path: 'mills/graph-sbm3',
+        component: MillSBM3Component,
+      },
+      {
+        path: 'mills/graph-ygm9517',
+        component: MillYGM9517Component,
+      },
+      {
+        path: 'mills/graph-ycvok130',
+        component: MillYCVOK130Component,
       },
     ]),
     provideHttpClient(),
