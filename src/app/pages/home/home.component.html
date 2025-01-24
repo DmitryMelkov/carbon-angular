@@ -91,6 +91,7 @@
             [id]="object.id"
           ></app-sushilka>
           <app-mpa *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa>
+          <app-vr *ngIf="object.type === 'vr'" [id]="object.id"></app-vr>
         </div>
         <div
           *ngIf="activeView === 'mnemo' && selectedObjectId === object.id"

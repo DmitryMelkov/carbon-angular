@@ -5,6 +5,8 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
 
 @Component({
   selector: 'app-mill-sbm3',
+  standalone: true,
+
   imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './mill-sbm3.component.html',
   styleUrl: './mill-sbm3.component.scss'

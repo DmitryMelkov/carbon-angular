@@ -5,6 +5,7 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
 
 @Component({
   selector: 'app-mill-ycvok130',
+  standalone: true,
   imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './mill-ycvok130.component.html',
   styleUrl: './mill-ycvok130.component.scss'

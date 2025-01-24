@@ -5,6 +5,8 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
 
 @Component({
   selector: 'app-mill2-graph',
+  standalone: true,
+
   imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './mill2-graph.component.html',
   styleUrl: './mill2-graph.component.scss'

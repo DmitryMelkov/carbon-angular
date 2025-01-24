@@ -23,6 +23,7 @@ import { MillYCVOK130Component } from '../mills/mill-ycvok130/mill-ycvok130.comp
 import { ReactorComponent } from '../reactors/reactors-current/reactors.component';
 import { ReactorMnemoComponent } from '../reactors/reactors-mnemo/reactors-mnemo.component';
 import { GraphicReactorsGeneralComponent } from '../reactors/reactors-graph-general/reactors-graph-general.component';
+import { VrComponent } from '../vr/vr-current/vr.component';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,7 @@ import { GraphicReactorsGeneralComponent } from '../reactors/reactors-graph-gene
     SushilkaMnemoComponent,
     MpaComponent,
     MpaMnemoComponent,
+    VrComponent,
     MatTabsModule,
     ControlButtonComponent,
     GraphicVacuumsGeneralComponent,
@@ -58,6 +60,8 @@ import { GraphicReactorsGeneralComponent } from '../reactors/reactors-graph-gene
 })
 export class HomeComponent {
   objectData = [
+    { id: 'vr1', name: 'ПК1', type: 'vr' },
+    { id: 'vr2', name: 'ПК2', type: 'vr' },
     { id: 'mpa2', name: 'МПА №2', type: 'mpa' },
     { id: 'mpa3', name: 'МПА №3', type: 'mpa' },
     { id: 'sushilka1', name: 'Сушилка №1', type: 'sushilka' },

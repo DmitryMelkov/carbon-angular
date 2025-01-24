@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment'; // Импо�
 
 @Component({
   selector: 'app-energy-resources-graph-consumption',
+  standalone: true,
   imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './energy-resources-graph-consumption.component.html',
   styleUrl: './energy-resources-graph-consumption.component.scss',

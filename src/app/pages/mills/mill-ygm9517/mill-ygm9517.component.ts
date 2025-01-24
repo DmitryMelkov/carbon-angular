@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-mill-ygm9517',
+  standalone: true,
+
   imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './mill-ygm9517.component.html',
   styleUrl: './mill-ygm9517.component.scss'
