@@ -16,6 +16,8 @@ import {
   recommendedVacuums,
 } from '../../../common/constans/vr-recomended-values';
 import { DataLoadingService } from '../../../common/services/data-loading.service';
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 
 @Component({
   selector: 'app-vr',
@@ -28,6 +30,7 @@ import { DataLoadingService } from '../../../common/services/data-loading.servic
   ],
   templateUrl: './vr.component.html',
   styleUrls: ['./vr.component.scss'],
+  animations: [fadeInAnimation], // Используем анимацию
 })
 export class VrComponent implements OnInit, OnDestroy {
   @Input() id!: string;
@@ -47,7 +50,8 @@ export class VrComponent implements OnInit, OnDestroy {
     private vrService: VrService,
     private route: ActivatedRoute,
     private valueCheckService: ValueCheckService,
-    private dataLoadingService: DataLoadingService
+    private dataLoadingService: DataLoadingService,
+    private modeVrService: ModeVrService
   ) {}
 
   ngOnInit(): void {
@@ -103,27 +107,11 @@ export class VrComponent implements OnInit, OnDestroy {
   }
 
   private updateMode(): void {
-    if (!this.data) {
-      this.mode = null;
-      return;
-    }
-
-    const temper1Value = this.data.temperatures['1-СК'];
-
-    if (temper1Value < 550 && temper1Value > 50) {
-      this.mode = 'Выход на режим';
-    } else if (temper1Value > 550) {
-      this.mode = 'Установившийся режим';
-    } else {
-      this.mode = 'Печь не работает';
-    }
-
-    // Обновляем рекомендуемые значения для 3-СК в зависимости от режима
-    if (this.mode === 'Установившийся режим') {
-      this.recommendedTemperatures['3-СК'] = 'не более 400 °C';
-    } else if (this.mode === 'Выход на режим') {
-      this.recommendedTemperatures['3-СК'] = 'не более 750 °C';
-    }
+    this.mode = this.modeVrService.determineMode(this.data); // Определяем режим
+    this.modeVrService.updateRecommendedTemperatures(
+      this.mode,
+      this.recommendedTemperatures
+    ); // Обновляем рекомендуемые значения
   }
 
   private checkValues(): void {

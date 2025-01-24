@@ -1,6 +1,6 @@
 <app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"></app-loader>
 
-<div class="current-container" *ngIf="!isLoading">
+<div class="current-container" *ngIf="!isLoading" @fadeIn>
   <app-header-current-params [title]="'Печь карбонизации №' + id.replace('vr', '')" [mode]="mode"></app-header-current-params>
 
   <div class="tables">
