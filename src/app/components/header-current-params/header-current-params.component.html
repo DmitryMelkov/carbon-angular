@@ -7,4 +7,9 @@
     <span class="current-param__date">{{ currentDate }}</span>
     <span class="current-param__time">{{ currentTime }}</span>
   </div>
+  <div *ngIf="mode" class="current-param__subtitle">
+    Режим работы:
+    <span class="current-param__subtitle-span"> {{ mode }}</span>
+  </div>
 </div>
+,

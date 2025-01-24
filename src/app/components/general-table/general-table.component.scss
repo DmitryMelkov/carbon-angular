@@ -1,12 +1,14 @@
 .table {
   margin-top: 30px;
   margin-right: 15px;
-  width: 410px;
+  min-width: 410px;
+  max-width: 600px;
   text-align: left;
   border-collapse: collapse;
   border-spacing: 5px;
   background-color: #e7eef4;
   box-shadow: 0 0 5px 0 black;
+
   &__title {
     margin-bottom: 10px;
     text-align: center;
@@ -16,10 +18,12 @@
     font-weight: 700;
     color: green;
   }
+
   &__tr {
     height: 30px;
     border: 1px solid black;
   }
+
   &__th {
     text-align: center;
     font-family: "Bitter", sans-serif;
@@ -28,6 +32,7 @@
     font-weight: 600;
     color: black;
   }
+
   &__td {
     letter-spacing: 1px;
     text-align: center;
@@ -35,19 +40,36 @@
     font-size: 16px;
     line-height: 16px;
     font-weight: 500;
-    color: black;
   }
+
   &__left {
     padding: 10px;
     padding-left: 30px;
     text-align: left;
   }
+
   &__right {
-    color: green;
     font-weight: 600;
+    color: green;
   }
+
   &__th:not(:last-child),
   &__td:not(:last-child) {
     border-right: 1px solid black;
+  }
+}
+
+/* Стили для мигания */
+.blink-warning {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    color: green; /* Исходный цвет */
+  }
+  50% {
+    color: red; /* Цвет предупреждения */
   }
 }

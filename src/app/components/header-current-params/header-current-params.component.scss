@@ -44,4 +44,23 @@
     font-weight: 600;
     color: black;
   }
+  &__subtitle {
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: 'Bitter', sans-serif;
+    font-size: 20px;
+    line-height: 29px;
+    font-weight: 600;
+    color: black;
+  }
+
+  &__subtitle-span {
+    margin-left: 15px;
+    font-family: 'Bitter', sans-serif;
+    font-size: 20px;
+    line-height: 29px;
+    font-weight: 600;
+    color: blue;
+  }
 }

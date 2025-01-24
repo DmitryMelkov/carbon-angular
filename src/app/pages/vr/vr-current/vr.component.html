@@ -1,0 +1,18 @@
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"></app-loader>
+
+<div class="current-container" *ngIf="!isLoading">
+  <app-header-current-params [title]="'VR №' + id.replace('vr', '')" [mode]="mode"></app-header-current-params>
+
+  <div class="tables">
+    <app-general-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="'°C'"
+      [recommendedValues]="recommendedTemperatures" [highlightedKeys]="highlightedKeys"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (уровни)'" [data]="data?.levels || {}" [unit]="' мм'"
+      [recommendedValues]="recommendedLevels" [highlightedKeys]="highlightedKeys"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (давления)'" [data]="data?.pressures || {}" [unit]="' кгс/м²'"
+      [recommendedValues]="recommendedPressures" [highlightedKeys]="highlightedKeys"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (разрежения)'" [data]="data?.vacuums || {}" [unit]="' кгс/м²'"
+      [recommendedValues]="recommendedVacuums" [highlightedKeys]="highlightedKeys"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (IM)'" [data]="data?.im || {}"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (горелка)'" [data]="data?.gorelka || {}"></app-general-table>
+  </div>
+</div>

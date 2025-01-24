@@ -4,13 +4,21 @@
     <tr class="table__tr">
       <th class="table__th table__left">Наименование параметра</th>
       <th class="table__th">Значение{{ unit }}</th>
+      <th *ngIf="recommendedValues" class="table__th">Рекомендуемое значение</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of preparedData | keyvalue" class="table__tr">
       <td class="table__td table__left">{{ item.key }}</td>
-      <td class="table__td table__right">{{ item.value }}</td>
+      <td
+        class="table__td table__right"
+        [@blink]="shouldHighlight(item.key) ? 'warning' : 'normal'"
+        [ngClass]="{ 'blink-warning': shouldHighlight(item.key) }"
+        [innerHTML]="item.value"
+      ></td>
+      <td *ngIf="recommendedValues" class="table__td table__right">
+        {{ getRecommendedValue(item.key) }}
+      </td>
     </tr>
   </tbody>
-
 </table>

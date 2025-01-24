@@ -26,7 +26,7 @@ import { MillYGM9517Component } from './pages/mills/mill-ygm9517/mill-ygm9517.co
 import { MillYCVOK130Component } from './pages/mills/mill-ycvok130/mill-ycvok130.component';
 import { ReactorComponent } from './pages/reactors/reactors-current/reactors.component';
 import { ReactorMnemoComponent } from './pages/reactors/reactors-mnemo/reactors-mnemo.component';
-import { VrComponent } from './pages/vr/vr.component';
+import { VrComponent } from './pages/vr/vr-current/vr.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -109,7 +109,6 @@ export const appConfig: ApplicationConfig = {
         component: ReactorMnemoComponent,
       },
       { path: 'vr/:id/current', component: VrComponent },
-
     ]),
     provideHttpClient(),
     provideAnimations(),
@@ -117,4 +116,3 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
   ],
 };
-

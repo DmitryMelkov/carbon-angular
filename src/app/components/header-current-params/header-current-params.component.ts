@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderCurrentParamsComponent implements OnInit, OnDestroy {
   @Input() title: string = ''; // Заголовок сушилки
+  @Input() mode: string | null = null; // Режим работы (опционально)
   currentDate: string = ''; // Текущая дата
   currentTime: string = ''; // Текущее время
   private timer: any; // Переменная для хранения интервала
