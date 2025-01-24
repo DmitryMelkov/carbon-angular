@@ -20,6 +20,9 @@ import { Mill2GraphComponent } from '../mills/mill2-graph/mill2-graph.component'
 import { MillSBM3Component } from '../mills/mill-sbm3/mill-sbm3.component';
 import { MillYGM9517Component } from '../mills/mill-ygm9517/mill-ygm9517.component';
 import { MillYCVOK130Component } from '../mills/mill-ycvok130/mill-ycvok130.component';
+import { ReactorComponent } from '../reactors/reactors-current/reactors.component';
+import { ReactorMnemoComponent } from '../reactors/reactors-mnemo/reactors-mnemo.component';
+import { GraphicReactorsGeneralComponent } from '../reactors/reactors-graph-general/reactors-graph-general.component';
 
 @Component({
   selector: 'app-home',
@@ -45,7 +48,10 @@ import { MillYCVOK130Component } from '../mills/mill-ycvok130/mill-ycvok130.comp
     Mill2GraphComponent,
     MillSBM3Component,
     MillYGM9517Component,
-    MillYCVOK130Component
+    MillYCVOK130Component,
+    ReactorComponent,
+    ReactorMnemoComponent,
+    GraphicReactorsGeneralComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -67,6 +73,9 @@ export class HomeComponent {
     | 'energy-resources'
     | 'daily-report'
     | 'monthly-report'
+    | 'reactors-current'
+    | 'reactors-mnemo'
+    | 'graph-reactors-general'
     | 'energy-resources-graph-pressure'
     | 'energy-resources-graph-consumption'
     | 'mills-current'
@@ -103,6 +112,24 @@ export class HomeComponent {
   showGraphTemper(id: string) {
     this.selectedObjectId = id;
     this.activeView = 'graph-tempers-general';
+  }
+
+  // Метод для отображения текущих реакторов
+  showReactorsCurrent() {
+    this.selectedObjectId = '';
+    this.activeView = 'reactors-current';
+  }
+
+    // Метод для отображения текущих реакторов
+    showReactorsMnemo() {
+      this.selectedObjectId = '';
+      this.activeView = 'reactors-mnemo';
+    }
+
+  // Метод для отображения графиков реакторов
+  showReactorsGeneral() {
+    this.selectedObjectId = '';
+    this.activeView = 'graph-reactors-general';
   }
 
   // Метод для отображения энергоресурсов
@@ -164,9 +191,9 @@ export class HomeComponent {
     this.activeView = 'millygm9517-graph';
   }
 
-    // Метод для отображения графиков мельницы ШБМ №3
-    showMillycvok130Graph() {
-      this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
-      this.activeView = 'millycvok130-graph';
-    }
+  // Метод для отображения графиков мельницы ШБМ №3
+  showMillycvok130Graph() {
+    this.selectedObjectId = ''; // Сбросьте идентификатор, так как это не сушилка
+    this.activeView = 'millycvok130-graph';
+  }
 }

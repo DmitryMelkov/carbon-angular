@@ -16,7 +16,7 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-  selector: 'app-documentation-modal-mpa',
+  selector: 'app-documentation-modal-reactors',
   standalone: true,
   imports: [
     CommonModule,

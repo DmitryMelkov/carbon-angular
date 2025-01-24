@@ -13,110 +13,180 @@
   <app-header-current-params [title]="'Корпус 296'"></app-header-current-params>
 
   <div class="mnemo">
-    <div class="reactors">
+    <div class="mnemo__param-box--btns">
+      <app-control-button
+        [isActive]="isTooltipsEnabled"
+        (onClick)="toggleTooltips()"
+      >
+        {{
+          isTooltipsEnabled
+            ? "Выкл. всплывающие подсказки"
+            : "Вкл. всплывающие подсказки"
+        }}
+      </app-control-button>
 
-      <div class="reaktor">
-        <div class="reaktor-meshalka">
+      <app-control-button (onClick)="openDocumentation()">
+        Документация объекта
+      </app-control-button>
+    </div>
+
+    <div class="reactors">
+      <div class="reactor">
+        <div class="reactor-meshalka">
           <img
-            class="reaktor-dvig"
+            class="reactor-dvig"
             src="/img/dvigatel.png"
             (load)="onImageLoad()"
           />
           <div class="reactor-dvig-platform"></div>
         </div>
-        <div class="reaktor-emkost">
+        <div class="reactor-emkost">
           <div class="mnemo__param-descr">Смоляной реактор №1</div>
-          <div class="mnemo__param mnemo__param-val">
-            <span class="mnemo__param-text reaktor-1-t-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipTemper"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
+            <span class="mnemo__param-text">
               {{ data?.temperatures?.['Температура реактора 45/1'] || '—' }} °C
             </span>
           </div>
-          <div class="mnemo__param mnemo__param-val">
-            <span class="mnemo__param-text reaktor-1-h-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipUroven"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
+            <span class="mnemo__param-text">
               {{ data?.levels?.['Уровень реактора 45/1'] || '—' }} мм
             </span>
           </div>
         </div>
-        <div class="reaktor-niz"></div>
+        <div class="reactor-niz"></div>
       </div>
 
-      <div class="reaktor">
-        <div class="reaktor-meshalka">
+      <div class="reactor">
+        <div class="reactor-meshalka">
           <img
-            class="reaktor-dvig"
+            class="reactor-dvig"
             src="/img/dvigatel.png"
             (load)="onImageLoad()"
           />
           <div class="reactor-dvig-platform"></div>
         </div>
-        <div class="reaktor-emkost">
+        <div class="reactor-emkost">
           <div class="mnemo__param-descr">Смоляной реактор №2</div>
-          <div class="mnemo__param mnemo__param-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipTemper"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
             <span class="mnemo__param-text">
               {{ data?.temperatures?.['Температура реактора 45/2'] || '—' }} °C
             </span>
           </div>
-          <div class="mnemo__param mnemo__param-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipUroven"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
             <span class="mnemo__param-text">
               {{ data?.levels?.['Уровень реактора 45/2'] || '—' }} мм
             </span>
           </div>
         </div>
-        <div class="reaktor-niz"></div>
+        <div class="reactor-niz"></div>
       </div>
 
-      <div class="reaktor">
-        <div class="reaktor-meshalka">
+      <div class="reactor">
+        <div class="reactor-meshalka">
           <img
-            class="reaktor-dvig"
+            class="reactor-dvig"
             src="/img/dvigatel.png"
             (load)="onImageLoad()"
           />
           <div class="reactor-dvig-platform"></div>
         </div>
-        <div class="reaktor-emkost">
+        <div class="reactor-emkost">
           <div class="mnemo__param-descr">Смоляной реактор №3</div>
-          <div class="mnemo__param mnemo__param-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipTemper"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
             <span class="mnemo__param-text">
               {{ data?.temperatures?.['Температура реактора 45/3'] || '—' }} °C
-             </span>
+            </span>
           </div>
-          <div class="mnemo__param mnemo__param-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipUroven"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
             <span class="mnemo__param-text">
               {{ data?.levels?.['Уровень реактора 45/3'] || '—' }} мм
             </span>
           </div>
         </div>
-        <div class="reaktor-niz"></div>
+        <div class="reactor-niz"></div>
       </div>
 
-      <div class="reaktor">
-        <div class="reaktor-meshalka">
+      <div class="reactor">
+        <div class="reactor-meshalka">
           <img
-            class="reaktor-dvig"
+            class="reactor-dvig"
             src="/img/dvigatel.png"
             (load)="onImageLoad()"
           />
           <div class="reactor-dvig-platform"></div>
         </div>
-        <div class="reaktor-emkost">
+        <div class="reactor-emkost">
           <div class="mnemo__param-descr">Смоляной реактор №4</div>
-          <div class="mnemo__param mnemo__param-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipTemper"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
             <span class="mnemo__param-text">
               {{ data?.temperatures?.['Температура реактора 45/4'] || '—' }} °C
             </span>
           </div>
-          <div class="mnemo__param mnemo__param-val">
+          <div
+            class="mnemo__param mnemo__param-val"
+            [class.enabled-hover]="isTooltipsEnabled"
+            [matTooltip]="tooltipUroven"
+            matTooltipPosition="above"
+            matTooltipClass="custom-tooltip"
+            [matTooltipDisabled]="!isTooltipsEnabled"
+          >
             <span class="mnemo__param-text">
               {{ data?.levels?.['Уровень реактора 45/4'] || '—' }} мм
             </span>
           </div>
         </div>
-        <div class="reaktor-niz"></div>
+        <div class="reactor-niz"></div>
       </div>
-
     </div>
-    <div class="reaktors-connect"></div>
+    <div class="reactors-connect"></div>
   </div>
-
 </div>

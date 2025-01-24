@@ -1,0 +1,58 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+      <app-control-button
+        [isActive]="activeButton === 10"
+        (onClick)="setTimeRange(10)"
+      >
+        10 минут
+      </app-control-button>
+      <app-control-button
+        [isActive]="activeButton === 30"
+        (onClick)="setTimeRange(30)"
+      >
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График для Температур -->
+    <div class="graph-general__box">
+      <div class="graph-general__content">
+        <app-universal-graph
+          [apiUrls]="apiUrl"
+          [parameterNamesList]="temperatureParameterNamesList"
+          [customNames]="temperatureCustomNames"
+          [units]="'°C'"
+          [dataKeys]="temperatureDataKeys"
+          [yAxisTitle]="'Температура (°C)'"
+          [title]="'Смоляные реактора (температуры)'"
+          [yAxisRange]="{ min: 0, max: 100 }"
+          [graphId]="reactorIdTemper"
+          [timeRange]="timeRange"
+          [animate]="true"
+        ></app-universal-graph>
+      </div>
+
+    </div>
+
+    <!-- График для Уровней-->
+    <div class="graph-general__box">
+      <div class="graph-general__content">
+        <app-universal-graph
+          [apiUrls]="apiUrl"
+          [parameterNamesList]="urovenParameterNamesList"
+          [customNames]="urovenCustomNames"
+          [units]="'мм'"
+          [dataKeys]="urovenDataKeys"
+          [yAxisTitle]="'Уровень смолы (мм)'"
+          [title]="'Смоляные реактора (уровни)'"
+          [yAxisRange]="{ min: 0, max: 2500 }"
+          [graphId]="reactorIdLevel"
+          [timeRange]="timeRange"
+          [animate]="true"
+        ></app-universal-graph>
+      </div>
+    </div>
+  </div>
+</div>

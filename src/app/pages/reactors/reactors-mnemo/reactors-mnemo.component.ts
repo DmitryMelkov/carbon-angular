@@ -28,11 +28,7 @@ import {
 @Component({
   selector: 'app-reactors-mnemo',
   standalone: true,
-  imports: [
-    HeaderCurrentParamsComponent,
-    LoaderComponent,
-    CommonModule,
-  ],
+  imports: [HeaderCurrentParamsComponent, LoaderComponent, CommonModule, ControlButtonComponent, MatDialogModule, MatTooltipModule],
   templateUrl: './reactors-mnemo.component.html',
   styleUrls: ['./reactors-mnemo.component.scss'],
   animations: [
@@ -48,15 +44,18 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
 
   data: ReactorData | null = null;
   isLoading: boolean = true; // Управление прелоудером
+  isTooltipsEnabled: boolean = true;
   isDataLoaded: boolean = false; // Управление анимацией
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
   isImageLoaded: boolean = false;
 
-
-  constructor(private reactorService: ReactorService, private route: ActivatedRoute) {}
+  constructor(
+    private reactorService: ReactorService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-
     this.loadData();
     this.startPeriodicDataLoading();
   }
@@ -100,11 +99,30 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
       });
   }
 
+  //Переключает режим всплывающих подсказок.
+  toggleTooltips(): void {
+    this.isTooltipsEnabled = !this.isTooltipsEnabled;
+  }
+
+  // Подсказки для параметров
+  tooltipTemper: string =
+    'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4-20 мА';
+
+  tooltipUroven: string = 'Прибор: Метран-55-ЛМК331\nДиапазон: 0...25 кПа\nТоковый выход: 4-20 мА\n';
+
+  //Открывает модальное окно с документацией.
+  openDocumentation(): void {
+    this.dialog.open(DocumentationModalComponent, {
+      minWidth: '300px',
+      maxWidth: '90vw',
+      data: { content: 'Это тестовый контент для документации объекта.' },
+    });
+  }
+
   private updateData(response: ReactorData | null): void {
     if (response) {
       this.data = response;
     } else {
-
       this.data = {
         temperatures: {
           'Температура реактора 45/1': NaN,

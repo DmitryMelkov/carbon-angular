@@ -1,103 +1,103 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
 .mnemo {
   position: relative;
   margin: 20px auto 0;
   max-width: 1080px;
-}
 
-.mnemo__param {
-  position: none;
-}
+  &__param {
+    position: static;
 
-.mnemo__param-val {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  background-color: rgb(218, 215, 215);
-  padding: 3px;
-  font-size: 16px;
-}
+    &-val {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      background-color: rgb(218, 215, 215);
+      padding: 3px;
+      font-size: 16px;
+    }
 
-.mnemo__param-text {
-  font-size: 14px;
-  line-height: 14px;
-  color: blue;
-  font-weight: 600;
-}
+    &-text {
+      @include mixins.text-style(14px, 14px, 600, vars.$blue);
+    }
 
-.mnemo__param-descr {
-  position: absolute;
-  z-index: 1;
-  font-size: 12px;
-  line-height: 14px;
-  color: rgb(10, 59, 10);
-  font-weight: 600;
-  text-align: center;
+    &-descr {
+      position: absolute;
+      z-index: 1;
+      @include mixins.text-style(12px, 14px, 600);
+      color: rgb(10, 59, 10);
+      text-align: center;
+    }
+  }
 }
 
 .reactors {
+  padding-top: 10px;
   padding-left: 15px;
   padding-right: 15px;
   display: flex;
   justify-content: space-between;
+
+  &-connect {
+    width: 100%;
+    height: 20px;
+    background-color: rgb(179, 176, 176);
+  }
 }
 
-.reaktor {
+.reactor {
   position: relative;
   width: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  &-meshalka {
+    width: 30px;
+  }
+
+  &-dvig {
+    width: 30px;
+    height: 50px;
+
+    &-platform {
+      width: 20px;
+      height: 30px;
+      background-color: rgb(179, 176, 176);
+      margin: 0 auto;
+    }
+  }
+
+  &-emkost {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(
+      to right,
+      rgb(56, 56, 247),
+      rgb(219, 216, 216),
+      rgb(56, 56, 247)
+    );
+    border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+      rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  }
+
+  &-niz {
+    width: 20px;
+    height: 50px;
+    background-color: rgb(179, 176, 176);
+    margin: 0 auto;
+  }
 }
 
-.reaktor-meshalka {
-  width: 30px;
-}
-
-.reactor-dvig-platform {
-  width: 20px;
-  height: 30px;
-  background-color: rgb(179, 176, 176);
-  margin: 0 auto;
-}
-
-.reaktor-dvig {
-  width: 30px;
-  height: 50px;
-}
-
-.reaktor-emkost {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 300px;
-  background: linear-gradient(to right, rgb(56, 56, 247), rgb(219, 216, 216), rgb(56, 56, 247));
-  border-radius: 30px;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
-}
-
-.reaktor-niz {
-  width: 20px;
-  height: 50px;
-  background-color: rgb(179, 176, 176);
-  margin: 0 auto;
-}
-
-.reaktors-connect {
-  width: 100%;
-  height: 20px;
-  background-color: rgb(179, 176, 176);
-}
-
-/* Всплывающие подсказки */
-.mnemo__param-box--btns {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
+::ng-deep .custom-tooltip {
+  white-space: pre-line; /* Поддержка переносов строк */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
