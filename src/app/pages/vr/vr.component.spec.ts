@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SushilkaTableComponent } from './sushilka-table.component';
+import { VrComponent } from './vr.component';
 
-describe('SushilkaTableComponent', () => {
-  let component: SushilkaTableComponent;
-  let fixture: ComponentFixture<SushilkaTableComponent>;
+describe('VrComponent', () => {
+  let component: VrComponent;
+  let fixture: ComponentFixture<VrComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SushilkaTableComponent]
+      imports: [VrComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SushilkaTableComponent);
+    fixture = TestBed.createComponent(VrComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

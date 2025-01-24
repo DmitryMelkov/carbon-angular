@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
 import { switchMap, catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
 import { SushilkiData } from '../../../common/types/sushilki-data';
-import { SushilkaTableComponent } from '../../../components/sushilka-table/sushilka-table.component';
+import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,7 @@ import {
   selector: 'app-sushilka',
   standalone: true,
   imports: [
-    SushilkaTableComponent,
+    GeneralTableComponent,
     HeaderCurrentParamsComponent,
     LoaderComponent,
     CommonModule,
@@ -93,7 +93,7 @@ export class SushilkaComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return of(null);
         }),
-        delay(1000) 
+        delay(1000)
       )
       .subscribe((response) => {
         this.updateData(response);

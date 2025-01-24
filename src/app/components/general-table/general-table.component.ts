@@ -2,13 +2,13 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-sushilka-table',
+  selector: 'app-general-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './sushilka-table.component.html',
-  styleUrls: ['./sushilka-table.component.scss'],
+  templateUrl: './general-table.component.html',
+  styleUrls: ['./general-table.component.scss'],
 })
-export class SushilkaTableComponent implements OnChanges {
+export class GeneralTableComponent implements OnChanges {
   @Input() title: string = ''; // Заголовок таблицы
   @Input() data: Record<string, any> | null = null; // Данные для отображения
   @Input() unit: string = ''; // Единицы измерения (опционально)

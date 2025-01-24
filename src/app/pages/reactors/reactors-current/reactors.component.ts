@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
 import { switchMap, catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
 import { ReactorData } from '../../../common/types/reactors-data';
-import { SushilkaTableComponent } from '../../../components/sushilka-table/sushilka-table.component';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
@@ -21,15 +20,16 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
 
 @Component({
   selector: 'app-reactors',
   standalone: true,
   imports: [
-    SushilkaTableComponent,
     HeaderCurrentParamsComponent,
     LoaderComponent,
     CommonModule,
+    GeneralTableComponent
   ],
   templateUrl: './reactors.component.html',
   styleUrls: ['./reactors.component.scss'],
@@ -49,10 +49,12 @@ export class ReactorComponent implements OnInit, OnDestroy {
   isDataLoaded: boolean = false; // Управление анимацией
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
-  constructor(private reactorService: ReactorService, private route: ActivatedRoute) {}
+  constructor(
+    private reactorService: ReactorService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-
     this.loadData();
     this.startPeriodicDataLoading();
   }

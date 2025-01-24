@@ -4,8 +4,8 @@
   <app-header-current-params [title]="'Вращающаяся сушилка №' + id.replace('sushilka', '')"></app-header-current-params>
 
   <div class="tables">
-    <app-sushilka-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="'°C'"></app-sushilka-table>
-    <app-sushilka-table [title]="'Текущие параметры (разрежения)'" [data]="data?.vacuums || {}" [unit]="' кгс/м²'"></app-sushilka-table>
-    <app-sushilka-table [title]="'Текущие параметры (горелка)'" [data]="data?.gorelka || {}"></app-sushilka-table>
+    <app-general-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="'°C'"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (разрежения)'" [data]="data?.vacuums || {}" [unit]="' кгс/м²'"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (горелка)'" [data]="data?.gorelka || {}"></app-general-table>
   </div>
 </div>
