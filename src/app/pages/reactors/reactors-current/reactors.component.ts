@@ -13,14 +13,9 @@ import { HeaderCurrentParamsComponent } from '../../../components/header-current
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
 import { ReactorService } from '../../../common/services/reactors/reactors.service';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-reactors',
@@ -29,17 +24,11 @@ import { GeneralTableComponent } from '../../../components/general-table/general
     HeaderCurrentParamsComponent,
     LoaderComponent,
     CommonModule,
-    GeneralTableComponent
+    GeneralTableComponent,
   ],
   templateUrl: './reactors.component.html',
   styleUrls: ['./reactors.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class ReactorComponent implements OnInit, OnDestroy {
   @Input() contentType!: string; // Тип контента
@@ -51,7 +40,8 @@ export class ReactorComponent implements OnInit, OnDestroy {
 
   constructor(
     private reactorService: ReactorService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +50,7 @@ export class ReactorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
@@ -84,18 +75,13 @@ export class ReactorComponent implements OnInit, OnDestroy {
   }
 
   private startPeriodicDataLoading(): void {
-    interval(10000)
-      .pipe(
-        switchMap(() => this.reactorService.getReactorK296Data()),
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при получении данных:', error);
-          return of(null);
-        })
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.reactorService.getReactorK296Data(), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
+      (response) => {
         this.updateData(response);
-      });
+      }
+    );
   }
 
   private updateData(response: ReactorData | null): void {

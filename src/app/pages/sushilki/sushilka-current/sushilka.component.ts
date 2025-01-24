@@ -14,13 +14,8 @@ import { HeaderCurrentParamsComponent } from '../../../components/header-current
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-sushilka',
@@ -33,13 +28,7 @@ import {
   ],
   templateUrl: './sushilka.component.html',
   styleUrls: ['./sushilka.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class SushilkaComponent implements OnInit, OnDestroy {
   @Input() id!: string; // ID сушилки
@@ -52,7 +41,8 @@ export class SushilkaComponent implements OnInit, OnDestroy {
 
   constructor(
     private sushilkiService: SushilkiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +68,7 @@ export class SushilkaComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
@@ -102,18 +93,13 @@ export class SushilkaComponent implements OnInit, OnDestroy {
   }
 
   private startPeriodicDataLoading(): void {
-    interval(10000)
-      .pipe(
-        switchMap(() => this.sushilkiService.getSushilkaData(this.id)),
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при получении данных:', error);
-          return of(null);
-        })
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
+      (response) => {
         this.updateData(response);
-      });
+      }
+    );
   }
 
   private updateData(response: SushilkiData | null): void {

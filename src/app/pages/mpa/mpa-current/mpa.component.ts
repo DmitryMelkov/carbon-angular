@@ -13,14 +13,9 @@ import { HeaderCurrentParamsComponent } from '../../../components/header-current
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { CommonModule } from '@angular/common';
 import { MpaService } from '../../../common/services/mpa/mpa.service';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-mpa',
@@ -33,13 +28,7 @@ import { GeneralTableComponent } from '../../../components/general-table/general
   ],
   templateUrl: './mpa.component.html',
   styleUrls: ['./mpa.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class MpaComponent implements OnInit, OnDestroy {
   @Input() id!: string; // ID Мпа
@@ -50,7 +39,11 @@ export class MpaComponent implements OnInit, OnDestroy {
   isDataLoaded: boolean = false; // Управление анимацией
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
-  constructor(private mpaService: MpaService, private route: ActivatedRoute) {}
+  constructor(
+    private mpaService: MpaService,
+    private route: ActivatedRoute,
+    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
+  ) {}
 
   ngOnInit(): void {
     // Если ID не передан через route, используем входное свойство
@@ -75,6 +68,7 @@ export class MpaComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.dataLoadingService.stopPeriodicLoading();
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
@@ -99,18 +93,13 @@ export class MpaComponent implements OnInit, OnDestroy {
   }
 
   private startPeriodicDataLoading(): void {
-    interval(10000)
-      .pipe(
-        switchMap(() => this.mpaService.getMpaData(this.id)),
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при получении данных:', error);
-          return of(null);
-        })
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
+      (response) => {
         this.updateData(response);
-      });
+      }
+    );
   }
 
   private updateData(response: MpaData | null): void {

@@ -17,14 +17,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { MpaService } from '../../../common/services/mpa/mpa.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { MpaTable } from "./table/table.component";
+import { MpaTable } from './table/table.component';
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-mpa-mnemo',
@@ -35,18 +30,12 @@ import { MpaTable } from "./table/table.component";
     MatDialogModule,
     ControlButtonComponent,
     LoaderComponent,
-    MpaTable
-],
+    MpaTable,
+  ],
   standalone: true,
   templateUrl: './mpa-mnemo.component.html',
   styleUrls: ['./mpa-mnemo.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class MpaMnemoComponent implements OnInit, OnDestroy {
   data: MpaData | null = null;
@@ -60,7 +49,8 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
   constructor(
     private mpaService: MpaService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dataLoadingService: DataLoadingService
   ) {}
 
   getDynamicKey(baseKey: string): string {
@@ -90,7 +80,7 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadData(): void {
+  private loadData(): void {
     this.isLoading = true;
 
     // Первичная загрузка данных
@@ -103,29 +93,25 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return of(null);
         }),
-        delay(1000) // Добавляем задержку в 2 секунды
+        delay(1000) // Добавляем задержку в 1 секунду
       )
       .subscribe((response) => {
         this.updateData(response);
         this.isLoading = false;
       });
 
-    // Периодическая загрузка данных
-    interval(10000)
-      .pipe(
-        switchMap(() => this.mpaService.getMpaData(this.id)),
-        takeUntil(this.destroy$),
-        catchError((err) => {
-          console.error('Ошибка загрузки данных:', err);
-          return of(null);
-        })
-      )
-      .subscribe((response) => {
+    // Периодическая загрузка данных через DataLoadingService
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
+      (response) => {
         this.updateData(response);
-      });
+      }
+    );
   }
 
   ngOnDestroy(): void {
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
@@ -137,11 +123,12 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
 
   // Подсказки для параметров
   tooltipTemper: string =
-  'Прибор: Термопара (1000мм)\nДиапазон: 0...+1300°C\nГрадуировка: ХА (К)';
+    'Прибор: Термопара (1000мм)\nДиапазон: 0...+1300°C\nГрадуировка: ХА (К)';
 
   tooltipDavlenie: string = 'Прибор: ПРОМА-ИДМ\nТоковый выход: 4-20 мА\n';
 
-  tooltipDB: string = 'Прибор: ПД-1.Т1\nДиапазон: 0...-250 Па\nТоковый выход: 4-20 мА';;
+  tooltipDB: string =
+    'Прибор: ПД-1.Т1\nДиапазон: 0...-250 Па\nТоковый выход: 4-20 мА';
 
   //Открывает модальное окно с документацией.
   openDocumentation(): void {
@@ -208,7 +195,7 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
   toNumber(value: any): number {
     return Number(value) || 0;
   }
-  
+
   onImageLoad(): void {
     this.isImageLoaded = true;
   }

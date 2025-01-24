@@ -18,13 +18,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-sushilka-mnemo',
@@ -40,13 +36,7 @@ import {
   standalone: true,
   templateUrl: './sushilka-mnemo.component.html',
   styleUrls: ['./sushilka-mnemo.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   data: SushilkiData | null = null;
@@ -60,7 +50,8 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   constructor(
     private sushilkiService: SushilkiService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
   ) {}
 
   getDynamicKey(baseKey: string): string {
@@ -103,34 +94,30 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return of(null);
         }),
-        delay(1000) // Добавляем задержку в 2 секунды
+        delay(1000) // Добавляем задержку в 1 секунду
       )
       .subscribe((response) => {
         this.updateData(response);
         this.isLoading = false;
       });
 
-    // Периодическая загрузка данных
-    interval(10000)
-      .pipe(
-        switchMap(() => this.sushilkiService.getSushilkaData(this.id)),
-        takeUntil(this.destroy$),
-        catchError((err) => {
-          console.error('Ошибка загрузки данных:', err);
-          return of(null);
-        })
-      )
-      .subscribe((response) => {
+    // Периодическая загрузка данных через DataLoadingService
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
+      (response) => {
         this.updateData(response);
-      });
+      }
+    );
   }
 
   ngOnDestroy(): void {
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
 
-  //Переключает режим всплывающих подсказок.
+  // Переключает режим всплывающих подсказок
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
   }
@@ -154,7 +141,7 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   temperUhodyashihGazov: string =
     'Прибор: Термопара (320мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
 
-  //Открывает модальное окно с документацией.
+  // Открывает модальное окно с документацией
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
       minWidth: '300px',

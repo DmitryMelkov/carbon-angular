@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { interval, of, Subject } from 'rxjs';
-import { switchMap, takeUntil, catchError } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -66,6 +66,8 @@ export class VrComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataLoadingService.stopPeriodicLoading();
+    this.destroy$.next();
+    this.destroy$.complete(); // Завершаем поток
   }
 
   private loadData(): void {
@@ -89,11 +91,15 @@ export class VrComponent implements OnInit, OnDestroy {
   }
 
   private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(this.id, 10000, (response) => {
-      this.data = response;
-      this.updateMode();
-      this.checkValues();
-    });
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.vrService.getVrData(this.id), // Функция для загрузки данных VR
+      10000,
+      (response) => {
+        this.data = response;
+        this.updateMode();
+        this.checkValues();
+      }
+    );
   }
 
   private updateMode(): void {

@@ -3,7 +3,6 @@ import {
   OnInit,
   OnDestroy,
   Input,
-  SimpleChanges,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
@@ -17,27 +16,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { fadeInAnimation } from '../../../common/animations/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-reactors-mnemo',
   standalone: true,
-  imports: [HeaderCurrentParamsComponent, LoaderComponent, CommonModule, ControlButtonComponent, MatDialogModule, MatTooltipModule],
+  imports: [
+    HeaderCurrentParamsComponent,
+    LoaderComponent,
+    CommonModule,
+    ControlButtonComponent,
+    MatDialogModule,
+    MatTooltipModule,
+  ],
   templateUrl: './reactors-mnemo.component.html',
   styleUrls: ['./reactors-mnemo.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class ReactorMnemoComponent implements OnInit, OnDestroy {
   @Input() contentType!: string; // Тип контента
@@ -52,7 +47,8 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
   constructor(
     private reactorService: ReactorService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
   ) {}
 
   ngOnInit(): void {
@@ -61,6 +57,7 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
@@ -85,21 +82,16 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
   }
 
   private startPeriodicDataLoading(): void {
-    interval(10000)
-      .pipe(
-        switchMap(() => this.reactorService.getReactorK296Data()),
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при получении данных:', error);
-          return of(null);
-        })
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.reactorService.getReactorK296Data(), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
+      (response) => {
         this.updateData(response);
-      });
+      }
+    );
   }
 
-  //Переключает режим всплывающих подсказок.
+  // Переключает режим всплывающих подсказок
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
   }
@@ -108,9 +100,10 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
   tooltipTemper: string =
     'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4-20 мА';
 
-  tooltipUroven: string = 'Прибор: Метран-55-ЛМК331\nДиапазон: 0...25 кПа\nТоковый выход: 4-20 мА\n';
+  tooltipUroven: string =
+    'Прибор: Метран-55-ЛМК331\nДиапазон: 0...25 кПа\nТоковый выход: 4-20 мА\n';
 
-  //Открывает модальное окно с документацией.
+  // Открывает модальное окно с документацией
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
       minWidth: '300px',

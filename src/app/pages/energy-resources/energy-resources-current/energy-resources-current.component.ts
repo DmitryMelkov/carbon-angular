@@ -3,16 +3,11 @@ import { EnergyResourcesService } from '../../../common/services/energy-resource
 import { EnergyResourceData } from '../../../common/types/energy-resources-data';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
-import { interval, Subject, of } from 'rxjs';
-import { takeUntil, catchError, switchMap, delay } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { takeUntil, catchError, delay } from 'rxjs/operators';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
+import { fadeInAnimation } from '../../../common/animations/animations';
 
 @Component({
   selector: 'app-energy-resources-current',
@@ -20,13 +15,7 @@ import {
   imports: [CommonModule, HeaderCurrentParamsComponent, LoaderComponent],
   templateUrl: './energy-resources-current.component.html',
   styleUrls: ['./energy-resources-current.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })), // Начальное состояние
-      state('*', style({ opacity: 1 })), // Конечное состояние
-      transition('void => *', animate('0.3s ease-in-out')), // Анимация появления
-    ]),
-  ],
+  animations: [fadeInAnimation],
 })
 export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   energyResources: Record<string, EnergyResourceData> = {};
@@ -48,7 +37,10 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   mpaKeys: { key: string; typeSize: string }[] = []; // Массив для МПА
   otherKeys: { key: string; typeSize: string }[] = []; // Массив для остальных
 
-  constructor(private energyResourcesService: EnergyResourcesService) {}
+  constructor(
+    private energyResourcesService: EnergyResourcesService,
+    private dataLoadingService: DataLoadingService
+  ) {}
 
   ngOnInit() {
     this.loadData(); // Загружаем данные при инициализации
@@ -56,8 +48,9 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroy$.next(); // Завершаем поток
-    this.destroy$.complete(); // Завершаем подписки
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+    this.destroy$.next();
+    this.destroy$.complete(); // Завершаем поток
   }
 
   private loadData() {
@@ -88,19 +81,14 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
       });
   }
 
-  private startPeriodicDataLoading() {
-    interval(10000) // Каждые 10 секунд
-      .pipe(
-        switchMap(() => this.energyResourcesService.getEnergyResourceData()),
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при периодической загрузке данных:', error);
-          return of({}); // Возвращаем пустой объект в случае ошибки
-        })
-      )
-      .subscribe((data) => {
+  private startPeriodicDataLoading(): void {
+    this.dataLoadingService.startPeriodicLoading(
+      () => this.energyResourcesService.getEnergyResourceData(), // Функция для загрузки данных энергоресурсов
+      10000,
+      (data) => {
         this.energyResources = data; // Обновляем данные
-      });
+      }
+    );
   }
 
   getKeys(obj: Record<string, any>): string[] {

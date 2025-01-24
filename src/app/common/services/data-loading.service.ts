@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { VrService } from './vr/vr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +8,16 @@ import { VrService } from './vr/vr.service';
 export class DataLoadingService {
   private destroy$ = new Subject<void>();
 
-  constructor(private vrService: VrService) {}
+  constructor() {} // Убираем зависимость от VrService
 
-  startPeriodicLoading(id: string, intervalTime: number, callback: (data: any) => void): void {
+  startPeriodicLoading(
+    loadDataFn: () => any, // Функция для загрузки данных
+    intervalTime: number,
+    callback: (data: any) => void
+  ): void {
     interval(intervalTime)
       .pipe(
-        switchMap(() => this.vrService.getVrData(id)),
+        switchMap(() => loadDataFn()), // Используем переданную функцию
         takeUntil(this.destroy$)
       )
       .subscribe((response) => {
