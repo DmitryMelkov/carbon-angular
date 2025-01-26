@@ -6,8 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { interval, Subject, of } from 'rxjs';
-import { switchMap, catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
+import { Subject} from 'rxjs';
 import { MpaData } from '../../../common/types/mpa-data';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -68,32 +67,28 @@ export class MpaComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading();
+    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
     this.destroy$.next();
     this.destroy$.complete(); // Завершаем поток
   }
 
   private loadData(): void {
     this.isLoading = true;
-    this.mpaService
-      .getMpaData(this.id)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при первичной загрузке данных:', error);
-          this.isLoading = false;
-          return of(null);
-        }),
-        delay(1000)
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.loadData<MpaData>(
+      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
+      (response) => {
         this.updateData(response);
         this.onLoadingComplete(); // Вызываем, когда данные загружены
-      });
+      },
+      (error) => {
+        console.error('Ошибка при первичной загрузке данных:', error);
+        this.isLoading = false;
+      }
+    );
   }
 
   private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(
+    this.dataLoadingService.startPeriodicLoading<MpaData>(
       () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
       10000, // Интервал 10 секунд
       (response) => {

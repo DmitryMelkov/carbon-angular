@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MpaData } from '../../../common/types/mpa-data';
-import { Subscription, switchMap, interval, Subject, of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { takeUntil, catchError, delay } from 'rxjs/operators'; // Добавляем delay
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -82,23 +82,17 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.isLoading = true;
-
-    // Первичная загрузка данных
-    this.mpaService
-      .getMpaData(this.id)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((err) => {
-          console.error('Ошибка первичной загрузки данных:', err);
-          this.isLoading = false;
-          return of(null);
-        }),
-        delay(1000) // Добавляем задержку в 1 секунду
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.loadData<MpaData>(
+      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
+      (response) => {
         this.updateData(response);
         this.isLoading = false;
-      });
+      },
+      (error) => {
+        console.error('Ошибка первичной загрузки данных:', error);
+        this.isLoading = false;
+      }
+    );
 
     // Периодическая загрузка данных через DataLoadingService
     this.dataLoadingService.startPeriodicLoading(
@@ -116,7 +110,7 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
     this.destroy$.complete(); // Завершаем поток
   }
 
-  //Переключает режим всплывающих подсказок.
+  // Переключает режим всплывающих подсказок
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
   }
@@ -130,7 +124,7 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
   tooltipDB: string =
     'Прибор: ПД-1.Т1\nДиапазон: 0...-250 Па\nТоковый выход: 4-20 мА';
 
-  //Открывает модальное окно с документацией.
+  // Открывает модальное окно с документацией
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
       minWidth: '300px',

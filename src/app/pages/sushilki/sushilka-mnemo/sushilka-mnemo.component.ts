@@ -8,8 +8,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiData } from '../../../common/types/sushilki-data';
-import { Subscription, switchMap, interval, Subject, of } from 'rxjs';
-import { takeUntil, catchError, delay } from 'rxjs/operators'; // Добавляем delay
+import { Subject, of } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
@@ -18,7 +18,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-
 import { fadeInAnimation } from '../../../common/animations/animations';
 import { DataLoadingService } from '../../../common/services/data-loading.service';
 
@@ -84,22 +83,18 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   loadData(): void {
     this.isLoading = true;
 
-    // Первичная загрузка данных
-    this.sushilkiService
-      .getSushilkaData(this.id)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((err) => {
-          console.error('Ошибка первичной загрузки данных:', err);
-          this.isLoading = false;
-          return of(null);
-        }),
-        delay(1000) // Добавляем задержку в 1 секунду
-      )
-      .subscribe((response) => {
+    // Используем DataLoadingService для загрузки данных
+    this.dataLoadingService.loadData(
+      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
+      (response) => {
         this.updateData(response);
+        this.onLoadingComplete(); // Вызываем, когда данные загружены
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных:', error);
         this.isLoading = false;
-      });
+      }
+    );
 
     // Периодическая загрузка данных через DataLoadingService
     this.dataLoadingService.startPeriodicLoading(

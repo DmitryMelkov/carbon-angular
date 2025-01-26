@@ -55,18 +55,11 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
 
   private loadData() {
     this.isLoading = true; // Устанавливаем флаг загрузки
-    this.energyResourcesService
-      .getEnergyResourceData()
-      .pipe(
-        takeUntil(this.destroy$), // Завершаем подписку при уничтожении
-        catchError((error) => {
-          console.error('Ошибка при загрузке данных:', error);
-          this.isLoading = false; // Убираем флаг загрузки
-          return of({}); // Возвращаем пустой объект в случае ошибки
-        }),
-        delay(1000)
-      )
-      .subscribe((data) => {
+
+    // Используем DataLoadingService для загрузки данных
+    this.dataLoadingService.loadData<Record<string, EnergyResourceData>>(
+      () => this.energyResourcesService.getEnergyResourceData(), // Функция для загрузки данных
+      (data) => {
         this.energyResources = data; // Сохраняем полученные данные
         this.isLoading = false; // Убираем флаг загрузки
         this.isDataLoaded = true; // Включаем анимацию
@@ -78,13 +71,18 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
         this.otherKeys = this.orderedKeys.filter(
           (item) => !this.mpaKeys.includes(item)
         );
-      });
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных:', error);
+        this.isLoading = false; // Убираем флаг загрузки
+      }
+    );
   }
 
   private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.energyResourcesService.getEnergyResourceData(), // Функция для загрузки данных энергоресурсов
-      10000,
+    this.dataLoadingService.startPeriodicLoading<Record<string, EnergyResourceData>>(
+      () => this.energyResourcesService.getEnergyResourceData(), // Функция для загрузки данных
+      10000, // Интервал 10 секунд
       (data) => {
         this.energyResources = data; // Обновляем данные
       }

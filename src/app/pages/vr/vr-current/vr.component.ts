@@ -79,33 +79,34 @@ export class VrComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.isLoading = true;
-    forkJoin({
-      vrData: this.vrService.getVrData(this.id),
-      notisData: this.notisVrService.getNotisData(this.id)
-    })
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при загрузке данных:', error);
-          this.isLoading = false;
-          return of({ vrData: null, notisData: null });
-        })
-      )
-      .subscribe((response) => {
+
+    this.dataLoadingService.loadData(
+      () =>
+        forkJoin({
+          vrData: this.vrService.getVrData(this.id),
+          notisData: this.notisVrService.getNotisData(this.id),
+        }),
+      (response) => {
         this.data = response.vrData;
         this.notisData = response.notisData;
         this.updateMode();
         this.checkValues();
         this.isLoading = false;
-      });
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных:', error);
+        this.isLoading = false;
+      }
+    );
   }
 
   private startPeriodicDataLoading(): void {
     this.dataLoadingService.startPeriodicLoading(
-      () => forkJoin({
-        vrData: this.vrService.getVrData(this.id),
-        notisData: this.notisVrService.getNotisData(this.id)
-      }),
+      () =>
+        forkJoin({
+          vrData: this.vrService.getVrData(this.id),
+          notisData: this.notisVrService.getNotisData(this.id),
+        }),
       10000,
       (response) => {
         this.data = response.vrData;

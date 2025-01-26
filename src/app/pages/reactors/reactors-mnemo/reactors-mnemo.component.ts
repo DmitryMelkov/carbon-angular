@@ -5,8 +5,8 @@ import {
   Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { interval, Subject, of } from 'rxjs';
-import { switchMap, catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
+import { Subject, of } from 'rxjs';
+import { catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
 import { ReactorData } from '../../../common/types/reactors-data';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -64,25 +64,21 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.isLoading = true;
-    this.reactorService
-      .getReactorK296Data()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при первичной загрузке данных:', error);
-          this.isLoading = false;
-          return of(null);
-        }),
-        delay(1000)
-      )
-      .subscribe((response) => {
+    this.dataLoadingService.loadData<ReactorData>(
+      () => this.reactorService.getReactorK296Data(),
+      (response) => {
         this.updateData(response);
         this.onLoadingComplete(); // Вызываем, когда данные загружены
-      });
+      },
+      (error) => {
+        console.error('Ошибка при первичной загрузке данных:', error);
+        this.isLoading = false;
+      }
+    );
   }
 
   private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(
+    this.dataLoadingService.startPeriodicLoading<ReactorData>(
       () => this.reactorService.getReactorK296Data(), // Функция для загрузки данных
       10000, // Интервал 10 секунд
       (response) => {

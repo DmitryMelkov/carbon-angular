@@ -75,21 +75,18 @@ export class SushilkaComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.isLoading = true;
-    this.sushilkiService
-      .getSushilkaData(this.id)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при первичной загрузке данных:', error);
-          this.isLoading = false;
-          return of(null);
-        }),
-        delay(1000)
-      )
-      .subscribe((response) => {
+
+    this.dataLoadingService.loadData(
+      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
+      (response) => {
         this.updateData(response);
         this.onLoadingComplete(); // Вызываем, когда данные загружены
-      });
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных:', error);
+        this.isLoading = false;
+      }
+    );
   }
 
   private startPeriodicDataLoading(): void {

@@ -57,59 +57,43 @@ export class MillsCurrentComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     // Загрузка данных для Mill 1
-    this.millsService
-      .getMill1Data()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при загрузке данных Mill 1:', error);
-          return of(null);
-        }),
-        delay(1000)
-      )
-      .subscribe((data) => {
+    this.dataLoadingService.loadData(
+      () => this.millsService.getMill1Data(),
+      (data) => {
         this.mill1Data = data;
         this.checkDataLoaded();
-      });
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных Mill 1:', error);
+        this.checkDataLoaded();
+      }
+    );
 
     // Загрузка данных для Mill 2
-    this.millsService
-      .getMill2Data()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при загрузке данных Mill 2:', error);
-          return of(null);
-        }),
-        delay(1000)
-      )
-      .subscribe((data) => {
+    this.dataLoadingService.loadData(
+      () => this.millsService.getMill2Data(),
+      (data) => {
         this.mill2Data = data;
         this.checkDataLoaded();
-      });
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных Mill 2:', error);
+        this.checkDataLoaded();
+      }
+    );
 
     // Загрузка данных для Mill 10b
-    this.millsService
-      .getMill10bData()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при загрузке данных Mill 10b:', error);
-          return of(null);
-        }),
-        delay(1000)
-      )
-      .subscribe((data) => {
+    this.dataLoadingService.loadData(
+      () => this.millsService.getMill10bData(),
+      (data) => {
         this.mill10bData = data;
         this.checkDataLoaded();
-      });
-  }
-
-  private checkDataLoaded() {
-    if (this.mill1Data && this.mill2Data && this.mill10bData) {
-      this.isLoading = false;
-      this.isDataLoaded = true;
-    }
+      },
+      (error) => {
+        console.error('Ошибка при загрузке данных Mill 10b:', error);
+        this.checkDataLoaded();
+      }
+    );
   }
 
   private startPeriodicDataLoading() {
@@ -139,6 +123,13 @@ export class MillsCurrentComponent implements OnInit, OnDestroy {
         if (data) this.mill10bData = data;
       }
     );
+  }
+
+  private checkDataLoaded() {
+    if (this.mill1Data && this.mill2Data && this.mill10bData) {
+      this.isLoading = false;
+      this.isDataLoaded = true;
+    }
   }
 
   onLoadingComplete(): void {
