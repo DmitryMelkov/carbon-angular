@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class HeaderCurrentParamsComponent implements OnInit, OnDestroy {
   @Input() title: string = ''; // Заголовок сушилки
   @Input() mode: string | null = null; // Режим работы (опционально)
+  @Input() notisStatus: string | null = null; // Статус нотиса
   currentDate: string = ''; // Текущая дата
   currentTime: string = ''; // Текущее время
   private timer: any; // Переменная для хранения интервала
@@ -29,6 +30,17 @@ export class HeaderCurrentParamsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.timer) {
       clearInterval(this.timer); // Очистка интервала при уничтожении компонента
+    }
+  }
+
+  getNotisStatusText(status: string): string {
+    switch (status) {
+      case 'idle':
+        return 'Загрузки нет';
+      case 'working':
+        return 'Идет загрузка';
+      default:
+        return 'Нет данных';
     }
   }
 }

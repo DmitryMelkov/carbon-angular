@@ -11,5 +11,8 @@
     Режим работы:
     <span class="current-param__subtitle-span"> {{ mode }}</span>
   </div>
+  <div *ngIf="notisStatus" class="current-param__subtitle">
+    Статус нотиса:
+    <span class="current-param__subtitle-span"> {{ getNotisStatusText(notisStatus) }}</span>
+  </div>
 </div>
-,

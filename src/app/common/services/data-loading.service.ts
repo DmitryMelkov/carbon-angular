@@ -8,7 +8,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 export class DataLoadingService {
   private destroy$ = new Subject<void>();
 
-  constructor() {} // Убираем зависимость от VrService
+  constructor() {}
 
   startPeriodicLoading(
     loadDataFn: () => any, // Функция для загрузки данных

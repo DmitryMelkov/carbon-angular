@@ -1,7 +1,11 @@
 <app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"></app-loader>
 
 <div class="current-container" *ngIf="!isLoading" @fadeIn>
-  <app-header-current-params [title]="'Печь карбонизации №' + id.replace('vr', '')" [mode]="mode"></app-header-current-params>
+  <app-header-current-params
+  [title]="'Печь карбонизации №' + id.replace('vr', '')"
+  [mode]="mode"
+  [notisStatus]="notisData?.status ?? null"
+></app-header-current-params>
 
   <div class="tables">
     <app-general-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="'°C'"
@@ -14,5 +18,6 @@
       [recommendedValues]="recommendedVacuums" [highlightedKeys]="highlightedKeys"></app-general-table>
     <app-general-table [title]="'Текущие параметры (IM)'" [data]="data?.im || {}"></app-general-table>
     <app-general-table [title]="'Текущие параметры (горелка)'" [data]="data?.gorelka || {}"></app-general-table>
+    <app-general-table [title]="'Текущие параметры (нотисы)'" [data]="notisData?.data || {}"></app-general-table>
   </div>
 </div>

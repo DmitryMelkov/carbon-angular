@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { forkJoin, of, Subject } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
@@ -18,6 +18,8 @@ import {
 import { DataLoadingService } from '../../../common/services/data-loading.service';
 import { fadeInAnimation } from '../../../common/animations/animations';
 import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
+import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
+import { NotisData } from '../../../common/types/notis-data';
 
 @Component({
   selector: 'app-vr',
@@ -30,17 +32,17 @@ import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
   ],
   templateUrl: './vr.component.html',
   styleUrls: ['./vr.component.scss'],
-  animations: [fadeInAnimation], // Используем анимацию
+  animations: [fadeInAnimation],
 })
 export class VrComponent implements OnInit, OnDestroy {
   @Input() id!: string;
   data: VrData | null = null;
+  notisData: NotisData | null = null;
   isLoading: boolean = true;
-  mode: string | null = null; // Режим работы
-  highlightedKeys: Set<string> = new Set(); // Ключи для выделения
+  mode: string | null = null;
+  highlightedKeys: Set<string> = new Set();
   private destroy$ = new Subject<void>();
 
-  // Рекомендуемые значения
   recommendedTemperatures = recommendedTemperatures;
   recommendedLevels = recommendedLevels;
   recommendedPressures = recommendedPressures;
@@ -51,7 +53,8 @@ export class VrComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private valueCheckService: ValueCheckService,
     private dataLoadingService: DataLoadingService,
-    private modeVrService: ModeVrService
+    private modeVrService: ModeVrService,
+    private notisVrService: NotisVrService
   ) {}
 
   ngOnInit(): void {
@@ -71,35 +74,42 @@ export class VrComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.dataLoadingService.stopPeriodicLoading();
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
   private loadData(): void {
     this.isLoading = true;
-    this.vrService
-      .getVrData(this.id)
+    forkJoin({
+      vrData: this.vrService.getVrData(this.id),
+      notisData: this.notisVrService.getNotisData(this.id)
+    })
       .pipe(
         takeUntil(this.destroy$),
         catchError((error) => {
           console.error('Ошибка при загрузке данных:', error);
           this.isLoading = false;
-          return of(null);
+          return of({ vrData: null, notisData: null });
         })
       )
       .subscribe((response) => {
-        this.data = response;
-        this.updateMode(); // Обновляем режим работы
-        this.checkValues(); // Проверяем значения
+        this.data = response.vrData;
+        this.notisData = response.notisData;
+        this.updateMode();
+        this.checkValues();
         this.isLoading = false;
       });
   }
 
   private startPeriodicDataLoading(): void {
     this.dataLoadingService.startPeriodicLoading(
-      () => this.vrService.getVrData(this.id), // Функция для загрузки данных VR
+      () => forkJoin({
+        vrData: this.vrService.getVrData(this.id),
+        notisData: this.notisVrService.getNotisData(this.id)
+      }),
       10000,
       (response) => {
-        this.data = response;
+        this.data = response.vrData;
+        this.notisData = response.notisData;
         this.updateMode();
         this.checkValues();
       }
