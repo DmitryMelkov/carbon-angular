@@ -1,0 +1,311 @@
+<app-loader
+  *ngIf="isLoading"
+  [delay]="2000"
+  [loadingText]="'Подождите, идет загрузка данных...'"
+></app-loader>
+
+<div
+  class="mnemo-container"
+  *ngIf="!isLoading"
+  [@fadeIn]="isImageLoaded ? '*' : 'void'"
+>
+  <div class="mnemo">
+    <img class="mnemo__img" src="/img/pech-vr.jpg" (load)="onImageLoad()" />
+    <div class="mnemo__param-descr ot-hvo-text">От ХВО</div>
+    <div class="mnemo__param-descr avarini-sbros-text">Аварийный сброс</div>
+    <div class="mnemo__param-descr par-v-otdelenii-activatsi-text">
+      Пар в отделении активации
+    </div>
+    <div class="mnemo__param-descr borov-soedinitelni-text">
+      Боров соединительный
+    </div>
+    <div class="mnemo__param-descr pech-doziga-gazov-text">
+      Печь дожига газов
+    </div>
+    <div class="mnemo__param-descr dymosos-text">Дымосос</div>
+    <div class="mnemo__param-descr kotel-utilizator-text">Котел утилизатор</div>
+    <div class="mnemo__param-descr vyhod-dymovyh-gazov-text">
+      Выход дымовых газов
+    </div>
+    <div class="mnemo__param-descr mokriy-skruber-text">Мокрый скруббер</div>
+    <div class="mnemo__param-descr topka-text">Топка</div>
+    <div class="mnemo__param-descr vanna-skrubbera-text">Ванна скруббера</div>
+    <div class="mnemo__param-descr goriz-vibrotransporter-text">
+      Вертикальный вибротранспортер
+    </div>
+    <div class="mnemo__param-descr vr-pech-carboniz-text">
+      Вращающаяся печь карбонизации
+    </div>
+    <div class="mnemo__param-descr hvo-text">ХВО</div>
+    <div class="mnemo__param-descr holodilnik-text">Холодильник</div>
+    <div class="mnemo__param-descr grohot-text">Грохот</div>
+    <div class="mnemo__param-descr elevator-text">Элеватор</div>
+    <div class="mnemo__param-descr zagruzka-granul-text">Загрузка гранул</div>
+    <div class="mnemo__param-descr notis-status-text">
+      Статус:
+      <ng-container [ngSwitch]="notisData?.status">
+        <span class="notis-span" *ngSwitchCase="'working'">Идет загрузка</span>
+        <span class="notis-span" *ngSwitchCase="'idle'">Загрузки нет</span>
+        <span class="notis-span" *ngSwitchDefault>Нет данных</span>
+      </ng-container>
+    </div>
+    <div class="mnemo__param-descr niz-zagr-kam-text">
+      Низ загрузочной камеры
+    </div>
+    <div class="mnemo__param-descr vigruzka-kam-text">Камера выгрузки</div>
+    <div class="mnemo__param-descr vniz-kamery-zagruzki-text">
+      Внизу камеры загрузки
+    </div>
+    <div class="mnemo__param-descr vverh-kamery-zagruzki-text">
+      Вверху камеры загрузки
+    </div>
+    <div class="mnemo__param-descr vhod-pechi-doziganiy-text">
+      Вход печи дожигания
+    </div>
+    <div class="mnemo__param-descr vyhod-pechi-doziganiy-text">
+      Выход печи дожигания
+    </div>
+    <div class="mnemo__param-descr zadanie-temper-na-gorelky-text">Задание</div>
+    <div class="mnemo__param-descr first-skolz-text">1-СК</div>
+    <div class="mnemo__param-descr second-skolz-text">2-СК</div>
+    <div class="mnemo__param-descr third-skolz-text">3-СК</div>
+
+    <div class="mnemo__gif mnemo__gif-1">
+      <img src="/img/fire-gif.gif" alt="img" />
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-2">
+      <img src="/img/ventilator.png" alt="img" />
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-3">
+      <img src="/img/par.gif" alt="img" />
+    </div>
+
+    <div class="mnemo__param first-skolz">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('1-СК')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param second-skolz">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('2-СК')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param third-skolz">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('3-СК')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param temper-v-topke">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('В топке')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param vverh-kamery-zagruzki">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Вверху камеры загрузки')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param vniz-kamery-zagruzki">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Внизу камеры загрузки')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param vhod-pechi-doziganiy">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('На входе печи дожига')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param vyhod-pechi-doziganiy">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('На выходе печи дожига')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param temper-kamer-vygruz">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Камеры выгрузки')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param gazy-kotla-utilizazi">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Дымовых газов котла')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param temper-gazov-do-scrubber">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Газов до скруббера')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param temper-gazov-posle-scrubber">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Газов после скруббера')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param temper-vody-v-vanne-scrubber">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Воды в ванне скруббера')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param granul-posle-holodil">
+      <span class="mnemo__param-text">
+        {{ data?.temperatures?.[('Гранул после холод-ка')] || '—' }}
+        °C
+      </span>
+    </div>
+
+    <div class="mnemo__param uroven-vanne-scrubber">
+      <span class="mnemo__param-text">
+        {{ data?.levels?.['В ванне скруббера']?.value || '—' }} мм
+      </span>
+    </div>
+
+    <div class="mnemo__param uroven-vody-hvo">
+      <span class="mnemo__param-text">
+        {{ data?.levels?.['В емкости ХВО']?.value || '—' }} мм
+      </span>
+    </div>
+
+    <div class="mnemo__param uroven-v-barabane-kotla">
+      <span class="mnemo__param-text">
+        {{ data?.levels?.['В барабане котла']?.value || '—' }} мм
+      </span>
+    </div>
+
+    <div class="mnemo__param p-gazov-posle-scrubber">
+      <span class="mnemo__param-text">
+        {{ data?.pressures?.['Давление газов после скруббера'] || '—' }} кгс/см²
+      </span>
+    </div>
+
+    <div class="mnemo__param p-v-barabane-kotla">
+      <span class="mnemo__param-text">
+        {{ data?.pressures?.['Пара в барабане котла'] || '—' }} кгс/см²
+      </span>
+    </div>
+
+    <div class="mnemo__param razr-v-topke">
+      <span class="mnemo__param-text">
+        {{ data?.vacuums?.['В топке печи'] || '—' }} кгс/м²
+      </span>
+    </div>
+
+    <div class="mnemo__param razr-v-prostranstve-kotla">
+      <span class="mnemo__param-text">
+        {{ data?.vacuums?.['В котле утилизаторе'] || '—' }} кгс/м²
+      </span>
+    </div>
+
+    <div class="mnemo__param razr-niz-zagr-kam">
+      <span class="mnemo__param-text">
+        {{ data?.vacuums?.['Низ загрузочной камеры'] || '—' }} кгс/м²
+      </span>
+    </div>
+
+    <div class="mnemo__param im5-percent">
+      <span class="mnemo__param-text">
+        {{ data?.im?.['ИМ5 котел-утилизатор'] || '—' }} %
+      </span>
+    </div>
+
+    <div class="mnemo__param mosh-gorelky">
+      <span class="mnemo__param-text">
+        {{ data?.gorelka?.['Мощность горелки №' + id] || '—' }} %
+      </span>
+    </div>
+
+    <div class="mnemo__param zadanie-temper-na-gorelky">
+      <span class="mnemo__param-text">
+        {{ data?.gorelka?.['Задание температуры на горелку №' + id] || '—' }} %
+      </span>
+    </div>
+
+    <div class="mnemo__param doza-notis">
+      <span class="mnemo__param-text">
+        {{ notisData?.data?.['Доза (кг/ч) НОТИС' + id] || '—' }} кг/ч
+      </span>
+    </div>
+
+    <app-level-indicator
+      [data]="data"
+      [minLevel]="-200"
+      [maxLevel]="200"
+      [totalRange]="400"
+      [levelKeyPrefix]="'В барабане котла'"
+      [dataSource]="'levels'"
+      [width]="'42px'"
+      [height]="'85px'"
+      [bottom]="'61.9%'"
+      [right]="'50%'"
+      [fillColor]="'#57b7f7'"
+      [warningThreshold]="25"
+    >
+    </app-level-indicator>
+
+    <app-mnemo-kran
+      class="kran kran-1"
+      [isActive]="!!data?.im?.['ИМ1 скруббер']"
+      [triangleWidth]="15"
+      [triangleHeight]="12"
+    >
+    </app-mnemo-kran>
+
+    <app-mnemo-kran
+      class="kran kran-2"
+      [isActive]="!!data?.im?.['ИМ2 ХВО']"
+      [triangleWidth]="11"
+      [triangleHeight]="10"
+    >
+    </app-mnemo-kran>
+
+    <app-mnemo-kran
+      class="kran kran-3"
+      [isActive]="!!data?.im?.['ИМ3 аварийный сброс']"
+      [triangleWidth]="15"
+      [triangleHeight]="12"
+    >
+    </app-mnemo-kran>
+
+    <app-mnemo-kran
+      class="kran kran-4"
+      [isActive]="!!data?.im?.['ИМ4 пар в отделение активации']"
+      [triangleWidth]="15"
+      [triangleHeight]="12"
+    >
+    </app-mnemo-kran>
+
+    <app-mnemo-kran
+      class="kran kran-5"
+      [isActive]="isKran5Active()"
+      [triangleWidth]="15"
+      [triangleHeight]="12"
+    >
+    </app-mnemo-kran>
+  </div>
+</div>

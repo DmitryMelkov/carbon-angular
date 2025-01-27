@@ -6,10 +6,12 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   imports: [CommonModule],
   standalone: true,
   templateUrl: './mnemo-kran.component.html',
-  styleUrl: './mnemo-kran.component.scss'
+  styleUrl: './mnemo-kran.component.scss',
 })
 export class MnemoKranComponent implements OnChanges {
   @Input() isActive: boolean | undefined = false;
+  @Input() triangleWidth: number = 20; // Ширина треугольника
+  @Input() triangleHeight: number = 17; // Высота треугольника
 
   color: string = 'red';
 

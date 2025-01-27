@@ -27,6 +27,7 @@ import { MillYCVOK130Component } from './pages/mills/mill-ycvok130/mill-ycvok130
 import { ReactorComponent } from './pages/reactors/reactors-current/reactors.component';
 import { ReactorMnemoComponent } from './pages/reactors/reactors-mnemo/reactors-mnemo.component';
 import { VrComponent } from './pages/vr/vr-current/vr.component';
+import { VrMnemoComponent } from './pages/vr/vr-mnemo/vr-mnemo.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -109,6 +110,7 @@ export const appConfig: ApplicationConfig = {
         component: ReactorMnemoComponent,
       },
       { path: 'vr/:id/current', component: VrComponent },
+      { path: 'vr/:id/mnemo', component: VrMnemoComponent },
     ]),
     provideHttpClient(),
     provideAnimations(),

@@ -2,11 +2,19 @@
   <div class="mnemo__kran-box">
     <div
       class="mnemo__triangle1 mnemo__kran-left"
-      [ngStyle]="{'border-left': '20px solid ' + color}">
+      [ngStyle]="{
+        'border-left': triangleWidth + 'px solid ' + color,
+        'border-top': triangleHeight + 'px solid transparent',
+        'border-bottom': triangleHeight + 'px solid transparent'
+      }">
     </div>
     <div
       class="mnemo__triangle2 mnemo__kran-right"
-      [ngStyle]="{'border-right': '20px solid ' + color}">
+      [ngStyle]="{
+        'border-right': triangleWidth + 'px solid ' + color,
+        'border-top': triangleHeight + 'px solid transparent',
+        'border-bottom': triangleHeight + 'px solid transparent'
+      }">
     </div>
   </div>
 </div>

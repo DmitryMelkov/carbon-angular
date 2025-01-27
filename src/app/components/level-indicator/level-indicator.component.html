@@ -1,0 +1,17 @@
+<div
+  class="mnemo__level-container"
+  [ngStyle]="{
+    width: dynamicSize.width,
+    height: dynamicSize.height,
+    bottom: position.bottom,
+    right: position.right
+  }"
+>
+  <div
+    class="mnemo__level-fill"
+    [ngStyle]="{
+      height: fillPercentage + '%',
+      backgroundColor: isWarning ? 'red' : fillPercentage > 0 ? fillColor : 'transparent'
+    }"
+  ></div>
+</div>
