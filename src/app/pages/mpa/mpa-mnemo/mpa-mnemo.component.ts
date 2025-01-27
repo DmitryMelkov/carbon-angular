@@ -8,8 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MpaData } from '../../../common/types/mpa-data';
-import { Subject, of } from 'rxjs';
-import { takeUntil, catchError, delay } from 'rxjs/operators'; // Добавляем delay
+import { Subject} from 'rxjs';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';

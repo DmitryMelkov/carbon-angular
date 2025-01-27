@@ -8,18 +8,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiData } from '../../../common/types/sushilki-data';
-import { Subject, of } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject} from 'rxjs';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
-import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
 import { DataLoadingService } from '../../../common/services/data-loading.service';
+import { SushilkiDocumentationModalComponent } from './sushilki-documentation-modal/sushilki-documentation-modal.component';
 
 @Component({
   selector: 'app-sushilka-mnemo',
@@ -138,7 +137,7 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
 
   // Открывает модальное окно с документацией
   openDocumentation(): void {
-    this.dialog.open(DocumentationModalComponent, {
+    this.dialog.open(SushilkiDocumentationModalComponent, {
       minWidth: '300px',
       maxWidth: '90vw',
       data: { content: 'Это тестовый контент для документации объекта.' },

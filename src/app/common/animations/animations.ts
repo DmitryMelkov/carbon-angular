@@ -11,3 +11,21 @@ export const blinkAnimation = trigger('blink', [
   state('warning', style({ color: 'red' })),
   transition('normal <=> warning', animate('500ms ease-in-out')),
 ]);
+
+export const accordionAnimation = trigger('accordionAnimation', [
+  state(
+    'closed',
+    style({
+      height: '0px',
+      opacity: 0,
+    })
+  ),
+  state(
+    'open',
+    style({
+      height: '*',
+      opacity: 1,
+    })
+  ),
+  transition('closed <=> open', animate('300ms ease-in-out')),
+]);
