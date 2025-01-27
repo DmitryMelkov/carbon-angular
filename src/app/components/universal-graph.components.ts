@@ -104,6 +104,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @Input() graphId!: string;
   @Input() timeRange: number = 10;
   @Input() animate: boolean = true;
+  @Input() zones: { min: number; max: number; color: string }[] = [];
   @Input() units: string | string[] = ''; // Может быть строкой или массивом строк
 
   private chart!: Chart<keyof ChartTypeRegistry>;
@@ -187,7 +188,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
         this.yAxisTitle,
         this.title,
         this.animate,
-        this.units // Передаем units (строку или массив)
+        this.units,
+        this.zones // Передаем зоны в сервис
       );
 
       const datasets = this.graphService.createDatasets(

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Chart, ChartOptions, ChartTypeRegistry } from 'chart.js';
 import crosshairPlugin from 'chartjs-plugin-crosshair';
+import annotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
 import 'chartjs-adapter-date-fns';
 
-Chart.register(crosshairPlugin);
 @Injectable({
   providedIn: 'root',
 })
@@ -26,7 +26,11 @@ export class UniversalGraphService {
     '#836953', // Коричневый
   ];
 
-  constructor() {}
+  constructor() {
+    // Регистрируем плагины
+    Chart.register(crosshairPlugin);
+    Chart.register(annotationPlugin);
+  }
 
   // Получить цвет по индексу
   getColor(index: number): string {
@@ -105,8 +109,25 @@ export class UniversalGraphService {
     yAxisTitle: string,
     title: string,
     animate: boolean = true,
-    units: string | string[] = '' // Может быть строкой или массивом строк
+    units: string | string[] = '',
+    zones: { min: number; max: number; color: string; }[] = [] // Добавлено поле label
   ): ChartOptions {
+    const annotations: Record<string, AnnotationOptions> = zones.reduce(
+      (acc, zone, index) => {
+        acc[`zone${index}`] = {
+          type: 'box',
+          yMin: zone.min,
+          yMax: zone.max,
+          backgroundColor: zone.color,
+          borderColor: zone.color.replace('0.1', '0.5'), // Добавляем рамку
+          borderWidth: 3,
+        };
+
+        return acc;
+      },
+      {} as Record<string, AnnotationOptions>
+    );
+
     return {
       animation: animate
         ? {
@@ -134,6 +155,9 @@ export class UniversalGraphService {
         },
       },
       plugins: {
+        annotation: {
+          annotations,
+        },
         crosshair: {
           line: {
             color: 'green',

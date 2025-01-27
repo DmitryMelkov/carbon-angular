@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 
   imports: [CommonModule, UniversalGraphComponent],
   templateUrl: './mill-ygm9517.component.html',
-  styleUrl: './mill-ygm9517.component.scss'
+  styleUrl: './mill-ygm9517.component.scss',
 })
 export class MillYGM9517Component {
   apiUrls: string[] = [`${environment.apiUrl}/api/mill10b/data`];
@@ -22,4 +22,11 @@ export class MillYGM9517Component {
   title: string = 'График вибрации YGM-9517';
   yAxisRange: { min: number; max: number } = { min: 0, max: 30 };
   timeRange: number = 30;
+
+  // Настройка зон
+  zones = [
+    { min: 0, max: 20, color: 'rgba(0, 255, 0, 0.1)', label: 'Зеленая зона' }, // Зеленая зона
+    { min: 20, max: 25, color: 'rgba(255, 255, 0, 0.1)', label: 'Желтая зона' }, // Желтая зона
+    { min: 25, max: 30, color: 'rgba(255, 0, 0, 0.1)', label: 'Красная зона' }, // Красная зона
+  ];
 }

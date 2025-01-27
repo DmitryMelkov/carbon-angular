@@ -19,7 +19,14 @@ export class Mill1GraphComponent {
   customNames: string[][] = [['Фронтальное', 'Поперечное', 'Осевое']];
   dataKeys: string[] = ['data']; // Ключи для данных из API
   yAxisTitle: string = 'Вибрация, мм/с';
-  title: string = 'График вибрации  мельница №1';
+  title: string = 'График вибрации мельница №1';
   yAxisRange: { min: number; max: number } = { min: 0, max: 30 };
   timeRange: number = 30;
+
+  // Настройка зон
+  zones = [
+    { min: 0, max: 20, color: 'rgba(0, 255, 0, 0.1)' }, // Зеленая зона
+    { min: 20, max: 25, color: 'rgba(255, 255, 0, 0.1)' }, // Желтая зона
+    { min: 25, max: 30, color: 'rgba(255, 0, 0, 0.1)' }, // Красная зона
+  ];
 }
