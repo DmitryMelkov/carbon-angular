@@ -52,65 +52,76 @@ export class DocumentationModalComponent {
   schemes = [
     {
       title: 'Общие данные',
-      dwg: 'http://Techsite4/schemes/common_data_sushilka.dwg',
-      pdf: 'http://Techsite4/schemes/PDF/common_data_sushilka.pdf',
+      dwg: '../content/vr/schemes/common_data_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/common_data_vr.pdf',
     },
     {
       title: 'Структурная схема',
-      dwg: 'http://Techsite4/schemes/structural_sushilka.dwg',
-      pdf: 'http://Techsite4/schemes/PDF/structural_sushilka.pdf',
+      dwg: '../content/vr/schemes/structural_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/structural_vr.pdf',
     },
     {
       title: 'Принципиальная схема питания',
-      dwg: 'http://Techsite4/schemes/power_sushilka.dwg',
-      pdf: 'http://Techsite4/schemes/PDF/power_sushilka.pdf',
+      dwg: '../content/vr/schemes/power_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/power_vr.pdf',
     },
     {
       title: 'Функциональная схема',
-      dwg: 'http://Techsite4/schemes/functional_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/functional_sushilka.pdf',
+      dwg: '../content/vr/schemes/functional_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/functional_vr.pdf',
     },
     {
       title: 'Принципиальная схема соединений контроллера I',
-      dwg: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/MK-500_first_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/MK-500_first_sushilka.pdf',
+      dwg: '../content/vr/schemes/MK-500_first_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/MK-500_first_vr.pdf',
     },
     {
       title: 'Принципиальная схема соединений контроллера II',
-      dwg: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/MK-500_second_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/MK-500_second_sushilka.pdf',
+      dwg: '../content/vr/schemes/MK-500_second_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/MK-500_second_vr.pdf',
     },
     {
-      title: 'Схема внешних соединений',
-      dwg: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/external_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/external_sushilka.pdf',
+      title: 'Принципиальная схема соединений термодата',
+      dwg: '../content/vr/schemes/termodat_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/termodat_vr.pdf',
     },
     {
-      title: 'Схема электрических соединений соединений',
-      dwg: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/MKC_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/MKC_sushilka.pdf',
+      title: 'Принципиальная схема соединений ИМ2300',
+      dwg: '../content/vr/schemes/im2300_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/im2300_vr.pdf',
+    },
+    {
+      title: 'Схема внешних соединений I',
+      dwg: '../content/vr/schemes/external1_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/external1_vr.pdf',
+    },
+    {
+      title: 'Схема внешних соединений II',
+      dwg: '../content/vr/schemes/external2_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/external2_vr.pdf',
+    },
+    {
+      title: 'Схема электрических соединений',
+      dwg: '../content/vr/schemes/MKC_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/MKC_vr.pdf',
     },
     {
       title: 'Сборочный чертеж',
-      dwg: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/assembly_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/assembly_sushilka.pdf',
+      dwg: '../content/vr/schemes/assembly_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/assembly_vr.pdf',
     },
     {
       title: 'Спецификация оборудования',
-      dwg: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/specification_sushilka.dwg',
-      pdf: 'http://Techsite4/kaskad/production/carbon/sushilki/modal-content/schemes/PDF/specification_sushilka.pdf',
+      dwg: '../content/vr/schemes/specification_vr.dwg',
+      pdf: '../content/vr/schemes/PDF/specification_vr.pdf',
     },
   ];
 
-  programs = [
+  docs = [
     {
-      title: 'Программа МК-500',
-      file: 'http://Techsite4/progs/prog_mk500_sushilka.th7',
-    },
-    {
-      title: 'Программа панели оператора DELTA',
-      file: 'http://Techsite4/progs/prog_delta_sushilka.dpa',
-    },
+      title: 'Руководства по эксплуатации',
+      file: '../content/vr/docs/re_air.pdf',
+    }
   ];
 
   constructor(
@@ -129,7 +140,7 @@ export class DocumentationModalComponent {
   get accordionState(): { [key: string]: string } {
     return {
       schemes: this.activeAccordion === 'schemes' ? 'open' : 'closed',
-      programs: this.activeAccordion === 'programs' ? 'open' : 'closed',
+      docs: this.activeAccordion === 'docs' ? 'open' : 'closed',
     };
   }
 }
