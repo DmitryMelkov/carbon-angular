@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { VrData } from '../../../common/types/vr-data';
 import { VrService } from '../../../common/services/vr/vr.service';
@@ -20,26 +19,34 @@ import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
 import { NotisData } from '../../../common/types/notis-data';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
 import { LevelIndicatorComponent } from '../../../components/level-indicator/level-indicator.component';
+import { blinkAnimation } from '../../../common/animations/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 
 @Component({
   selector: 'app-vr-mnemo',
   standalone: true,
   imports: [
-    HeaderCurrentParamsComponent,
     LoaderComponent,
     CommonModule,
     MnemoKranComponent,
-    LevelIndicatorComponent
+    LevelIndicatorComponent,
+    MatTooltipModule,
+    MatDialogModule,
+    ControlButtonComponent,
   ],
   templateUrl: './vr-mnemo.component.html',
   styleUrls: ['./vr-mnemo.component.scss'],
-  animations: [fadeInAnimation],
+  animations: [fadeInAnimation, blinkAnimation], // Добавляем blinkAnimation
 })
 export class VrMnemoComponent implements OnInit, OnDestroy {
   @Input() id!: string;
   data: VrData | null = null;
   notisData: NotisData | null = null;
   isLoading: boolean = true;
+  isTooltipsEnabled: boolean = true;
   mode: string | null = null;
   highlightedKeys: Set<string> = new Set();
   private destroy$ = new Subject<void>();
@@ -56,8 +63,23 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     private valueCheckService: ValueCheckService,
     private dataLoadingService: DataLoadingService,
     private modeVrService: ModeVrService,
-    private notisVrService: NotisVrService
+    private notisVrService: NotisVrService,
+    private dialog: MatDialog
   ) {}
+
+  // Метод для проверки, вышел ли параметр за пределы допустимого
+  isAlarm(
+    key: string,
+    value: any,
+    recommendedValues: Record<string, string>
+  ): boolean {
+    const isOutOfRange = this.valueCheckService.isOutOfRange(
+      key,
+      value,
+      recommendedValues
+    );
+    return isOutOfRange;
+  }
 
   ngOnInit(): void {
     if (!this.id) {
@@ -92,7 +114,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
         this.data = response.vrData;
         this.notisData = response.notisData;
         this.updateMode();
-        this.checkValues();
         this.isLoading = false;
       },
       (error) => {
@@ -114,9 +135,46 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
         this.data = response.vrData;
         this.notisData = response.notisData;
         this.updateMode();
-        this.checkValues();
       }
     );
+  }
+
+  // Переключает режим всплывающих подсказок
+  toggleTooltips(): void {
+    this.isTooltipsEnabled = !this.isTooltipsEnabled;
+  }
+
+  termopara1000: string =
+    'Прибор: Термопара (1000мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
+
+  termopara400: string =
+    'Прибор: Термопара (400мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
+
+  tcm50m: string =
+    'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4 - 20 мА';
+
+  vBarabaneKotla: string =
+    'Прибор: АИР-20/М2-Н-ДД\nДиапазон: 0...4 кПа\nТоковый выход: 4 - 20 мА';
+
+  davlScrubber: string =
+    'Прибор: ПД-1.М.Н1.42\nДиапазон: 0...0,25 кПа\nТоковый выход: 4 - 20 мА';
+
+  davlKotel: string =
+    'Прибор: Метран-55-ДИ\nДиапазон: 0...1,6 МПа\nТоковый выход: 4 - 20 мА';
+
+  davlTopka: string =
+    'Прибор: ПД-1.ТН.42\nДиапазон: -0,125...+0,125 кПа\nТоковый выход: 4 - 20 мА';
+
+  davlNizKamery: string =
+    'Прибор: ПД-1.Т1.42\nДиапазон: 0...-0,25 кПа\nТоковый выход: 4 - 20 мА';
+
+  // Открывает модальное окно с документацией
+  openDocumentation(): void {
+    this.dialog.open(DocumentationModalComponent, {
+      minWidth: '300px',
+      maxWidth: '90vw',
+      data: { content: 'Это тестовый контент для документации объекта.' },
+    });
   }
 
   private updateMode(): void {
@@ -135,64 +193,5 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   isKran5Active(): boolean {
     const value = this.data?.im?.['ИМ5 котел-утилизатор'];
     return typeof value === 'number' && value > 5; // Проверяем, что значение больше 5
-  }
-
-  private checkValues(): void {
-    if (!this.data) return;
-
-    // Очищаем предыдущие значения
-    this.highlightedKeys.clear();
-
-    // Проверяем температуры
-    for (const key in this.data.temperatures) {
-      if (
-        this.valueCheckService.isOutOfRange(
-          key,
-          this.data.temperatures[key],
-          this.recommendedTemperatures
-        )
-      ) {
-        this.highlightedKeys.add(key);
-      }
-    }
-
-    // Проверяем уровни
-    for (const key in this.data.levels) {
-      if (
-        this.valueCheckService.isOutOfRange(
-          key,
-          this.data.levels[key].value,
-          this.recommendedLevels
-        )
-      ) {
-        this.highlightedKeys.add(key);
-      }
-    }
-
-    // Проверяем давления
-    for (const key in this.data.pressures) {
-      if (
-        this.valueCheckService.isOutOfRange(
-          key,
-          this.data.pressures[key],
-          this.recommendedPressures
-        )
-      ) {
-        this.highlightedKeys.add(key);
-      }
-    }
-
-    // Проверяем разрежения
-    for (const key in this.data.vacuums) {
-      const value = this.data.vacuums[key];
-      const isOut = this.valueCheckService.isOutOfRange(
-        key,
-        value,
-        this.recommendedVacuums
-      );
-      if (isOut) {
-        this.highlightedKeys.add(key);
-      }
-    }
   }
 }

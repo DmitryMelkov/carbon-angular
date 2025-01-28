@@ -14,4 +14,7 @@
       backgroundColor: isWarning ? 'red' : fillPercentage > 0 ? fillColor : 'transparent'
     }"
   ></div>
+  <div class="mnemo__level-percentage">
+    {{ fillPercentage | number: '1.0-0' }}% <!-- Отображаем процент заполненности -->
+  </div>
 </div>

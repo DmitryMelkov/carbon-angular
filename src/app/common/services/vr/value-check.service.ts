@@ -5,11 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class ValueCheckService {
   // Метод для проверки, выходит ли значение за пределы диапазона
-  isOutOfRange(
-    key: string,
-    value: any,
-    recommendedValues: Record<string, string>
-  ): boolean {
+  isOutOfRange(key: string, value: any, recommendedValues: Record<string, string>): boolean {
     const recommended = recommendedValues[key];
     if (!recommended) return false;
 

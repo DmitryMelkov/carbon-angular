@@ -10,6 +10,22 @@
   [@fadeIn]="isImageLoaded ? '*' : 'void'"
 >
   <div class="mnemo">
+    <div class="mnemo__param-box--btns">
+      <app-control-button
+        [isActive]="isTooltipsEnabled"
+        (onClick)="toggleTooltips()"
+      >
+        {{
+          isTooltipsEnabled
+            ? "Выкл. всплывающие подсказки"
+            : "Вкл. всплывающие подсказки"
+        }}
+      </app-control-button>
+
+      <app-control-button (onClick)="openDocumentation()">
+        Документация объекта
+      </app-control-button>
+    </div>
     <img class="mnemo__img" src="/img/pech-vr.jpg" (load)="onImageLoad()" />
     <div class="mnemo__param-descr ot-hvo-text">От ХВО</div>
     <div class="mnemo__param-descr avarini-sbros-text">Аварийный сброс</div>
@@ -82,98 +98,195 @@
       <img src="/img/par.gif" alt="img" />
     </div>
 
-    <div class="mnemo__param first-skolz">
+    <div
+      class="mnemo__param first-skolz"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara400"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('1-СК')] || '—' }}
-        °C
+        {{ data?.temperatures?.['1-СК'] || '—' }} °C
       </span>
     </div>
 
-    <div class="mnemo__param second-skolz">
+    <div
+      class="mnemo__param second-skolz"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara400"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('2-СК')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param third-skolz">
+    <div
+      class="mnemo__param third-skolz"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara400"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('3-СК')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param temper-v-topke">
+    <div
+      class="mnemo__param temper-v-topke"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('В топке')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param vverh-kamery-zagruzki">
+    <div
+      class="mnemo__param vverh-kamery-zagruzki"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Вверху камеры загрузки')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param vniz-kamery-zagruzki">
+    <div
+      class="mnemo__param vniz-kamery-zagruzki"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Внизу камеры загрузки')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param vhod-pechi-doziganiy">
+    <div
+      class="mnemo__param vhod-pechi-doziganiy"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('На входе печи дожига')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param vyhod-pechi-doziganiy">
+    <div
+      class="mnemo__param vyhod-pechi-doziganiy"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('На выходе печи дожига')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param temper-kamer-vygruz">
+    <div
+      class="mnemo__param temper-kamer-vygruz"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Камеры выгрузки')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param gazy-kotla-utilizazi">
+    <div
+      class="mnemo__param gazy-kotla-utilizazi"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Дымовых газов котла')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param temper-gazov-do-scrubber">
+    <div
+      class="mnemo__param temper-gazov-do-scrubber"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Газов до скруббера')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param temper-gazov-posle-scrubber">
+    <div
+      class="mnemo__param temper-gazov-posle-scrubber"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="tcm50m"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Газов после скруббера')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param temper-vody-v-vanne-scrubber">
+    <div
+      class="mnemo__param temper-vody-v-vanne-scrubber"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="tcm50m"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Воды в ванне скруббера')] || '—' }}
         °C
       </span>
     </div>
 
-    <div class="mnemo__param granul-posle-holodil">
+    <div
+      class="mnemo__param granul-posle-holodil"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="tcm50m"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.temperatures?.[('Гранул после холод-ка')] || '—' }}
         °C
@@ -192,37 +305,79 @@
       </span>
     </div>
 
-    <div class="mnemo__param uroven-v-barabane-kotla">
+    <div
+      class="mnemo__param uroven-v-barabane-kotla"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="vBarabaneKotla"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.levels?.['В барабане котла']?.value || '—' }} мм
       </span>
     </div>
 
-    <div class="mnemo__param p-gazov-posle-scrubber">
+    <div
+      class="mnemo__param p-gazov-posle-scrubber"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlScrubber"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.pressures?.['Давление газов после скруббера'] || '—' }} кгс/см²
       </span>
     </div>
 
-    <div class="mnemo__param p-v-barabane-kotla">
+    <div
+      class="mnemo__param p-v-barabane-kotla"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlKotel"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.pressures?.['Пара в барабане котла'] || '—' }} кгс/см²
       </span>
     </div>
 
-    <div class="mnemo__param razr-v-topke">
+    <div
+      class="mnemo__param razr-v-topke"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlTopka"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.vacuums?.['В топке печи'] || '—' }} кгс/м²
       </span>
     </div>
 
-    <div class="mnemo__param razr-v-prostranstve-kotla">
+    <div
+      class="mnemo__param razr-v-prostranstve-kotla"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlNizKamery"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.vacuums?.['В котле утилизаторе'] || '—' }} кгс/м²
       </span>
     </div>
 
-    <div class="mnemo__param razr-niz-zagr-kam">
+    <div
+      class="mnemo__param razr-niz-zagr-kam"
+      [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlNizKamery"
+      matTooltipPosition="above"
+      matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled"
+    >
       <span class="mnemo__param-text">
         {{ data?.vacuums?.['Низ загрузочной камеры'] || '—' }} кгс/м²
       </span>
@@ -253,16 +408,42 @@
     </div>
 
     <app-level-indicator
-      [data]="data"
+      [value]="data?.levels?.['В барабане котла']?.value"
       [minLevel]="-200"
       [maxLevel]="200"
       [totalRange]="400"
-      [levelKeyPrefix]="'В барабане котла'"
-      [dataSource]="'levels'"
-      [width]="'42px'"
-      [height]="'85px'"
-      [bottom]="'61.9%'"
-      [right]="'50%'"
+      [width]="'59px'"
+      [height]="'89px'"
+      [bottom]="'65.8%'"
+      [right]="'46.3%'"
+      [fillColor]="'#57b7f7'"
+      [warningThreshold]="25"
+    >
+    </app-level-indicator>
+
+    <app-level-indicator
+      [value]="data?.levels?.['В емкости ХВО']?.value"
+      [minLevel]="0"
+      [maxLevel]="6000"
+      [totalRange]="6000"
+      [width]="'41px'"
+      [height]="'40px'"
+      [bottom]="'14.5%'"
+      [right]="'56.7%'"
+      [fillColor]="'#57b7f7'"
+      [warningThreshold]="25"
+    >
+    </app-level-indicator>
+
+    <app-level-indicator
+      [value]="data?.levels?.['В ванне скруббера']?.value"
+      [minLevel]="0"
+      [maxLevel]="1000"
+      [totalRange]="1000"
+      [width]="'292px'"
+      [height]="'139px'"
+      [bottom]="'2.7%'"
+      [right]="'12%'"
       [fillColor]="'#57b7f7'"
       [warningThreshold]="25"
     >

@@ -47,6 +47,10 @@ body::-webkit-scrollbar-thumb {
   margin: 0;
 }
 
+.custom-tooltip {
+  white-space: pre-line; /* Разрешает переносы строк */
+}
+
 .btn-reset {
   background-color: transparent;
   cursor: pointer;

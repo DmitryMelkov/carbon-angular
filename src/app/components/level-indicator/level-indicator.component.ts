@@ -1,22 +1,28 @@
 import { Component, Input, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-level-indicator',
-  standalone: true, // standalone компонент
-  imports: [CommonModule], // Импортируем CommonModule
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './level-indicator.component.html',
   styleUrls: ['./level-indicator.component.scss'],
 })
 export class LevelIndicatorComponent implements OnInit, OnDestroy {
-  @Input() objectNumber?: number;
-  @Input() data: any;
+  private _value?: number;
+
+  @Input()
+  get value(): number | undefined {
+    return this._value;
+  }
+  set value(val: number | undefined) {
+    this._value = val;
+    this.calculateFillPercentage(); // Пересчитываем fillPercentage при изменении value
+  }
+
   @Input() minLevel: number = 0;
   @Input() maxLevel: number = 100;
   @Input() totalRange: number = 100;
-  @Input() levelKeyPrefix: string = '';
-  @Input() dataSource: 'parameters' | 'levels' = 'parameters';
   @Input() width: string = '42px';
   @Input() height: string = '85px';
   @Input() bottom: string = '61.9%';
@@ -68,10 +74,7 @@ export class LevelIndicatorComponent implements OnInit, OnDestroy {
   }
 
   private calculateFillPercentage(): void {
-    const levelKey = this.objectNumber !== undefined ? `${this.levelKeyPrefix}${this.objectNumber}` : this.levelKeyPrefix;
-    const rawValue = this.data[this.dataSource]?.[levelKey];
-    const cleanedValue = String(rawValue).replace(/["\s]/g, '');
-    const levelValue = parseFloat(cleanedValue);
+    const levelValue = this._value !== undefined ? this._value : 0; // Используем _value
     const isValidLevel = !isNaN(levelValue);
 
     if (isValidLevel) {
