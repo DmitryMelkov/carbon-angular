@@ -428,19 +428,19 @@
 
     <div class="mnemo__param mosh-gorelky">
       <span class="mnemo__param-text">
-        {{ data?.gorelka?.['Мощность горелки №' + id] || '—' }} %
+        {{ data?.gorelka?.['Мощность горелки №' + id.replace('vr', '')] || '—' }} %
       </span>
     </div>
 
     <div class="mnemo__param zadanie-temper-na-gorelky">
       <span class="mnemo__param-text">
-        {{ data?.gorelka?.['Задание температуры на горелку №' + id] || '—' }} %
+        {{ data?.gorelka?.['Задание температуры на горелку №' + id.replace('vr', '')] || '—' }} %
       </span>
     </div>
 
     <div class="mnemo__param doza-notis">
       <span class="mnemo__param-text">
-        {{ notisData?.data?.['Доза (кг/ч) НОТИС' + id] || '—' }} кг/ч
+        {{ notisData?.data?.['Доза (кг/ч) НОТИС' + id.replace('vr', '')] || '—' }} кг/ч
       </span>
     </div>
 

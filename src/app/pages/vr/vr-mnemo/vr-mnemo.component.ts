@@ -17,6 +17,7 @@ import { ControlButtonComponent } from '../../../components/control-button/contr
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 import { ParamIndicatorComponent } from './param-indicator/param-indicator.component';
+import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -42,7 +43,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   notisData: NotisData | null = null;
   isLoading: boolean = true;
   isTooltipsEnabled: boolean = true;
-  mode: string | null = null;
+  mode: string | null = null; // Добавляем свойство mode
   private destroy$ = new Subject<void>();
   isImageLoaded: boolean = false;
 
@@ -51,19 +52,18 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private dataLoadingService: DataLoadingService,
     private notisVrService: NotisVrService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private modeVrService: ModeVrService
   ) {}
 
   ngOnInit(): void {
     if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') ?? '';
     }
-
     if (!this.id) {
       console.error('ID VR не указан!');
       return;
     }
-
     this.loadData();
     this.startPeriodicDataLoading();
   }
@@ -85,6 +85,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       (response) => {
         this.data = response.vrData;
         this.notisData = response.notisData;
+        this.updateMode();
         this.isLoading = false;
       },
       (error) => {
@@ -105,40 +106,40 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       (response) => {
         this.data = response.vrData;
         this.notisData = response.notisData;
+        this.updateMode();
       }
     );
   }
 
-  // Переключает режим всплывающих подсказок
+  private updateMode(): void {
+    if (this.data) {
+      const mode = this.modeVrService.determineMode(this.data);
+      this.modeVrService.setCurrentMode(mode);
+      this.mode = mode; // Обновляем свойство mode
+    }
+  }
+
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
   }
 
   termopara1000: string =
     'Прибор: Термопара (1000мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
-
   termopara400: string =
     'Прибор: Термопара (400мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
-
   tcm50m: string =
     'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4 - 20 мА';
-
   vBarabaneKotla: string =
     'Прибор: АИР-20/М2-Н-ДД\nДиапазон: 0...4 кПа\nТоковый выход: 4 - 20 мА';
-
   davlScrubber: string =
     'Прибор: ПД-1.М.Н1.42\nДиапазон: 0...0,25 кПа\nТоковый выход: 4 - 20 мА';
-
   davlKotel: string =
     'Прибор: Метран-55-ДИ\nДиапазон: 0...1,6 МПа\nТоковый выход: 4 - 20 мА';
-
   davlTopka: string =
     'Прибор: ПД-1.ТН.42\nДиапазон: -0,125...+0,125 кПа\nТоковый выход: 4 - 20 мА';
-
   davlNizKamery: string =
     'Прибор: ПД-1.Т1.42\nДиапазон: 0...-0,25 кПа\nТоковый выход: 4 - 20 мА';
 
-  // Открывает модальное окно с документацией
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
       minWidth: '300px',
@@ -151,7 +152,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     this.isImageLoaded = true;
   }
 
-  // В компоненте VrMnemoComponent
   isKran5Active(): boolean {
     const value = this.data?.im?.['ИМ5 котел-утилизатор'];
     return typeof value === 'number' && value > 5; // Проверяем, что значение больше 5

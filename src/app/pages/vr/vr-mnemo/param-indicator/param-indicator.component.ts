@@ -7,6 +7,7 @@ import {
   recommendedVacuums,
 } from '../../../../common/constans/vr-recomended-values';
 import { CommonModule } from '@angular/common';
+import { ModeVrService } from '../../../../common/services/vr/mode-vr.service';
 
 @Component({
   selector: 'app-param-indicator',
@@ -27,12 +28,19 @@ export class ParamIndicatorComponent {
   @Input() value!: any; // Значение параметра
   @Input() unit!: string;
 
-  constructor(private valueCheckService: ValueCheckService) {}
+  constructor(
+    private valueCheckService: ValueCheckService,
+    private modeVrService: ModeVrService
+  ) {}
 
   // Универсальная функция для проверки выхода за пределы допустимого диапазона
   isAlarm(key: string, value: any): boolean {
-    let recommendedValues: Record<string, string> | undefined;
+    const mode = this.modeVrService.getCurrentMode();
+    if (mode === 'Печь не работает') {
+      return false; // Если режим "Печь не работает", то уставки не моргают
+    }
 
+    let recommendedValues: Record<string, string> | undefined;
     if (key in recommendedTemperatures) {
       recommendedValues = recommendedTemperatures;
     } else if (key in recommendedLevels) {

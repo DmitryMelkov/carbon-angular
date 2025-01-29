@@ -5,6 +5,7 @@ import { VrData } from '../../types/vr-data';
   providedIn: 'root', // Сервис доступен на уровне всего приложения
 })
 export class ModeVrService {
+  private currentMode: string | null = null;
   constructor() {}
 
   // Метод для определения режима работы печи
@@ -12,9 +13,7 @@ export class ModeVrService {
     if (!data) {
       return null;
     }
-
     const temper1Value = data.temperatures['1-СК'];
-
     if (temper1Value < 550 && temper1Value > 50) {
       return 'Выход на режим';
     } else if (temper1Value > 550) {
@@ -22,6 +21,16 @@ export class ModeVrService {
     } else {
       return 'Печь не работает';
     }
+  }
+
+  // Устанавливаем текущий режим
+  setCurrentMode(mode: string | null): void {
+    this.currentMode = mode;
+  }
+
+  // Получаем текущий режим
+  getCurrentMode(): string | null {
+    return this.currentMode;
   }
 
   // Метод для обновления рекомендуемых значений в зависимости от режима
