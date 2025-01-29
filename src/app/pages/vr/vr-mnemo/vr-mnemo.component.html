@@ -9,6 +9,14 @@
   *ngIf="!isLoading"
   [@fadeIn]="isImageLoaded ? '*' : 'void'"
 >
+<div class="mnemo-header">
+  <app-header-current-params
+    [title]="'Печь карбонизации №' + id.replace('vr', '')"
+    [mode]="mode"
+    [notisStatus]="notisData?.status ?? null"
+  ></app-header-current-params>
+</div>
+
   <div class="mnemo">
     <div class="mnemo__param-box--btns">
       <app-control-button
@@ -106,9 +114,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.['1-СК'] || '—' }} °C
-      </span>
+      <app-param-indicator
+        [key]="'1-СК'"
+        [value]="data?.temperatures?.['1-СК']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -119,10 +129,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('2-СК')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'2-СК'"
+        [value]="data?.temperatures?.['2-СК']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -133,10 +144,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('3-СК')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'3-СК'"
+        [value]="data?.temperatures?.['3-СК']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -147,10 +159,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('В топке')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'В топке'"
+        [value]="data?.temperatures?.['В топке']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -161,10 +174,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Вверху камеры загрузки')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Вверху камеры загрузки'"
+        [value]="data?.temperatures?.['Вверху камеры загрузки']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -175,10 +189,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Внизу камеры загрузки')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Внизу камеры загрузки'"
+        [value]="data?.temperatures?.['Внизу камеры загрузки']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -189,10 +204,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('На входе печи дожига')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'На входе печи дожига'"
+        [value]="data?.temperatures?.['На входе печи дожига']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -203,10 +219,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('На выходе печи дожига')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'На выходе печи дожига'"
+        [value]="data?.temperatures?.['На выходе печи дожига']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -217,10 +234,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Камеры выгрузки')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Камеры выгрузки'"
+        [value]="data?.temperatures?.['Камеры выгрузки']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -231,10 +249,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Дымовых газов котла')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Дымовых газов котла'"
+        [value]="data?.temperatures?.['Дымовых газов котла']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -245,10 +264,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Газов до скруббера')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Газов до скруббера'"
+        [value]="data?.temperatures?.['Газов до скруббера']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -259,10 +279,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Газов после скруббера')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Газов после скруббера'"
+        [value]="data?.temperatures?.['Газов после скруббера']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -273,10 +294,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Воды в ванне скруббера')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Воды в ванне скруббера'"
+        [value]="data?.temperatures?.['Воды в ванне скруббера']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -287,22 +309,27 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.temperatures?.[('Гранул после холод-ка')] || '—' }}
-        °C
-      </span>
+      <app-param-indicator
+        [key]="'Гранул после холод-ка'"
+        [value]="data?.temperatures?.['Гранул после холод-ка']"
+        [unit]="'°C'"
+      ></app-param-indicator>
     </div>
 
     <div class="mnemo__param uroven-vanne-scrubber">
-      <span class="mnemo__param-text">
-        {{ data?.levels?.['В ванне скруббера']?.value || '—' }} мм
-      </span>
+      <app-param-indicator
+        [key]="'В ванне скруббера'"
+        [value]="data?.levels?.['В ванне скруббера']?.value"
+        [unit]="'мм'"
+      ></app-param-indicator>
     </div>
 
     <div class="mnemo__param uroven-vody-hvo">
-      <span class="mnemo__param-text">
-        {{ data?.levels?.['В емкости ХВО']?.value || '—' }} мм
-      </span>
+      <app-param-indicator
+        [key]="'В емкости ХВО'"
+        [value]="data?.levels?.['В емкости ХВО']?.value"
+        [unit]="'мм'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -313,9 +340,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.levels?.['В барабане котла']?.value || '—' }} мм
-      </span>
+      <app-param-indicator
+        [key]="'В барабане котла'"
+        [value]="data?.levels?.['В барабане котла']?.value"
+        [unit]="'мм'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -326,9 +355,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.pressures?.['Давление газов после скруббера'] || '—' }} кгс/см²
-      </span>
+      <app-param-indicator
+        [key]="'Давление газов после скруббера'"
+        [value]="data?.pressures?.['Давление газов после скруббера']"
+        [unit]="'кгс/см²'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -352,9 +383,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.vacuums?.['В топке печи'] || '—' }} кгс/м²
-      </span>
+      <app-param-indicator
+        [key]="'В топке печи'"
+        [value]="data?.vacuums?.['В топке печи']"
+        [unit]="'кгс/м²'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -365,9 +398,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.vacuums?.['В котле утилизаторе'] || '—' }} кгс/м²
-      </span>
+      <app-param-indicator
+        [key]="'В котле утилизаторе'"
+        [value]="data?.vacuums?.['В котле утилизаторе']"
+        [unit]="'кгс/м²'"
+      ></app-param-indicator>
     </div>
 
     <div
@@ -378,9 +413,11 @@
       matTooltipClass="custom-tooltip"
       [matTooltipDisabled]="!isTooltipsEnabled"
     >
-      <span class="mnemo__param-text">
-        {{ data?.vacuums?.['Низ загрузочной камеры'] || '—' }} кгс/м²
-      </span>
+      <app-param-indicator
+        [key]="'Низ загрузочной камеры'"
+        [value]="data?.vacuums?.['Низ загрузочной камеры']"
+        [unit]="'кгс/м²'"
+      ></app-param-indicator>
     </div>
 
     <div class="mnemo__param im5-percent">

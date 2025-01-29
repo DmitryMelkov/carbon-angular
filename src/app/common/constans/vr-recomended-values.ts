@@ -5,7 +5,7 @@ export const recommendedTemperatures: Record<string, string> = {
     'не более 400 °C (установившийся режим), не более 750 °C (выход на режим)',
   'В топке': 'не более 1000 °C',
   'Вверху камеры загрузки': 'не более 1000 °C',
-  'Внизу камеры загрузки': '1000-1100 °C',
+  'Внизу камеры загрузки': '1000 - 1100 °C',
   'На входе печи дожига': 'не более 1200 °C',
   'На выходе печи дожига': 'не более 1200 °C',
   'Камеры выгрузки': 'не более 750 °C',
@@ -23,7 +23,7 @@ export const recommendedLevels: Record<string, string> = {
 };
 
 export const recommendedPressures: Record<string, string> = {
-  'Давление газов после скруббера': 'не более 20 кгс/м²',
+  'Давление газов после скруббера': 'не более 20 кгс/см²',
 };
 
 export const recommendedVacuums: Record<string, string> = {

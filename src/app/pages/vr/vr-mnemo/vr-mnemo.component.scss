@@ -2,51 +2,55 @@
   position: relative;
   width: 1316px;
 
+  &-header {
+    padding-bottom: 10px;
+  }
+
   &-container {
     position: relative;
     max-width: 1450px;
     padding-left: 10px;
   }
-}
 
-.mnemo__img {
-  width: 1316px;
-}
+  &__img {
+    width: 1316px;
+  }
 
-.mnemo__gif {
-  position: absolute;
-  z-index: 1;
-}
+  &__gif {
+    position: absolute;
+    z-index: 1;
 
-.mnemo__gif-1 {
-  top: 63.1%;
-  left: 61%;
-  transform: rotate(180deg);
-}
+    &-1 {
+      top: 63.1%;
+      left: 61%;
+      transform: rotate(180deg);
+    }
 
-.mnemo__gif-3 {
-  top: 35.4%;
-  right: -50px;
-}
+    &-2 {
+      top: 28%;
+      left: 74%;
+      background-color: grey;
+      border-radius: 50%;
+      border: 1px solid black;
 
-.mnemo__gif-3 img {
-  width: 50px;
-  transform: rotate(90deg);
-}
+      & img {
+        width: 49px;
+        height: 49px;
+        animation: rotate 1s infinite linear;
+        animation-play-state: paused;
+      }
+    }
 
-.mnemo__gif-2 {
-  top: 28%;
-  left: 74%;
-  background-color: grey;
-  border-radius: 50%;
-  border: 1px solid black;
-}
+    &-3 {
+      top: 35.4%;
+      right: -50px;
 
-.mnemo__gif-2 img {
-  width: 49px;
-  height: 49px;
-  animation: rotate 1s infinite linear;
-  animation-play-state: paused;
+      & img {
+        width: 50px;
+        transform: rotate(90deg);
+      }
+    }
+  }
 }
 
 .mnemo__param {
@@ -68,6 +72,25 @@
     color: rgb(10, 59, 10);
     font-weight: 600;
     text-align: center;
+  }
+
+  &-box--btns {
+    position: absolute;
+  }
+}
+
+/* Стили для мигания */
+.blink-warning {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    color: green; /* Исходный цвет */
+  }
+  50% {
+    color: red; /* Цвет предупреждения */
   }
 }
 
@@ -99,18 +122,14 @@
   }
 
   &-5 {
-    top: 15%;
-    left: 35.65%;
+    top: 14.8%;
+    left: 35.5%;
   }
 
   &-6 {
     top: 15%;
     left: 35.65%;
   }
-}
-
-.mnemo__param-box--btns {
-  position: absolute;
 }
 
 // Позиционирование параметров

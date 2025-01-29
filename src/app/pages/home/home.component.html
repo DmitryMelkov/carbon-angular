@@ -67,6 +67,7 @@
         <div *ngIf="activeView === 'mnemo' && selectedObjectId === object.id" class="home__content">
           <app-sushilka-mnemo *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka-mnemo>
           <app-mpa-mnemo *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa-mnemo>
+          <app-vr-mnemo *ngIf="object.type === 'vr'" [id]="object.id"></app-vr-mnemo>
         </div>
         <div *ngIf="activeView === 'graph-tempers-general' && selectedObjectId === object.id && object.type === 'sushilka'" class="home__content">
           <app-graphic-tempers-general [id]="object.id"></app-graphic-tempers-general>

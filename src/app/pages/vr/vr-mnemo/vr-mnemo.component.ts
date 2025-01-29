@@ -2,33 +2,27 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { VrData } from '../../../common/types/vr-data';
 import { VrService } from '../../../common/services/vr/vr.service';
-import { ValueCheckService } from '../../../common/services/vr/value-check.service';
-import {
-  recommendedLevels,
-  recommendedPressures,
-  recommendedTemperatures,
-  recommendedVacuums,
-} from '../../../common/constans/vr-recomended-values';
 import { DataLoadingService } from '../../../common/services/data-loading.service';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
 import { NotisData } from '../../../common/types/notis-data';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
 import { LevelIndicatorComponent } from '../../../components/level-indicator/level-indicator.component';
-import { blinkAnimation } from '../../../common/animations/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
+import { ParamIndicatorComponent } from './param-indicator/param-indicator.component';
 
 @Component({
   selector: 'app-vr-mnemo',
   standalone: true,
   imports: [
+    HeaderCurrentParamsComponent,
     LoaderComponent,
     CommonModule,
     MnemoKranComponent,
@@ -36,10 +30,11 @@ import { DocumentationModalComponent } from './documentation-modal/documentation
     MatTooltipModule,
     MatDialogModule,
     ControlButtonComponent,
+    ParamIndicatorComponent
   ],
   templateUrl: './vr-mnemo.component.html',
   styleUrls: ['./vr-mnemo.component.scss'],
-  animations: [fadeInAnimation, blinkAnimation], // Добавляем blinkAnimation
+  animations: [fadeInAnimation],
 })
 export class VrMnemoComponent implements OnInit, OnDestroy {
   @Input() id!: string;
@@ -48,38 +43,16 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   isTooltipsEnabled: boolean = true;
   mode: string | null = null;
-  highlightedKeys: Set<string> = new Set();
   private destroy$ = new Subject<void>();
   isImageLoaded: boolean = false;
-
-  recommendedTemperatures = recommendedTemperatures;
-  recommendedLevels = recommendedLevels;
-  recommendedPressures = recommendedPressures;
-  recommendedVacuums = recommendedVacuums;
 
   constructor(
     private vrService: VrService,
     private route: ActivatedRoute,
-    private valueCheckService: ValueCheckService,
     private dataLoadingService: DataLoadingService,
-    private modeVrService: ModeVrService,
     private notisVrService: NotisVrService,
     private dialog: MatDialog
   ) {}
-
-  // Метод для проверки, вышел ли параметр за пределы допустимого
-  isAlarm(
-    key: string,
-    value: any,
-    recommendedValues: Record<string, string>
-  ): boolean {
-    const isOutOfRange = this.valueCheckService.isOutOfRange(
-      key,
-      value,
-      recommendedValues
-    );
-    return isOutOfRange;
-  }
 
   ngOnInit(): void {
     if (!this.id) {
@@ -103,7 +76,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.isLoading = true;
-
     this.dataLoadingService.loadData(
       () =>
         forkJoin({
@@ -113,7 +85,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       (response) => {
         this.data = response.vrData;
         this.notisData = response.notisData;
-        this.updateMode();
         this.isLoading = false;
       },
       (error) => {
@@ -134,7 +105,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       (response) => {
         this.data = response.vrData;
         this.notisData = response.notisData;
-        this.updateMode();
       }
     );
   }
@@ -175,14 +145,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       maxWidth: '90vw',
       data: { content: 'Это тестовый контент для документации объекта.' },
     });
-  }
-
-  private updateMode(): void {
-    this.mode = this.modeVrService.determineMode(this.data); // Определяем режим
-    this.modeVrService.updateRecommendedTemperatures(
-      this.mode,
-      this.recommendedTemperatures
-    ); // Обновляем рекомендуемые значения
   }
 
   onImageLoad(): void {

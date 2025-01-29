@@ -7,6 +7,7 @@ import { SushilkaMnemoComponent } from '../sushilki/sushilka-mnemo/sushilka-mnem
 import { MpaComponent } from '../mpa/mpa-current/mpa.component';
 import { MpaMnemoComponent } from '../mpa/mpa-mnemo/mpa-mnemo.component';
 import { VrComponent } from '../vr/vr-current/vr.component';
+import { VrMnemoComponent } from '../vr/vr-mnemo/vr-mnemo.component';
 import { GraphicVacuumsGeneralComponent } from '../sushilki/sushilka-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicTempersGeneralComponent } from '../sushilki/sushilka-graph-general/graphic-tempers-general/graphic-tempers-general.component';
 import { GraphicMpaGeneralComponent } from '../mpa/mpa-graph-general/mpa-graph-general.component';
@@ -37,6 +38,7 @@ import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/en
     MpaComponent,
     MpaMnemoComponent,
     VrComponent,
+    VrMnemoComponent,
     GraphicVacuumsGeneralComponent,
     GraphicTempersGeneralComponent,
     GraphicMpaGeneralComponent,
