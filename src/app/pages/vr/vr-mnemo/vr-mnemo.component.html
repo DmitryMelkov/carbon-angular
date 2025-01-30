@@ -8,6 +8,7 @@
 
   <div class="mnemo">
     <div class="mnemo__param-box--btns">
+
       <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()">
         {{
         isTooltipsEnabled
@@ -19,10 +20,14 @@
       <app-control-button (onClick)="openDocumentation()">
         Документация объекта
       </app-control-button>
+    </div>
+
+    <div class="mnemo__param-box--btn-lab">
       <app-control-button (onClick)="openLab()">
         Для лаборатории
       </app-control-button>
     </div>
+
     <img class="mnemo__img" src="/img/pech-vr.jpg" (load)="onImageLoad()" />
     <div class="mnemo__param-descr ot-hvo-text">От ХВО</div>
     <div class="mnemo__param-descr avarini-sbros-text">Аварийный сброс</div>
