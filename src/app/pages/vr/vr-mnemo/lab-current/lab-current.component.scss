@@ -1,0 +1,79 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.table {
+  max-width: 600px;
+  text-align: left;
+  border-collapse: collapse;
+  border-spacing: 5px;
+  background-color: #e7eef4;
+  box-shadow: 0 0 5px 0 black;
+
+  &__title {
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 700;
+    color: green;
+  }
+
+  &__tr {
+    height: 30px;
+    border: 1px solid black;
+  }
+
+  &__th {
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    font-size: 15px;
+    line-height: 15px;
+    font-weight: 400;
+    color: black;
+  }
+
+  &__td {
+    letter-spacing: 1px;
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    font-size: 15px;
+    line-height: 15px;
+    font-weight: 500;
+  }
+
+  &__left {
+    padding: 3px;
+    padding-left: 30px;
+    text-align: left;
+  }
+
+  &__right {
+    padding: 3px;
+    font-weight: 600;
+    color: green;
+  }
+
+  &__th:not(:last-child),
+  &__td:not(:last-child) {
+    border-right: 1px solid black;
+  }
+}
+
+
+/* loader.component.scss */
+.loader {
+  width: 358px;
+  height: 121px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.loader-descr {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: green;
+}

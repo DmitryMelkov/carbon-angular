@@ -18,6 +18,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
 import { ParamIndicatorComponent } from './param-indicator/param-indicator.component';
 import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
+import { LabCurrentComponent } from './lab-current/lab-current.component';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -31,7 +32,8 @@ import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
     MatTooltipModule,
     MatDialogModule,
     ControlButtonComponent,
-    ParamIndicatorComponent
+    ParamIndicatorComponent,
+    LabCurrentComponent
   ],
   templateUrl: './vr-mnemo.component.html',
   styleUrls: ['./vr-mnemo.component.scss'],
@@ -43,7 +45,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   notisData: NotisData | null = null;
   isLoading: boolean = true;
   isTooltipsEnabled: boolean = true;
-  mode: string | null = null; // Добавляем свойство mode
+  mode: string | null = null;
   private destroy$ = new Subject<void>();
   isImageLoaded: boolean = false;
 
@@ -53,7 +55,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     private dataLoadingService: DataLoadingService,
     private notisVrService: NotisVrService,
     private dialog: MatDialog,
-    private modeVrService: ModeVrService
+    private modeVrService: ModeVrService,
   ) {}
 
   ngOnInit(): void {

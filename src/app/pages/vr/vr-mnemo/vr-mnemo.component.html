@@ -1,31 +1,18 @@
-<app-loader
-  *ngIf="isLoading"
-  [delay]="2000"
-  [loadingText]="'Подождите, идет загрузка данных...'"
-></app-loader>
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"></app-loader>
 
-<div
-  class="mnemo-container"
-  *ngIf="!isLoading"
-  [@fadeIn]="isImageLoaded ? '*' : 'void'"
->
-<div class="mnemo-header">
-  <app-header-current-params
-    [title]="'Печь карбонизации №' + id.replace('vr', '')"
-    [mode]="mode"
-  ></app-header-current-params>
-</div>
+<div class="mnemo-container" *ngIf="!isLoading" [@fadeIn]="isImageLoaded ? '*' : 'void'">
+  <div class="mnemo-header">
+    <app-header-current-params [title]="'Печь карбонизации №' + id.replace('vr', '')"
+      [mode]="mode"></app-header-current-params>
+  </div>
 
   <div class="mnemo">
     <div class="mnemo__param-box--btns">
-      <app-control-button
-        [isActive]="isTooltipsEnabled"
-        (onClick)="toggleTooltips()"
-      >
+      <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()">
         {{
-          isTooltipsEnabled
-            ? "Выкл. всплывающие подсказки"
-            : "Вкл. всплывающие подсказки"
+        isTooltipsEnabled
+        ? "Выкл. всплывающие подсказки"
+        : "Вкл. всплывающие подсказки"
         }}
       </app-control-button>
 
@@ -105,318 +92,143 @@
       <img src="/img/par.gif" alt="img" />
     </div>
 
-    <div
-      class="mnemo__param first-skolz"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara400"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'1-СК'"
-        [value]="data?.temperatures?.['1-СК']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param first-skolz" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="termopara400"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'1-СК'" [value]="data?.temperatures?.['1-СК']" [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param second-skolz"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara400"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'2-СК'"
-        [value]="data?.temperatures?.['2-СК']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param second-skolz" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="termopara400"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'2-СК'" [value]="data?.temperatures?.['2-СК']" [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param third-skolz"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara400"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'3-СК'"
-        [value]="data?.temperatures?.['3-СК']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param third-skolz" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="termopara400"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'3-СК'" [value]="data?.temperatures?.['3-СК']" [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param temper-v-topke"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'В топке'"
-        [value]="data?.temperatures?.['В топке']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param temper-v-topke" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="termopara1000"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'В топке'" [value]="data?.temperatures?.['В топке']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param vverh-kamery-zagruzki"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Вверху камеры загрузки'"
-        [value]="data?.temperatures?.['Вверху камеры загрузки']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param vverh-kamery-zagruzki" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Вверху камеры загрузки'" [value]="data?.temperatures?.['Вверху камеры загрузки']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param vniz-kamery-zagruzki"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Внизу камеры загрузки'"
-        [value]="data?.temperatures?.['Внизу камеры загрузки']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param vniz-kamery-zagruzki" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Внизу камеры загрузки'" [value]="data?.temperatures?.['Внизу камеры загрузки']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param vhod-pechi-doziganiy"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'На входе печи дожига'"
-        [value]="data?.temperatures?.['На входе печи дожига']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param vhod-pechi-doziganiy" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'На входе печи дожига'" [value]="data?.temperatures?.['На входе печи дожига']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param vyhod-pechi-doziganiy"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'На выходе печи дожига'"
-        [value]="data?.temperatures?.['На выходе печи дожига']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param vyhod-pechi-doziganiy" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'На выходе печи дожига'" [value]="data?.temperatures?.['На выходе печи дожига']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param temper-kamer-vygruz"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Камеры выгрузки'"
-        [value]="data?.temperatures?.['Камеры выгрузки']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param temper-kamer-vygruz" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="termopara1000"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Камеры выгрузки'" [value]="data?.temperatures?.['Камеры выгрузки']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param gazy-kotla-utilizazi"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Дымовых газов котла'"
-        [value]="data?.temperatures?.['Дымовых газов котла']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param gazy-kotla-utilizazi" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Дымовых газов котла'" [value]="data?.temperatures?.['Дымовых газов котла']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param temper-gazov-do-scrubber"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="termopara1000"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Газов до скруббера'"
-        [value]="data?.temperatures?.['Газов до скруббера']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param temper-gazov-do-scrubber" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="termopara1000" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Газов до скруббера'" [value]="data?.temperatures?.['Газов до скруббера']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param temper-gazov-posle-scrubber"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="tcm50m"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Газов после скруббера'"
-        [value]="data?.temperatures?.['Газов после скруббера']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param temper-gazov-posle-scrubber" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="tcm50m" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Газов после скруббера'" [value]="data?.temperatures?.['Газов после скруббера']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param temper-vody-v-vanne-scrubber"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="tcm50m"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Воды в ванне скруббера'"
-        [value]="data?.temperatures?.['Воды в ванне скруббера']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param temper-vody-v-vanne-scrubber" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="tcm50m" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Воды в ванне скруббера'" [value]="data?.temperatures?.['Воды в ванне скруббера']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param granul-posle-holodil"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="tcm50m"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Гранул после холод-ка'"
-        [value]="data?.temperatures?.['Гранул после холод-ка']"
-        [unit]="'°C'"
-      ></app-param-indicator>
+    <div class="mnemo__param granul-posle-holodil" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="tcm50m"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Гранул после холод-ка'" [value]="data?.temperatures?.['Гранул после холод-ка']"
+        [unit]="'°C'"></app-param-indicator>
     </div>
 
     <div class="mnemo__param uroven-vanne-scrubber">
-      <app-param-indicator
-        [key]="'В ванне скруббера'"
-        [value]="data?.levels?.['В ванне скруббера']?.value"
-        [unit]="'мм'"
-      ></app-param-indicator>
+      <app-param-indicator [key]="'В ванне скруббера'" [value]="data?.levels?.['В ванне скруббера']?.value"
+        [unit]="'мм'"></app-param-indicator>
     </div>
 
     <div class="mnemo__param uroven-vody-hvo">
-      <app-param-indicator
-        [key]="'В емкости ХВО'"
-        [value]="data?.levels?.['В емкости ХВО']?.value"
-        [unit]="'мм'"
-      ></app-param-indicator>
+      <app-param-indicator [key]="'В емкости ХВО'" [value]="data?.levels?.['В емкости ХВО']?.value"
+        [unit]="'мм'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param uroven-v-barabane-kotla"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="vBarabaneKotla"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'В барабане котла'"
-        [value]="data?.levels?.['В барабане котла']?.value"
-        [unit]="'мм'"
-      ></app-param-indicator>
+    <div class="mnemo__param uroven-v-barabane-kotla" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="vBarabaneKotla" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'В барабане котла'" [value]="data?.levels?.['В барабане котла']?.value"
+        [unit]="'мм'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param p-gazov-posle-scrubber"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="davlScrubber"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Давление газов после скруббера'"
-        [value]="data?.pressures?.['Давление газов после скруббера']"
-        [unit]="'кгс/см²'"
-      ></app-param-indicator>
+    <div class="mnemo__param p-gazov-posle-scrubber" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlScrubber" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Давление газов после скруббера'"
+        [value]="data?.pressures?.['Давление газов после скруббера']" [unit]="'кгс/см²'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param p-v-barabane-kotla"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="davlKotel"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
+    <div class="mnemo__param p-v-barabane-kotla" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="davlKotel"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
       <span class="mnemo__param-text">
         {{ data?.pressures?.['Пара в барабане котла'] || '—' }} кгс/см²
       </span>
     </div>
 
-    <div
-      class="mnemo__param razr-v-topke"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="davlTopka"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'В топке печи'"
-        [value]="data?.vacuums?.['В топке печи']"
-        [unit]="'кгс/м²'"
-      ></app-param-indicator>
+    <div class="mnemo__param razr-v-topke" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="davlTopka"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'В топке печи'" [value]="data?.vacuums?.['В топке печи']"
+        [unit]="'кгс/м²'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param razr-v-prostranstve-kotla"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="davlNizKamery"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'В котле утилизаторе'"
-        [value]="data?.vacuums?.['В котле утилизаторе']"
-        [unit]="'кгс/м²'"
-      ></app-param-indicator>
+    <div class="mnemo__param razr-v-prostranstve-kotla" [class.enabled-hover]="isTooltipsEnabled"
+      [matTooltip]="davlNizKamery" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+      [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'В котле утилизаторе'" [value]="data?.vacuums?.['В котле утилизаторе']"
+        [unit]="'кгс/м²'"></app-param-indicator>
     </div>
 
-    <div
-      class="mnemo__param razr-niz-zagr-kam"
-      [class.enabled-hover]="isTooltipsEnabled"
-      [matTooltip]="davlNizKamery"
-      matTooltipPosition="above"
-      matTooltipClass="custom-tooltip"
-      [matTooltipDisabled]="!isTooltipsEnabled"
-    >
-      <app-param-indicator
-        [key]="'Низ загрузочной камеры'"
-        [value]="data?.vacuums?.['Низ загрузочной камеры']"
-        [unit]="'кгс/м²'"
-      ></app-param-indicator>
+    <div class="mnemo__param razr-niz-zagr-kam" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="davlNizKamery"
+      matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
+      <app-param-indicator [key]="'Низ загрузочной камеры'" [value]="data?.vacuums?.['Низ загрузочной камеры']"
+        [unit]="'кгс/м²'"></app-param-indicator>
     </div>
 
     <div class="mnemo__param im5-percent">
@@ -443,86 +255,42 @@
       </span>
     </div>
 
-    <app-level-indicator
-      [value]="data?.levels?.['В барабане котла']?.value"
-      [minLevel]="-200"
-      [maxLevel]="200"
-      [totalRange]="400"
-      [width]="'59px'"
-      [height]="'89px'"
-      [bottom]="'65.8%'"
-      [right]="'46.3%'"
-      [fillColor]="'#57b7f7'"
-      [warningThreshold]="25"
-    >
+    <app-level-indicator [value]="data?.levels?.['В барабане котла']?.value" [minLevel]="-200" [maxLevel]="200"
+      [totalRange]="400" [width]="'59px'" [height]="'89px'" [bottom]="'65.8%'" [right]="'46.3%'" [fillColor]="'#57b7f7'"
+      [warningThreshold]="25">
     </app-level-indicator>
 
-    <app-level-indicator
-      [value]="data?.levels?.['В емкости ХВО']?.value"
-      [minLevel]="0"
-      [maxLevel]="6000"
-      [totalRange]="6000"
-      [width]="'41px'"
-      [height]="'40px'"
-      [bottom]="'14.5%'"
-      [right]="'56.7%'"
-      [fillColor]="'#57b7f7'"
-      [warningThreshold]="25"
-    >
+    <app-level-indicator [value]="data?.levels?.['В емкости ХВО']?.value" [minLevel]="0" [maxLevel]="6000"
+      [totalRange]="6000" [width]="'41px'" [height]="'40px'" [bottom]="'14.5%'" [right]="'56.7%'"
+      [fillColor]="'#57b7f7'" [warningThreshold]="25">
     </app-level-indicator>
 
-    <app-level-indicator
-      [value]="data?.levels?.['В ванне скруббера']?.value"
-      [minLevel]="0"
-      [maxLevel]="1000"
-      [totalRange]="1000"
-      [width]="'292px'"
-      [height]="'139px'"
-      [bottom]="'2.7%'"
-      [right]="'12%'"
-      [fillColor]="'#57b7f7'"
-      [warningThreshold]="25"
-    >
+    <app-level-indicator [value]="data?.levels?.['В ванне скруббера']?.value" [minLevel]="0" [maxLevel]="1000"
+      [totalRange]="1000" [width]="'292px'" [height]="'139px'" [bottom]="'2.7%'" [right]="'12%'" [fillColor]="'#57b7f7'"
+      [warningThreshold]="25">
     </app-level-indicator>
 
-    <app-mnemo-kran
-      class="kran kran-1"
-      [isActive]="!!data?.im?.['ИМ1 скруббер']"
-      [triangleWidth]="15"
-      [triangleHeight]="12"
-    >
+    <app-mnemo-kran class="kran kran-1" [isActive]="!!data?.im?.['ИМ1 скруббер']" [triangleWidth]="15"
+      [triangleHeight]="12">
     </app-mnemo-kran>
 
-    <app-mnemo-kran
-      class="kran kran-2"
-      [isActive]="!!data?.im?.['ИМ2 ХВО']"
-      [triangleWidth]="11"
-      [triangleHeight]="10"
-    >
+    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="11" [triangleHeight]="10">
     </app-mnemo-kran>
 
-    <app-mnemo-kran
-      class="kran kran-3"
-      [isActive]="!!data?.im?.['ИМ3 аварийный сброс']"
-      [triangleWidth]="15"
-      [triangleHeight]="12"
-    >
+    <app-mnemo-kran class="kran kran-3" [isActive]="!!data?.im?.['ИМ3 аварийный сброс']" [triangleWidth]="15"
+      [triangleHeight]="12">
     </app-mnemo-kran>
 
-    <app-mnemo-kran
-      class="kran kran-4"
-      [isActive]="!!data?.im?.['ИМ4 пар в отделение активации']"
-      [triangleWidth]="15"
-      [triangleHeight]="12"
-    >
+    <app-mnemo-kran class="kran kran-4" [isActive]="!!data?.im?.['ИМ4 пар в отделение активации']" [triangleWidth]="15"
+      [triangleHeight]="12">
     </app-mnemo-kran>
 
-    <app-mnemo-kran
-      class="kran kran-5"
-      [isActive]="isKran5Active()"
-      [triangleWidth]="15"
-      [triangleHeight]="12"
-    >
+    <app-mnemo-kran class="kran kran-5" [isActive]="isKran5Active()" [triangleWidth]="15" [triangleHeight]="12">
     </app-mnemo-kran>
+
+
+    <div class="lab-current">
+      <app-lab-current [id]="id"></app-lab-current>
+    </div>
   </div>
 </div>
