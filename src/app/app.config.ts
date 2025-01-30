@@ -28,6 +28,7 @@ import { ReactorComponent } from './pages/reactors/reactors-current/reactors.com
 import { ReactorMnemoComponent } from './pages/reactors/reactors-mnemo/reactors-mnemo.component';
 import { VrComponent } from './pages/vr/vr-current/vr.component';
 import { VrMnemoComponent } from './pages/vr/vr-mnemo/vr-mnemo.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -113,6 +114,7 @@ export const appConfig: ApplicationConfig = {
       { path: 'vr/:id/mnemo', component: VrMnemoComponent },
     ]),
     provideHttpClient(),
+    MatSnackBarModule,
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'ru' },
     provideAnimationsAsync(),

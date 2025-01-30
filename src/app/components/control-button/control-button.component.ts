@@ -12,4 +12,5 @@ export class ControlButtonComponent {
   @Input() isActive: boolean = false;
   @Input() isDisabled: boolean = false;
   @Output() onClick = new EventEmitter<Event>();
+  @Input() borderRadius: string = '0px'; // Добавляем свойство для радиуса
 }

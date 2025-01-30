@@ -1,0 +1,67 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.lab-modal {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+
+  &__header {
+    margin-bottom: 20px;
+  }
+
+  &__descr {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 400;
+    color: black;
+  }
+
+  .laboratory__form {
+    margin-bottom: 30px;
+    &-row {
+      display: flex;
+      align-items: flex-end; // Выравниваем элементы по нижнему краю
+      gap: 15px; // Расстояние между элементами
+    }
+
+    &-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    &-input {
+      max-width: 150px;
+      height: 35px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border .3s ease-in-out;
+
+      &.input-error {
+        border-color: red; // Красная рамка для инпутов с ошибкой
+      }
+    }
+    &-input:focus {
+      outline: none;
+      border: 1px solid green;
+    }
+
+    &-error {
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      color: red;
+      font-size: 12px;
+      line-height: 14px;
+    }
+
+    &-btn {
+      height: 35px;
+    }
+  }
+}

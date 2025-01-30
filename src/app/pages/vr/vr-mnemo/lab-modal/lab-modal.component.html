@@ -1,0 +1,78 @@
+<div class="lab-modal">
+  <div class="lab-modal__header">
+    <app-modal-header [title]="'Документация объекта'" (close)="close()"></app-modal-header>
+  </div>
+  <div class="lab-modal__body">
+    <p class="lab-modal__descr descr-reset">
+      Введите значение которое хотите записать в базу данных и нажмите кнопку <strong>Принять</strong>.
+    </p>
+
+    <form [formGroup]="labForm" (ngSubmit)="onSubmit()" class="laboratory__form">
+      <div class="laboratory__form-row">
+        <div class="laboratory__form-item">
+          <label class="laboratory__form-label" for="volatile-substances">Летучие в-ва </label>
+          <input class="laboratory__form-input" type="text" id="volatile-substances"
+            formControlName="volatileSubstances"
+            [ngClass]="{'input-error': labForm.get('volatileSubstances')?.invalid && labForm.get('volatileSubstances')?.touched}">
+          <span *ngIf="labForm.get('volatileSubstances')?.hasError('invalidNumber')" class="laboratory__form-error">
+            Введите число
+          </span>
+          <span *ngIf="labForm.get('volatileSubstances')?.hasError('outOfRange')" class="laboratory__form-error">
+            от 0 до 30
+          </span>
+        </div>
+        <div class="laboratory__form-item">
+          <label class="laboratory__form-label" for="value-ph">pH </label>
+          <input class="laboratory__form-input" type="text" id="value-ph" formControlName="pH"
+            [ngClass]="{'input-error': labForm.get('pH')?.invalid && labForm.get('pH')?.touched}">
+          <span *ngIf="labForm.get('pH')?.hasError('invalidNumber')" class="laboratory__form-error">
+            Введите число
+          </span>
+          <span *ngIf="labForm.get('pH')?.hasError('outOfRange')" class="laboratory__form-error">
+            от 0 до 30
+          </span>
+        </div>
+        <div class="laboratory__form-item">
+          <label class="laboratory__form-label" for="value-sum">Суммарка </label>
+          <input class="laboratory__form-input" type="text" id="value-sum" formControlName="sum"
+            [ngClass]="{'input-error': labForm.get('sum')?.invalid && labForm.get('sum')?.touched}">
+          <span *ngIf="labForm.get('sum')?.hasError('invalidNumber')" class="laboratory__form-error">
+            Введите число
+          </span>
+          <span *ngIf="labForm.get('sum')?.hasError('outOfRange')" class="laboratory__form-error">
+            от 0 до 30
+          </span>
+        </div>
+        <div class="laboratory__form-item">
+          <label class="laboratory__form-label" for="input-time">Время</label>
+          <input class="laboratory__form-input" type="time" id="input-time" formControlName="time"
+            [ngClass]="{'input-error': labForm.get('time')?.invalid && labForm.get('time')?.touched}">
+          <span *ngIf="labForm.get('time')?.invalid && labForm.get('time')?.touched" class="laboratory__form-error">
+            Время
+          </span>
+        </div>
+        <div class="laboratory__form-item">
+          <label class="laboratory__form-label" for="volatile-substances-password">Пароль </label>
+          <input class="laboratory__form-input" type="password" id="volatile-substances-password"
+            formControlName="password"
+            [ngClass]="{'input-error': labForm.get('password')?.invalid && labForm.get('password')?.touched}">
+          <span *ngIf="labForm.get('password')?.hasError('required') && labForm.get('password')?.touched"
+            class="laboratory__form-error">
+            Введите пароль
+          </span>
+          <span *ngIf="labForm.get('password')?.hasError('incorrectPassword')" class="laboratory__form-error">
+            Неверный пароль
+          </span>
+        </div>
+        <app-control-button class="laboratory__form-btn"
+          [isDisabled]="labForm.invalid || isLoading" (onClick)="onSubmit()" [borderRadius]="'4px'">
+          {{ isLoading ? 'Отправка...' : 'Принять' }}
+        </app-control-button>
+      </div>
+      <!-- Сообщение об ошибке, если ни одно поле не заполнено -->
+      <span *ngIf="labForm.hasError('atLeastOneField') && labForm.touched" class="laboratory__form-error">
+        Заполните хотя бы одно поле (Летучие в-ва, pH или Суммарка)
+      </span>
+    </form>
+  </div>
+</div>

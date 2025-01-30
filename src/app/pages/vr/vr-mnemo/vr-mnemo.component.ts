@@ -19,6 +19,7 @@ import { DocumentationModalComponent } from './documentation-modal/documentation
 import { ParamIndicatorComponent } from './param-indicator/param-indicator.component';
 import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 import { LabCurrentComponent } from './lab-current/lab-current.component';
+import { LabModalComponent } from './lab-modal/lab-modal.component';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -144,9 +145,17 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
 
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
-      minWidth: '300px',
+      minWidth: '600px',
       maxWidth: '90vw',
       data: { content: 'Это тестовый контент для документации объекта.' },
+    });
+  }
+
+  openLab(): void {
+    this.dialog.open(LabModalComponent, {
+      minWidth: '600px',
+      maxWidth: '90vw',
+      data: { content: 'Это тестовый контент для документации объекта.', vrId: this.id  },
     });
   }
 

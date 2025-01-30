@@ -12,8 +12,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class LoaderComponent implements OnInit {
   @Input() delay: number = 2000; // Задержка отображения прелоудера в миллисекундах
   @Input() loadingText: string = 'Загрузка данных, пожалуйста подождите...';
-  @Input() width: string = '40px'; // Ширина прелоадера
-  @Input() height: string = '40px'; // Высота прелоадера
+  @Input() width: string = '100px'; // Ширина прелоадера
+  @Input() height: string = '100px'; // Высота прелоадера
   @Input() textColor: string = 'green';
   @Output() loadingComplete = new EventEmitter<void>(); // Сообщение о завершении загрузки
 

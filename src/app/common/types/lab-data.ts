@@ -9,3 +9,12 @@ export interface LabData {
   valueSUMTime: string;
   valueSUMDate: string;
 }
+
+export interface LabFormData {
+  volatileSubstances: string;
+  pH: string;
+  sum: string;
+  time: string;
+  password: string;
+}
+
