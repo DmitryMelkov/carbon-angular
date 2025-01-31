@@ -16,6 +16,7 @@ import {
   atLeastOneFieldValidator,
   numberValidator,
 } from '../../../../common/validators/lab-validators';
+import { LabLastComponent } from '../lab-last/lab-last.component';
 
 @Component({
   selector: 'app-lab-modal',
@@ -24,6 +25,7 @@ import {
     CommonModule,
     ReactiveFormsModule,
     ControlButtonComponent,
+    LabLastComponent
   ],
   templateUrl: './lab-modal.component.html',
   styleUrls: ['./lab-modal.component.scss'],
@@ -41,7 +43,7 @@ export class LabModalComponent {
   ) {
     this.labForm = this.fb.group(
       {
-        volatileSubstances: ['', [numberValidator]], 
+        volatileSubstances: ['', [numberValidator]],
         pH: ['', [numberValidator]],
         sum: ['', [numberValidator]],
         time: ['', Validators.required],
