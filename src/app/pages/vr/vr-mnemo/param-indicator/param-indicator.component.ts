@@ -1,43 +1,49 @@
-import { Component, Input } from '@angular/core';
-import { ValueCheckService } from '../../../../common/services/vr/value-check.service';
-import {
-  recommendedLevels,
-  recommendedPressures,
-  recommendedTemperatures,
-  recommendedVacuums,
-} from '../../../../common/constans/vr-recomended-values';
+// param-indicator.component.ts
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ValueCheckService } from '../../../../common/services/vr/value-check.service';
 import { ModeVrService } from '../../../../common/services/vr/mode-vr.service';
+import { AlarmService } from '../../../../common/services/vr/alarm.service';
+import { Subscription } from 'rxjs';
+import { recommendedLevels,recommendedPressures,recommendedTemperatures,recommendedVacuums } from '../../../../common/constans/vr-recomended-values';
 
 @Component({
   selector: 'app-param-indicator',
   standalone: true,
-  imports: [CommonModule], // Добавляем CommonModule
+  imports: [CommonModule],
   template: `
     <span
       class="mnemo__param-text"
       [ngClass]="{ 'blink-warning': isAlarm(key, value) }"
     >
-      {{ value || '—' }} {{unit}}
+      {{ value || '—' }} {{ unit }}
     </span>
   `,
   styleUrls: ['../vr-mnemo.component.scss'],
 })
-export class ParamIndicatorComponent {
+export class ParamIndicatorComponent implements OnChanges {
   @Input() key!: string; // Ключ параметра
   @Input() value!: any; // Значение параметра
   @Input() unit!: string;
 
   constructor(
     private valueCheckService: ValueCheckService,
-    private modeVrService: ModeVrService
+    private modeVrService: ModeVrService,
+    private alarmService: AlarmService
   ) {}
 
-  // Универсальная функция для проверки выхода за пределы допустимого диапазона
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['value']) {
+      this.checkAndUpdateAlarm();
+    }
+  }
+
+  // Проверка выхода за пределы допустимого диапазона
   isAlarm(key: string, value: any): boolean {
     const mode = this.modeVrService.getCurrentMode();
     if (mode === 'Печь не работает') {
-      return false; // Если режим "Печь не работает", то уставки не моргают
+      this.alarmService.removeAlarm(key); // Удаляем тревогу, если печь не работает
+      return false;
     }
 
     let recommendedValues: Record<string, string> | undefined;
@@ -52,9 +58,26 @@ export class ParamIndicatorComponent {
     }
 
     if (recommendedValues) {
-      return this.valueCheckService.isOutOfRange(key, value, recommendedValues);
+      const isOutOfRange = this.valueCheckService.isOutOfRange(
+        key,
+        value,
+        recommendedValues
+      );
+
+      if (isOutOfRange) {
+        this.alarmService.updateAlarm(key, value); // Обновляем тревогу
+      } else {
+        this.alarmService.removeAlarm(key); // Удаляем тревогу
+      }
+
+      return isOutOfRange;
     }
 
     return false;
+  }
+
+  // Метод для проверки и обновления состояния тревоги
+  private checkAndUpdateAlarm(): void {
+    this.isAlarm(this.key, this.value);
   }
 }

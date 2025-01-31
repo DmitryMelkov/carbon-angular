@@ -1,0 +1,46 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.alarm-table {
+  padding-right: 2px;
+  max-width: 400px;
+  border: 2px solid green;
+}
+
+.no-alarms {
+  padding: 4px;
+  text-align: center;
+  color: green;
+  font-size: 18px;
+  font-weight: 800;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px;
+  border: 1px solid #ddd;
+}
+th {
+  text-align: center;
+  background-color: #f4f4f4;
+}
+
+.blink-warning {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    color: green; /* Исходный цвет */
+  }
+  50% {
+    color: red; /* Цвет предупреждения */
+  }
+}

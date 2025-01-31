@@ -1,0 +1,21 @@
+<div class="alarm-table">
+  <div *ngIf="alarms.length === 0" class="no-alarms">
+    Все параметры в норме.
+  </div>
+  <table *ngIf="alarms.length > 0">
+    <thead>
+      <tr>
+        <th>Наименование</th>
+        <th>Значение</th>
+        <th>Причины</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let alarm of alarms">
+        <td class="blink-warning">{{ alarm.key }}</td>
+        <td class="blink-warning">{{ alarm.value }}</td>
+        <td>Подробнее</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

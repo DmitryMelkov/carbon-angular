@@ -20,6 +20,7 @@ import { ParamIndicatorComponent } from './param-indicator/param-indicator.compo
 import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 import { LabCurrentComponent } from './lab-current/lab-current.component';
 import { LabModalComponent } from './lab-modal/lab-modal.component';
+import { AlarmTableComponent } from './alarm-table/alarm-table.component';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -34,7 +35,8 @@ import { LabModalComponent } from './lab-modal/lab-modal.component';
     MatDialogModule,
     ControlButtonComponent,
     ParamIndicatorComponent,
-    LabCurrentComponent
+    LabCurrentComponent,
+    AlarmTableComponent
   ],
   templateUrl: './vr-mnemo.component.html',
   styleUrls: ['./vr-mnemo.component.scss'],
