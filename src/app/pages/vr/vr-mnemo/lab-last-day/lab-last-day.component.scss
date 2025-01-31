@@ -5,15 +5,36 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Тень для таблицы
 
     th, td {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0; // Светлые границы
       text-align: center;
     }
 
     th {
-      background-color: #f5f5f5;
+      background: linear-gradient(135deg, green, #81c784);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    tbody tr {
+      transition: background-color 0.3s ease;
+
+      &:nth-child(odd) {
+        background-color: #f5f5f5;
+      }
+
+      &:nth-child(even) {
+        background-color: white;
+      }
+
+      &:hover {
+        background-color: #e8f5e9;
+        cursor: pointer;
+      }
     }
   }
 
@@ -22,5 +43,15 @@
     text-align: center;
     padding: 20px;
     color: #666;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .loading {
+    color: #4caf50; // Зеленый цвет для текста загрузки
+  }
+
+  .no-data {
+    color: #f44336; // Красный цвет для текста "Нет данных"
   }
 }

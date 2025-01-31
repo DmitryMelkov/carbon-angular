@@ -1,11 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { ModalHeaderComponent } from '../../../../components/modal-header/modal-header.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,7 +18,6 @@ import {
 } from '../../../../common/validators/lab-validators';
 import { LabLastDayComponent } from '../lab-last-day/lab-last-day.component';
 
-
 @Component({
   selector: 'app-lab-modal',
   imports: [
@@ -26,12 +25,13 @@ import { LabLastDayComponent } from '../lab-last-day/lab-last-day.component';
     CommonModule,
     ReactiveFormsModule,
     ControlButtonComponent,
-    LabLastDayComponent
+    LabLastDayComponent,
   ],
   templateUrl: './lab-modal.component.html',
   styleUrls: ['./lab-modal.component.scss'],
 })
 export class LabModalComponent {
+  @ViewChild(LabLastDayComponent) labLastDayComponent!: LabLastDayComponent;
   labForm: FormGroup;
   isLoading: boolean = false;
 
@@ -76,21 +76,25 @@ export class LabModalComponent {
 
     this.isLoading = true;
 
-    this.labService.submitLabData(this.data.vrId, formData).subscribe(
-      (response) => {
-        this.isLoading = false;
-        this.snackBar.open('Данные успешно отправлены', 'Закрыть', {
-          duration: 3000,
-        });
-        this.dialogRef.close();
-      },
-      (error) => {
-        this.isLoading = false;
-        this.snackBar.open('Ошибка при отправке данных', 'Закрыть', {
-          duration: 3000,
-        });
-      }
-    );
+    this.labService
+      .submitLabData(this.data.vrId, this.labForm.value)
+      .subscribe({
+        next: () => {
+          this.labLastDayComponent.loadData(); // Обновляем данные
+          this.isLoading = false;
+          this.labForm.reset();
+          this.snackBar.open('Данные успешно отправлены', 'Закрыть', {
+            duration: 3000,
+          });
+        },
+        error: (error) => {
+          console.error('Error:', error);
+          this.isLoading = false;
+          this.snackBar.open('Ошибка при отправке данных', 'Закрыть', {
+            duration: 3000,
+          });
+        },
+      });
   }
 
   close(): void {
