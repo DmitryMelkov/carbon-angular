@@ -21,6 +21,7 @@
 
   .laboratory__form {
     margin-bottom: 30px;
+    position: relative;
     &-row {
       display: flex;
       align-items: flex-end; // Выравниваем элементы по нижнему краю

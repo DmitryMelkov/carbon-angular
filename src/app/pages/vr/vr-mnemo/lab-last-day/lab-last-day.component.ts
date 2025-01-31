@@ -12,7 +12,7 @@ import { fadeInAnimation } from '../../../../common/animations/animations';
   imports: [CommonModule, LoaderComponent], // Добавьте LoaderComponent в imports
   templateUrl: './lab-last-day.component.html',
   styleUrls: ['./lab-last-day.component.scss'],
-  animations: [fadeInAnimation]
+  animations: [fadeInAnimation],
 })
 export class LabLastDayComponent implements OnInit {
   @Input() vrId!: string;
@@ -33,16 +33,35 @@ export class LabLastDayComponent implements OnInit {
     this.dataLoadingService.stopPeriodicLoading();
   }
 
+  private sortLabData(data: LabLastDay[]): LabLastDay[] {
+    return data.sort((a, b) => {
+      // Проверяем, что recordDate и recordTime не пустые
+      if (!a.recordDate || !a.recordTime || !b.recordDate || !b.recordTime) {
+        return 0; // или обработайте это как нужно
+      }
+
+      // Преобразуем дату из формата DD.MM.YYYY в YYYY-MM-DD
+      const [dayA, monthA, yearA] = a.recordDate.split('.');
+      const [dayB, monthB, yearB] = b.recordDate.split('.');
+
+      const dateA = new Date(`${yearA}-${monthA}-${dayA}T${a.recordTime}`);
+      const dateB = new Date(`${yearB}-${monthB}-${dayB}T${b.recordTime}`);
+
+      return dateB.getTime() - dateA.getTime(); // Сортировка от новых к старым
+    });
+  }
+
   public loadData(): void {
     if (this.vrId) {
       this.dataLoadingService.loadData<LabLastDay[]>(
-        () => this.labService.getLastDayData(this.vrId).pipe(delay(1000)), // Функция загрузки
+        () => this.labService.getLastDayData(this.vrId).pipe(delay(1000)),
         (data) => {
-          this.labData = data; // Обработка успешной загрузки
+          console.log('Received data:', data); // Логируем полученные данные
+          this.labData = this.sortLabData(data);
           this.isLoading = false;
         },
         (error) => {
-          console.error('Error loading data:', error); // Обработка ошибок
+          console.error('Error loading data:', error);
           this.isLoading = false;
         }
       );
@@ -55,7 +74,7 @@ export class LabLastDayComponent implements OnInit {
         () => this.labService.getLastDayData(this.vrId), // Функция загрузки
         10000, // Интервал (10 секунд)
         (data) => {
-          this.labData = data; // Обработка успешной загрузки
+          this.labData = this.sortLabData(data);
           this.isLoading = false;
         }
       );
