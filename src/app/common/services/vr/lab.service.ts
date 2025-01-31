@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LabData } from '../../types/lab-data';
+import { LabData, LabLastDay } from '../../types/lab-data';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -23,5 +23,10 @@ export class LabService {
       valueSUM: formData.sum ? formData.sum.replace(',', '.') : null,
       time: formData.time
     });
+  }
+
+  getLastDayData(vrId: string): Observable<LabLastDay[]> {
+    const url = `${environment.apiUrl}/api/lab/pech${vrId}/last-day`;
+    return this.http.get<LabLastDay[]>(url);
   }
 }

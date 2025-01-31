@@ -18,3 +18,11 @@ export interface LabFormData {
   password: string;
 }
 
+export interface LabLastDay {
+  _id: string;
+  value: string;
+  valuePH: string;
+  valueSUM: string;
+  recordTime: string;
+  recordDate: string;
+}

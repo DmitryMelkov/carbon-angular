@@ -16,7 +16,8 @@ import {
   atLeastOneFieldValidator,
   numberValidator,
 } from '../../../../common/validators/lab-validators';
-import { LabLastComponent } from '../lab-last/lab-last.component';
+import { LabLastDayComponent } from '../lab-last-day/lab-last-day.component';
+
 
 @Component({
   selector: 'app-lab-modal',
@@ -25,7 +26,7 @@ import { LabLastComponent } from '../lab-last/lab-last.component';
     CommonModule,
     ReactiveFormsModule,
     ControlButtonComponent,
-    LabLastComponent
+    LabLastDayComponent
   ],
   templateUrl: './lab-modal.component.html',
   styleUrls: ['./lab-modal.component.scss'],

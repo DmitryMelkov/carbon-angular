@@ -1,0 +1,28 @@
+<div class="lab-last">
+  <div *ngIf="isLoading" class="loading">Загрузка данных...</div>
+
+  <div *ngIf="!isLoading && labData.length === 0" class="no-data">
+    Нет данных за последние сутки
+  </div>
+
+  <table *ngIf="!isLoading && labData.length > 0">
+    <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Время</th>
+        <th>Летучие в-ва</th>
+        <th>pH</th>
+        <th>Суммарка</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of labData">
+        <td>{{ item.recordDate }}</td>
+        <td>{{ item.recordTime }}</td>
+        <td>{{ item.value || '-' }}</td>
+        <td>{{ item.valuePH || '-' }}</td>
+        <td>{{ item.valueSUM || '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
