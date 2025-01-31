@@ -28,53 +28,51 @@ export class ParamIndicatorComponent implements OnChanges {
 
   constructor(
     private valueCheckService: ValueCheckService,
-    private modeVrService: ModeVrService,
-    private alarmService: AlarmService
+    private alarmService: AlarmService,
+    private modeVrService: ModeVrService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['value']) {
+    if (changes['value'] && changes['value'].currentValue !== undefined) {
       this.checkAndUpdateAlarm();
     }
   }
 
   // Проверка выхода за пределы допустимого диапазона
-  isAlarm(key: string, value: any): boolean {
-    const mode = this.modeVrService.getCurrentMode();
-    if (mode === 'Печь не работает') {
-      this.alarmService.removeAlarm(key); // Удаляем тревогу, если печь не работает
-      return false;
-    }
+isAlarm(key: string, value: any): boolean {
+  const mode = this.modeVrService.getCurrentMode();
 
-    let recommendedValues: Record<string, string> | undefined;
-    if (key in recommendedTemperatures) {
-      recommendedValues = recommendedTemperatures;
-    } else if (key in recommendedLevels) {
-      recommendedValues = recommendedLevels;
-    } else if (key in recommendedPressures) {
-      recommendedValues = recommendedPressures;
-    } else if (key in recommendedVacuums) {
-      recommendedValues = recommendedVacuums;
-    }
-
-    if (recommendedValues) {
-      const isOutOfRange = this.valueCheckService.isOutOfRange(
-        key,
-        value,
-        recommendedValues
-      );
-
-      if (isOutOfRange) {
-        this.alarmService.updateAlarm(key, value); // Обновляем тревогу
-      } else {
-        this.alarmService.removeAlarm(key); // Удаляем тревогу
-      }
-
-      return isOutOfRange;
-    }
-
+  // Если режим "Печь не работает", то сразу возвращаем false и удаляем тревогу
+  if (mode === 'Печь не работает') {
+    this.alarmService.removeAlarm(key);
     return false;
   }
+
+  let recommendedValues: Record<string, string> | undefined;
+  if (key in recommendedTemperatures) {
+    recommendedValues = recommendedTemperatures;
+  } else if (key in recommendedLevels) {
+    recommendedValues = recommendedLevels;
+  } else if (key in recommendedPressures) {
+    recommendedValues = recommendedPressures;
+  } else if (key in recommendedVacuums) {
+    recommendedValues = recommendedVacuums;
+  }
+
+  if (recommendedValues) {
+    const isOutOfRange = this.valueCheckService.isOutOfRange(key, value, recommendedValues);
+
+    if (isOutOfRange) {
+      this.alarmService.updateAlarm(key, value, this.unit); // Передаем unit
+    } else {
+      this.alarmService.removeAlarm(key);
+    }
+
+    return isOutOfRange;
+  }
+
+  return false;
+}
 
   // Метод для проверки и обновления состояния тревоги
   private checkAndUpdateAlarm(): void {

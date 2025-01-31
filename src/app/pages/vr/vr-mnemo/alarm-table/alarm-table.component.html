@@ -1,4 +1,4 @@
-<div class="alarm-table">
+<div class="alarm-table" *ngIf="alarms$ | async as alarms">
   <div *ngIf="alarms.length === 0" class="no-alarms">
     Все параметры в норме.
   </div>
@@ -12,7 +12,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let alarm of alarms">
-        <td class="blink-warning">{{ alarm.key }}</td>
+        <td class="blink-warning">{{ alarm.key }}, {{ alarm.unit }}</td>
         <td class="blink-warning">{{ alarm.value }}</td>
         <td>Подробнее</td>
       </tr>
