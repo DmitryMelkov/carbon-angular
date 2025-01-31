@@ -4,21 +4,24 @@ import { LabService } from '../../../../common/services/vr/lab.service';
 import { CommonModule } from '@angular/common';
 import { DataLoadingService } from '../../../../common/services/data-loading.service';
 import { delay } from 'rxjs';
+import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { fadeInAnimation } from '../../../../common/animations/animations';
 
 @Component({
   selector: 'app-lab-last-day',
-  imports: [CommonModule],
+  imports: [CommonModule, LoaderComponent], // Добавьте LoaderComponent в imports
   templateUrl: './lab-last-day.component.html',
-  styleUrl: './lab-last-day.component.scss',
+  styleUrls: ['./lab-last-day.component.scss'],
+  animations: [fadeInAnimation]
 })
 export class LabLastDayComponent implements OnInit {
   @Input() vrId!: string;
   labData: LabLastDay[] = [];
-  isLoading = false;
+  isLoading = true; // Установите isLoading в true при инициализации
 
   constructor(
     private labService: LabService,
-    private dataLoadingService: DataLoadingService // Внедрение сервиса
+    private dataLoadingService: DataLoadingService
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +36,7 @@ export class LabLastDayComponent implements OnInit {
   public loadData(): void {
     if (this.vrId) {
       this.dataLoadingService.loadData<LabLastDay[]>(
-        () => this.labService.getLastDayData(this.vrId).pipe(delay(10000)), // Функция загрузки
+        () => this.labService.getLastDayData(this.vrId).pipe(delay(1000)), // Функция загрузки
         (data) => {
           this.labData = data; // Обработка успешной загрузки
           this.isLoading = false;

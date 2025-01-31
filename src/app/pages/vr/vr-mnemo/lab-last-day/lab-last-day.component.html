@@ -1,30 +1,29 @@
+<div class="lab-last-day">
+  <div class="lab-last-day__loader" *ngIf="isLoading">
+    <app-loader [loadingText]="'Загрузка данных...'" (loadingComplete)="isLoading = false"></app-loader>
+  </div>
 
-
-
-<div class="lab-last">
-  <div *ngIf="isLoading" class="loading">Загрузка данных...</div>
-
-  <div *ngIf="!isLoading && labData.length === 0" class="no-data">
+  <div class="lab-last-day__empty" *ngIf="!isLoading && labData.length === 0">
     Нет данных за последние сутки
   </div>
 
-  <table *ngIf="!isLoading && labData.length > 0">
-    <thead>
-      <tr>
-        <th>Дата</th>
-        <th>Время</th>
-        <th>Летучие в-ва</th>
-        <th>pH</th>
-        <th>Суммарка</th>
+  <table class="lab-last-day__table" *ngIf="!isLoading && labData.length > 0" @fadeIn>
+    <thead class="lab-last-day__table-head">
+      <tr class="lab-last-day__table-row">
+        <th class="lab-last-day__table-header">Дата</th>
+        <th class="lab-last-day__table-header">Время</th>
+        <th class="lab-last-day__table-header">Летучие в-ва, %</th>
+        <th class="lab-last-day__table-header">pH</th>
+        <th class="lab-last-day__table-header">Суммарка</th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let item of labData">
-        <td>{{ item.recordDate }}</td>
-        <td>{{ item.recordTime }}</td>
-        <td>{{ item.value || '-' }}</td>
-        <td>{{ item.valuePH || '-' }}</td>
-        <td>{{ item.valueSUM || '-' }}</td>
+    <tbody class="lab-last-day__table-body">
+      <tr class="lab-last-day__table-row" *ngFor="let item of labData">
+        <td class="lab-last-day__table-cell">{{ item.recordDate }}</td>
+        <td class="lab-last-day__table-cell">{{ item.recordTime }}</td>
+        <td class="lab-last-day__table-cell">{{ item.value || '-' }}</td>
+        <td class="lab-last-day__table-cell">{{ item.valuePH || '-' }}</td>
+        <td class="lab-last-day__table-cell">{{ item.valueSUM || '-' }}</td>
       </tr>
     </tbody>
   </table>

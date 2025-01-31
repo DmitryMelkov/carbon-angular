@@ -1,57 +1,65 @@
-.lab-last {
+
+
+.lab-last-day {
   margin-top: 20px;
 
-  table {
+  &__loader {
+    text-align: center;
+    padding: 20px;
+    color: #4caf50;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 20px;
+    color: #f44336;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  &__table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Тень для таблицы
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    th, td {
-      padding: 12px 16px;
-      border: 1px solid #e0e0e0; // Светлые границы
-      text-align: center;
+    &-head {
+      background: linear-gradient(135deg, green, #81c784);
     }
 
-    th {
-      background: linear-gradient(135deg, green, #81c784);
+    &-header {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
       color: white;
       font-weight: 600;
       text-transform: uppercase;
     }
 
-    tbody tr {
-      transition: background-color 0.3s ease;
+    &-body {
+      .lab-last-day__table-row {
+        transition: background-color 0.3s ease;
 
-      &:nth-child(odd) {
-        background-color: #f5f5f5;
-      }
+        &:nth-child(odd) {
+          background-color: #f5f5f5;
+        }
 
-      &:nth-child(even) {
-        background-color: white;
-      }
+        &:nth-child(even) {
+          background-color: white;
+        }
 
-      &:hover {
-        background-color: #e8f5e9;
-        cursor: pointer;
+        &:hover {
+          background-color: #e8f5e9;
+          cursor: pointer;
+        }
       }
     }
-  }
 
-  .loading,
-  .no-data {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .loading {
-    color: #4caf50; // Зеленый цвет для текста загрузки
-  }
-
-  .no-data {
-    color: #f44336; // Красный цвет для текста "Нет данных"
+    &-cell {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: center;
+    }
   }
 }

@@ -147,6 +147,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     this.dialog.open(DocumentationModalComponent, {
       minWidth: '600px',
       maxWidth: '90vw',
+      maxHeight: '80vh',
       data: { content: 'Это тестовый контент для документации объекта.' },
     });
   }
@@ -155,6 +156,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     this.dialog.open(LabModalComponent, {
       minWidth: '600px',
       maxWidth: '90vw',
+      maxHeight: '80vh',
       data: { content: 'Это тестовый контент для документации объекта.', vrId: this.id  },
     });
   }

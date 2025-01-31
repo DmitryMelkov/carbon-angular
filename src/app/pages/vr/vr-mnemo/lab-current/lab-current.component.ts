@@ -5,12 +5,14 @@ import { DataLoadingService } from '../../../../common/services/data-loading.ser
 import { CommonModule } from '@angular/common';
 import { delay } from 'rxjs';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
+import { fadeInAnimation } from '../../../../common/animations/animations';
 
 @Component({
   selector: 'app-lab-current',
   imports: [CommonModule, LoaderComponent],
   templateUrl: './lab-current.component.html',
   styleUrls: ['./lab-current.component.scss'],
+  animations: [fadeInAnimation]
 })
 export class LabCurrentComponent implements OnInit, OnDestroy {
   @Input() id: string = ''; // Принимаем ID печи как входной параметр
