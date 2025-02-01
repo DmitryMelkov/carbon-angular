@@ -25,6 +25,7 @@ import { AlarmTableComponent } from './alarm-table/alarm-table.component';
 @Component({
   selector: 'app-vr-mnemo',
   standalone: true,
+  providers: [ModeVrService], // Каждый экземпляр компонента получит свой сервис
   imports: [
     HeaderCurrentParamsComponent,
     LoaderComponent,

@@ -1,0 +1,29 @@
+<div class="alarm-modal" [@fadeInOut]>
+  <div class="alarm-modal__header">
+    <app-modal-header [title]=data.title (close)="close()">
+    </app-modal-header>
+  </div>
+  <div class="alarm-modal__body">
+    <h3 class="troubleshooting__title">
+      Возможные причины и действия по устранению неполадок
+    </h3>
+    <p class="troubleshooting__descr">
+      Нажмите на причину чтобы прочитать пошаговые действия
+    </p>
+    <div class="troubleshooting__section" *ngFor="let item of data.troubleshootingItems; let i = index">
+
+      <div
+        class="troubleshooting__item troubleshooting__item--cause"
+        (click)="toggleItem(i)">
+        <span class="troubleshooting__label">Причина:</span> {{ item.cause }}
+      </div>
+
+
+      <div
+        class="troubleshooting__item troubleshooting__item--action"
+        *ngIf="activeItemIndex === i">
+        <span class="troubleshooting__label">Действие:</span> {{ item.action }}
+      </div>
+    </div>
+  </div>
+</div>

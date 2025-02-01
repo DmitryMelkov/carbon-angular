@@ -14,7 +14,7 @@ export class ModeVrService {
       return null;
     }
     const temper1Value = data.temperatures['1-СК'];
-    if (temper1Value < 550 && temper1Value > 50) {
+    if (temper1Value < 550 && temper1Value > 10) {
       return 'Выход на режим';
     } else if (temper1Value > 550) {
       return 'Установившийся режим';

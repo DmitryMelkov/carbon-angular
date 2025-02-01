@@ -1,0 +1,58 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.alarm-modal {
+  padding: 10px 20px;
+  width: 780px;
+  max-width: 90vw;
+  &__body {
+    margin-top: 10px;
+  }
+}
+
+.troubleshooting__title {
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 600;
+  color: green;
+  margin-bottom: 30px;
+}
+
+.troubleshooting__descr {
+  margin-bottom: 10px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+  color: black;
+}
+
+.troubleshooting__label {
+  font-weight: 800;
+}
+
+.troubleshooting__item--cause {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f8d7da;
+  border-left: 4px solid #dc3545;
+  margin-bottom: 5px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.troubleshooting__item--cause:hover {
+  background-color: #f7abb2;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.troubleshooting__item--action {
+  padding: 10px;
+  margin-left: 40px;
+  border: 1px solid green;
+  border-radius: 4px;
+  background-color: rgba(92, 230, 115, 0.363);
+  margin-bottom: 10px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

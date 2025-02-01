@@ -2,9 +2,20 @@
 @use "../../../../../styles/variables" as vars;
 
 .alarm-table {
-  padding-right: 2px;
+  min-width: 400px;
   max-width: 400px;
+  max-height: 250px;
+  overflow: auto;
   border: 2px solid green;
+}
+
+.alarm-btn {
+  font-size: 13px;
+  color: black;
+  font-weight: 600;
+  &:hover {
+    color: blue;
+  }
 }
 
 .no-alarms {
@@ -31,16 +42,16 @@ th {
   background-color: #f4f4f4;
 }
 
-.blink-warning {
-  animation: blink 1s infinite;
-}
-
 @keyframes blink {
-  0%,
-  100% {
-    color: green; /* Исходный цвет */
+  0%, 100% {
+    color: green;
   }
   50% {
-    color: red; /* Цвет предупреждения */
+    color: red;
   }
+}
+
+
+.blink-warning {
+  animation: blink 1s infinite;
 }
