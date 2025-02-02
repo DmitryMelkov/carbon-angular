@@ -147,6 +147,13 @@
   }
 }
 
+.siren-container {
+  position: absolute;
+  z-index: 1;
+  top: 420px;
+  left: 620px;
+}
+
 // Позиционирование параметров
 // Температуры
 .first-skolz {

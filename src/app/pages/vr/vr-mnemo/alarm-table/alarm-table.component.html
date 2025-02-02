@@ -12,18 +12,23 @@
     </thead>
     <tbody>
       <tr *ngFor="let alarm of alarms">
-  <td class="blink-warning"
-      [style.animationDelay]="getAnimationDelay()">
-    {{ alarm.key }}, {{ alarm.unit }}
-  </td>
-  <td class="blink-warning"
-      [style.animationDelay]="getAnimationDelay()">
-    {{ alarm.value }}
-  </td>
-  <td>
-    <button class="alarm-btn btn-reset" (click)="openAlarmModal(alarm)">Подробнее</button>
-  </td>
-</tr>
+        <td class="blink-warning" [style.animationDelay]="getAnimationDelay()">
+          {{ alarm.key }}, {{ alarm.unit }}
+        </td>
+        <td class="blink-warning" [style.animationDelay]="getAnimationDelay()">
+          {{ alarm.value }}
+        </td>
+        <td>
+          <!-- Если конфигурация отсутствует, кнопка будет disabled -->
+          <button
+            class="alarm-btn btn-reset"
+            (click)="openAlarmModal(alarm)"
+            [disabled]="!hasAlarmConfig(alarm)"
+          >
+            Подробнее
+          </button>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

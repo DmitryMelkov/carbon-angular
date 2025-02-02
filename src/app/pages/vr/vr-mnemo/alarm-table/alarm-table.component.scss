@@ -13,8 +13,17 @@
   font-size: 13px;
   color: black;
   font-weight: 600;
+  transition: color 0.3s ease-in-out;
   &:hover {
     color: blue;
+    transition: color 0.3s ease-in-out;
+  }
+
+  // Стили для disabled-состояния
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: grey;
   }
 }
 
@@ -25,10 +34,12 @@
   font-size: 18px;
   font-weight: 800;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
 }
+
 th,
 td {
   font-size: 13px;
@@ -37,8 +48,8 @@ td {
   padding: 4px;
   border: 1px solid #ddd;
 }
+
 th {
-  text-align: center;
   background-color: #f4f4f4;
 }
 
@@ -50,7 +61,6 @@ th {
     color: red;
   }
 }
-
 
 .blink-warning {
   animation: blink 1s infinite;

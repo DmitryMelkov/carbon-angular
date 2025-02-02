@@ -7,7 +7,7 @@ import {
   AlarmModalComponent,
   AlarmModalData,
 } from '../alarm-modal/alarm-modal.component';
-import { ALARM_MODAL_DATA } from '../alarm-modal/alarm-modal.config';
+import { ALARM_MODAL_DATA, AlarmModalConfig, AlarmModalConfigs } from '../alarm-modal/alarm-modal.config';
 
 @Component({
   selector: 'app-alarm-table',
@@ -44,71 +44,46 @@ export class AlarmTableComponent implements OnInit {
   }
 
   openAlarmModal(alarm: { key: string; value: any; unit: string }): void {
-    if (alarm.key === 'Внизу камеры загрузки') {
-      let modalData: AlarmModalData | null = null;
+    const configEntry: AlarmModalConfigs | undefined = ALARM_MODAL_DATA[alarm.key];
 
-      // Если значение меньше 1000, показываем первую модалку
-      if (alarm.value < 1000) {
-        modalData = {
-          title: 'Температура внизу камеры загрузки (ниже 1000 °C)',
-          troubleshootingItems: [
-            {
-              cause:
-                'Недостаточный расход воздуха на догорание газов карбонизации.',
-              action:
-                'Увеличить частоту вращения вентиляторов (1 и/или 2) подачи воздуха в камеру загрузки.',
-            },
-            {
-              cause: 'Просыпи угля.',
-              action:
-                'Открыть отверстие с торца печи или включить вентилятор подачи воздуха в камеру загрузки с торца печи.',
-            },
-          ],
-        };
-      }
-      // Если значение больше 1100, показываем вторую модалку
-      else if (alarm.value > 1100) {
-        modalData = {
-          title: 'Температура внизу камеры загрузки (выше 1100 °C)',
-          troubleshootingItems: [
-            {
-              cause:
-                'Подсосы воздуха через сальниковые уплотнения на стыке барабан-камера загрузки.',
-              action:
-                'Вызвать дежурного слесаря для регулировки сальниковых уплотнений.',
-            },
-            {
-              cause:
-                'Повышенный расход воздуха на догорание газов карбонизации.',
-              action:
-                'Отключить или снизить частоту вращения вентиляторов (1 и/или 2) подачи воздуха в камеру загрузки.',
-            },
-            {
-              cause: 'Просыпи угля и горение сажи.',
-              action:
-                'Подать пар в камеру загрузки (верх и/или низ). Уменьшить разрежение.',
-            },
-          ],
-        };
-      }
-      if (modalData) {
-        this.dialog.open(AlarmModalComponent, {
-          minWidth: '400px',
-          maxWidth: '90vw',
-          data: modalData,
-        });
-      }
+    if (!configEntry) {
+      // Если для данного alarm'а нет конфигурации, выходим
       return;
     }
 
-    // Для остальных alarm'ов используем существующие данные из alarmData
-    const alarmInfo = ALARM_MODAL_DATA[alarm.key];
-    if (alarmInfo) {
+    let modalData: AlarmModalData | null = null;
+
+    if (Array.isArray(configEntry)) {
+      // Если вариантов несколько, выбираем тот, условие которого возвращает true
+      modalData = configEntry.find(config =>
+        config.condition ? config.condition(alarm.value) : true
+      )?.data || null;
+    } else {
+      // Если задан один вариант, используем его
+      modalData = configEntry.data;
+    }
+
+    if (modalData) {
       this.dialog.open(AlarmModalComponent, {
         minWidth: '400px',
         maxWidth: '90vw',
-        data: alarmInfo,
+        data: modalData,
       });
     }
+  }
+
+  /**
+   * Проверяет, есть ли в конфигурации модальное окно для данного alarm-а.
+   */
+  hasAlarmConfig(alarm: { key: string; value: any; unit: string }): boolean {
+    const configEntry: AlarmModalConfigs | undefined = ALARM_MODAL_DATA[alarm.key];
+    if (!configEntry) {
+      return false;
+    }
+    if (Array.isArray(configEntry)) {
+      // Если вариантов несколько, проверяем, что хотя бы один удовлетворяет условию
+      return configEntry.some(config => (config.condition ? config.condition(alarm.value) : true));
+    }
+    return true;
   }
 }

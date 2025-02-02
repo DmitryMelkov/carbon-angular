@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, of, Subject } from 'rxjs';
+import { forkJoin, Subject, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -21,11 +21,13 @@ import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 import { LabCurrentComponent } from './lab-current/lab-current.component';
 import { LabModalComponent } from './lab-modal/lab-modal.component';
 import { AlarmTableComponent } from './alarm-table/alarm-table.component';
+import { AlarmService } from '../../../common/services/vr/alarm.service';
+import { SirenComponent } from './siren/siren.component';
 
 @Component({
   selector: 'app-vr-mnemo',
   standalone: true,
-  providers: [ModeVrService], // Каждый экземпляр компонента получит свой сервис
+  providers: [ModeVrService],
   imports: [
     HeaderCurrentParamsComponent,
     LoaderComponent,
@@ -37,7 +39,8 @@ import { AlarmTableComponent } from './alarm-table/alarm-table.component';
     ControlButtonComponent,
     ParamIndicatorComponent,
     LabCurrentComponent,
-    AlarmTableComponent
+    AlarmTableComponent,
+    SirenComponent // Подключаем компонент сирены
   ],
   templateUrl: './vr-mnemo.component.html',
   styleUrls: ['./vr-mnemo.component.scss'],
@@ -53,6 +56,28 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   isImageLoaded: boolean = false;
 
+  // Переменная для определения состояния тревоги
+  isAlarmActive: boolean = false;
+  private alarmSubscription!: Subscription;
+
+  // Текстовые константы для описания приборов
+  termopara1000: string =
+    'Прибор: Термопара (1000мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
+  termopara400: string =
+    'Прибор: Термопара (400мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
+  tcm50m: string =
+    'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4 - 20 мА';
+  vBarabaneKotla: string =
+    'Прибор: АИР-20/М2-Н-ДД\nДиапазон: 0...4 кПа\nТоковый выход: 4 - 20 мА';
+  davlScrubber: string =
+    'Прибор: ПД-1.М.Н1.42\nДиапазон: 0...0,25 кПа\nТоковый выход: 4 - 20 мА';
+  davlKotel: string =
+    'Прибор: Метран-55-ДИ\nДиапазон: 0...1,6 МПа\nТоковый выход: 4 - 20 мА';
+  davlTopka: string =
+    'Прибор: ПД-1.ТН.42\nДиапазон: -0,125...+0,125 кПа\nТоковый выход: 4 - 20 мА';
+  davlNizKamery: string =
+    'Прибор: ПД-1.Т1.42\nДиапазон: 0...-0,25 кПа\nТоковый выход: 4 - 20 мА';
+
   constructor(
     private vrService: VrService,
     private route: ActivatedRoute,
@@ -60,9 +85,11 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     private notisVrService: NotisVrService,
     private dialog: MatDialog,
     private modeVrService: ModeVrService,
+    private alarmService: AlarmService // Используем сервис тревог
   ) {}
 
   ngOnInit(): void {
+    // Если id не передан через Input, пытаемся получить его из маршрута
     if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') ?? '';
     }
@@ -72,12 +99,18 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     }
     this.loadData();
     this.startPeriodicDataLoading();
+
+    // Подписка на изменения тревог из AlarmService
+    this.alarmSubscription = this.alarmService.alarms$.subscribe((alarms) => {
+      this.isAlarmActive = Object.keys(alarms).length > 0;
+    });
   }
 
   ngOnDestroy(): void {
     this.dataLoadingService.stopPeriodicLoading();
     this.destroy$.next();
     this.destroy$.complete();
+    this.alarmSubscription?.unsubscribe();
   }
 
   private loadData(): void {
@@ -121,30 +154,13 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     if (this.data) {
       const mode = this.modeVrService.determineMode(this.data);
       this.modeVrService.setCurrentMode(mode);
-      this.mode = mode; // Обновляем свойство mode
+      this.mode = mode;
     }
   }
 
   toggleTooltips(): void {
     this.isTooltipsEnabled = !this.isTooltipsEnabled;
   }
-
-  termopara1000: string =
-    'Прибор: Термопара (1000мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
-  termopara400: string =
-    'Прибор: Термопара (400мм)\nДиапазон: 0...+1000°C\nГрадуировка: ХА (К)';
-  tcm50m: string =
-    'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4 - 20 мА';
-  vBarabaneKotla: string =
-    'Прибор: АИР-20/М2-Н-ДД\nДиапазон: 0...4 кПа\nТоковый выход: 4 - 20 мА';
-  davlScrubber: string =
-    'Прибор: ПД-1.М.Н1.42\nДиапазон: 0...0,25 кПа\nТоковый выход: 4 - 20 мА';
-  davlKotel: string =
-    'Прибор: Метран-55-ДИ\nДиапазон: 0...1,6 МПа\nТоковый выход: 4 - 20 мА';
-  davlTopka: string =
-    'Прибор: ПД-1.ТН.42\nДиапазон: -0,125...+0,125 кПа\nТоковый выход: 4 - 20 мА';
-  davlNizKamery: string =
-    'Прибор: ПД-1.Т1.42\nДиапазон: 0...-0,25 кПа\nТоковый выход: 4 - 20 мА';
 
   openDocumentation(): void {
     this.dialog.open(DocumentationModalComponent, {
@@ -160,7 +176,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       minWidth: '600px',
       maxWidth: '90vw',
       maxHeight: '80vh',
-      data: { content: 'Это тестовый контент для документации объекта.', vrId: this.id  },
+      data: { content: 'Это тестовый контент для документации объекта.', vrId: this.id },
     });
   }
 
@@ -170,6 +186,6 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
 
   isKran5Active(): boolean {
     const value = this.data?.im?.['ИМ5 котел-утилизатор'];
-    return typeof value === 'number' && value > 5; // Проверяем, что значение больше 5
+    return typeof value === 'number' && value > 5;
   }
 }
