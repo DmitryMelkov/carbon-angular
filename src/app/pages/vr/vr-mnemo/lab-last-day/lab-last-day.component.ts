@@ -6,10 +6,14 @@ import { DataLoadingService } from '../../../../common/services/data-loading.ser
 import { delay } from 'rxjs';
 import { LoaderComponent } from '../../../../components/loader/loader.component';
 import { fadeInAnimation } from '../../../../common/animations/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatIcon } from '@angular/material/icon';
+import { LabPasswordDialogComponent } from '../lab-password-dialog/lab-password-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-lab-last-day',
-  imports: [CommonModule, LoaderComponent], // Добавьте LoaderComponent в imports
+  imports: [CommonModule, LoaderComponent, MatIcon],
   templateUrl: './lab-last-day.component.html',
   styleUrls: ['./lab-last-day.component.scss'],
   animations: [fadeInAnimation],
@@ -21,7 +25,9 @@ export class LabLastDayComponent implements OnInit {
 
   constructor(
     private labService: LabService,
-    private dataLoadingService: DataLoadingService
+    private dataLoadingService: DataLoadingService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -79,5 +85,29 @@ export class LabLastDayComponent implements OnInit {
         }
       );
     }
+  }
+
+
+  public deleteRecord(recordId: string): void {
+    const dialogRef = this.dialog.open(LabPasswordDialogComponent);
+
+    dialogRef.afterClosed().subscribe((password: string) => {
+      if (password) {
+        this.labService.deleteLabData(this.vrId, recordId).subscribe({
+          next: () => {
+            this.labData = this.labData.filter(item => item._id !== recordId);
+            this.snackBar.open('Запись удалена', 'Закрыть', { duration: 2000 });
+          },
+          error: (error) => {
+            console.error('Ошибка при удалении:', error);
+            this.snackBar.open(
+              `Ошибка: ${error.error?.message || 'Неизвестная ошибка'}`,
+              'Закрыть',
+              { duration: 5000 }
+            );
+          }
+        });
+      }
+    });
   }
 }

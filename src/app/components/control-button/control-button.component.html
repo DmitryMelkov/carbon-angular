@@ -1,6 +1,6 @@
 <button
   class="control-button btn-reset"
-  [ngClass]="{'active-button': isActive}"
+  [ngClass]="buttonClass"
   [disabled]="isDisabled"
   [style.border-radius]="borderRadius"
   (click)="onClick.emit($event)">

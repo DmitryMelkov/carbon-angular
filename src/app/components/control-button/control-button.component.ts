@@ -13,4 +13,11 @@ export class ControlButtonComponent {
   @Input() isDisabled: boolean = false;
   @Output() onClick = new EventEmitter<Event>();
   @Input() borderRadius: string = '0px'; // Добавляем свойство для радиуса
+
+  get buttonClass() {
+    return {
+      'active-button': this.isActive,
+      'disabled-button': this.isDisabled,
+    };
+  }
 }
