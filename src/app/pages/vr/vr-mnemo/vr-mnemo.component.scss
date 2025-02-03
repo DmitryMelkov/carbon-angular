@@ -4,6 +4,7 @@
 
   &-header {
     padding-bottom: 10px;
+    max-width: 1080px;
   }
 
   &-container {
@@ -55,8 +56,8 @@
 
 .alarm-table {
   position: absolute;
-  top: 0%;
-  right: -8.4%;
+  top: -130px;
+  right: -155px;
 }
 
 .mnemo__param {
