@@ -10,24 +10,24 @@
       <tr class="alarm__table-row" *ngFor="let alarm of alarms">
         <td
           class="alarm__table-cell blink-warning"
-          [style.animationDelay]="getAnimationDelay()"
+          [style.animationDelay]="alarm.animationDelay"
         >
           {{ alarm.key }}, {{ alarm.unit }}
         </td>
         <td
           class="alarm__table-cell blink-warning"
-          [style.animationDelay]="getAnimationDelay()"
+          [style.animationDelay]="alarm.animationDelay"
         >
           {{ alarm.value }}
         </td>
         <td class="alarm__table-cell">
           <button
-          class="alarm-btn btn-reset"
-          (click)="openAlarmModal(alarm)"
-          [disabled]="!hasAlarmConfig(alarm)"
-        >
-          <mat-icon>info_outline</mat-icon>
-        </button>
+            class="alarm-btn btn-reset"
+            (click)="openAlarmModal(alarm)"
+            [disabled]="!hasAlarmConfig(alarm)"
+          >
+            <mat-icon>info_outline</mat-icon>
+          </button>
         </td>
       </tr>
     </tbody>

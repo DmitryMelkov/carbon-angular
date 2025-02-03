@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AlarmService } from '../../../../common/services/vr/alarm.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -10,6 +11,13 @@ import {
 import { ALARM_MODAL_DATA, AlarmModalConfigs } from '../alarm-modal/alarm-modal.config';
 import { MatIconModule } from '@angular/material/icon';
 
+// Интерфейс с дополнительным свойством для задержки анимации
+interface AlarmData {
+  key: string;
+  value: any;
+  unit: string;
+  animationDelay: string;
+}
 
 @Component({
   selector: 'app-alarm-table',
@@ -19,33 +27,38 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./alarm-table.component.scss'],
 })
 export class AlarmTableComponent implements OnInit {
-  alarms$: Observable<{ key: string; value: any; unit: string }[]>;
+  // Переопределяем тип элементов, добавляя поле animationDelay
+  alarms$: Observable<AlarmData[]>;
+
+  // Фиксируем время старта анимации
+  private animationStartTime = Date.now();
+  // Задаём длительность анимации, например 1000 мс
+  private blinkAnimationDuration = 1000;
 
   constructor(
     private alarmService: AlarmService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) {
-    this.alarms$ = this.alarmService.alarms$;
-  }
-
-  private animationStartTime = Date.now();
-  public blinkAnimationDuration = 0;
-
-  getAnimationDelay(): string {
-    const now = Date.now();
-    const elapsed = now - this.animationStartTime;
-    const delay = -(elapsed % this.blinkAnimationDuration);
-    return `${delay}ms`;
+    // Каждый раз, когда поступают данные, вычисляем для каждого элемента задержку анимации
+    this.alarms$ = this.alarmService.alarms$.pipe(
+      map(alarms =>
+        alarms.map(alarm => ({
+          ...alarm,
+          animationDelay: `${-((Date.now() - this.animationStartTime) % this.blinkAnimationDuration)}ms`
+        }))
+      )
+    );
   }
 
   ngOnInit(): void {
+    // Если требуется триггерить обновление отображения при изменении alarms
     this.alarms$.subscribe(() => {
       this.cdr.detectChanges();
     });
   }
 
-  openAlarmModal(alarm: { key: string; value: any; unit: string }): void {
+  openAlarmModal(alarm: AlarmData): void {
     const configEntry: AlarmModalConfigs | undefined = ALARM_MODAL_DATA[alarm.key];
 
     if (!configEntry) {
@@ -77,7 +90,7 @@ export class AlarmTableComponent implements OnInit {
   /**
    * Проверяет, есть ли в конфигурации модальное окно для данного alarm-а.
    */
-  hasAlarmConfig(alarm: { key: string; value: any; unit: string }): boolean {
+  hasAlarmConfig(alarm: AlarmData): boolean {
     const configEntry: AlarmModalConfigs | undefined = ALARM_MODAL_DATA[alarm.key];
     if (!configEntry) {
       return false;
