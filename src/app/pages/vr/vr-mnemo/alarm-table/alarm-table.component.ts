@@ -7,12 +7,14 @@ import {
   AlarmModalComponent,
   AlarmModalData,
 } from '../alarm-modal/alarm-modal.component';
-import { ALARM_MODAL_DATA, AlarmModalConfig, AlarmModalConfigs } from '../alarm-modal/alarm-modal.config';
+import { ALARM_MODAL_DATA, AlarmModalConfigs } from '../alarm-modal/alarm-modal.config';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-alarm-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './alarm-table.component.html',
   styleUrls: ['./alarm-table.component.scss'],
 })

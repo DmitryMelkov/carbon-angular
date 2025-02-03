@@ -1,34 +1,43 @@
-<div class="alarm-table" *ngIf="alarms$ | async as alarms">
-  <div *ngIf="alarms.length === 0" class="no-alarms">
-    Все параметры в норме.
-  </div>
-  <table *ngIf="alarms.length > 0">
-    <thead>
-      <tr>
-        <th>Наименование</th>
-        <th>Значение</th>
-        <th>Причины</th>
+<div class="alarm__table-container" *ngIf="alarms$ | async as alarms">
+  <table class="alarm__table">
+    <thead class="alarm__table-head">
+      <tr class="alarm__table-row">
+        <th class="alarm__table-header">Наименование</th>
+        <th class="alarm__table-header">Знач.</th>
+        <th class="alarm__table-header">Причины</th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let alarm of alarms">
-        <td class="blink-warning" [style.animationDelay]="getAnimationDelay()">
+    <tbody class="alarm__table-body" *ngIf="alarms.length > 0; else noAlarms">
+      <tr class="alarm__table-row" *ngFor="let alarm of alarms">
+        <td
+          class="alarm__table-cell blink-warning"
+          [style.animationDelay]="getAnimationDelay()"
+        >
           {{ alarm.key }}, {{ alarm.unit }}
         </td>
-        <td class="blink-warning" [style.animationDelay]="getAnimationDelay()">
+        <td
+          class="alarm__table-cell blink-warning"
+          [style.animationDelay]="getAnimationDelay()"
+        >
           {{ alarm.value }}
         </td>
-        <td>
-          <!-- Если конфигурация отсутствует, кнопка будет disabled -->
+        <td class="alarm__table-cell">
           <button
-            class="alarm-btn btn-reset"
-            (click)="openAlarmModal(alarm)"
-            [disabled]="!hasAlarmConfig(alarm)"
-          >
-            Подробнее
-          </button>
+          class="alarm-btn btn-reset"
+          (click)="openAlarmModal(alarm)"
+          [disabled]="!hasAlarmConfig(alarm)"
+        >
+          <mat-icon>info_outline</mat-icon>
+        </button>
         </td>
       </tr>
     </tbody>
+    <ng-template #noAlarms>
+      <tbody class="no-alarms">
+        <tr>
+          <td colspan="3">Все параметры в норме.</td>
+        </tr>
+      </tbody>
+    </ng-template>
   </table>
 </div>

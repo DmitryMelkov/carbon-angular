@@ -11,7 +11,6 @@ export interface AlarmModalConfig {
 export type AlarmModalConfigs = AlarmModalConfig | AlarmModalConfig[];
 
 export const ALARM_MODAL_DATA: { [key: string]: AlarmModalConfigs } = {
-  // Пример с одним вариантом:
   '1-СК': {
     data: {
       title: 'Температура 1-СК',
@@ -33,7 +32,6 @@ export const ALARM_MODAL_DATA: { [key: string]: AlarmModalConfigs } = {
       ],
     },
   },
-  // Пример с двумя вариантами для одного ключа, выбираемым по условию:
   'Внизу камеры загрузки': [
     {
       condition: (value: any) => value < 1000,

@@ -125,8 +125,12 @@ export class VrComponent implements OnInit, OnDestroy {
     ); // Обновляем рекомендуемые значения
   }
 
+  getHighlightedKeys(): Set<string> {
+    return this.mode === 'Печь не работает' ? new Set() : this.highlightedKeys;
+  }
+
   private checkValues(): void {
-    if (!this.data) return;
+    if (!this.data || this.mode === 'Печь не работает') return; // Не проверяем значения, если печь не работает
 
     // Очищаем предыдущие значения
     this.highlightedKeys.clear();
