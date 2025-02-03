@@ -3,8 +3,7 @@
     <thead class="alarm__table-head">
       <tr class="alarm__table-row">
         <th class="alarm__table-header">Наименование</th>
-        <th class="alarm__table-header">Знач.</th>
-        <th class="alarm__table-header">Причины</th>
+        <th colspan="2" class="alarm__table-header">Значения</th>
       </tr>
     </thead>
     <tbody class="alarm__table-body" *ngIf="alarms.length > 0; else noAlarms">
