@@ -3,7 +3,7 @@ import { EnergyResourcesService } from '../../../../common/services/energy-resou
 import { EnergyResourceData } from '../../../../common/types/energy-resources-data';
 import { CommonModule } from '@angular/common';
 import { interval, Subject, of } from 'rxjs';
-import { takeUntil, catchError, switchMap, delay } from 'rxjs/operators';
+import { takeUntil, catchError, switchMap, delay, startWith } from 'rxjs/operators';
 import {
   animate,
   state,
@@ -43,11 +43,30 @@ export class MpaTable implements OnInit, OnDestroy {
   constructor(private energyResourcesService: EnergyResourcesService) {}
 
   ngOnInit() {
+    // Однократная начальная загрузка данных
     this.loadData();
-    this.startPeriodicDataLoading();
+
+    // Периодический опрос данных каждые 10 секунд, начиная сразу
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.energyResourcesService.getEnergyResourceData().pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных:', error);
+              return of({}); // При ошибке возвращаем пустой объект
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+        this.energyResources = data;
+      });
   }
 
   ngOnDestroy() {
+    // Завершаем все подписки
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -56,36 +75,20 @@ export class MpaTable implements OnInit, OnDestroy {
     this.energyResourcesService
       .getEnergyResourceData()
       .pipe(
+        // Добавляем задержку для имитации загрузки (при необходимости)
+        delay(1000),
         takeUntil(this.destroy$),
         catchError((error) => {
           console.error('Ошибка при загрузке данных:', error);
-          return of({});  // Если произошла ошибка, возвращаем пустой объект
-        }),
-        delay(1000)
-      )
-      .subscribe((data) => {
-        this.energyResources = data;
-
-        this.mpaKeys = this.orderedKeys.filter(
-          (item) => item.key.startsWith('de') || item.key.startsWith('dd97')
-        );
-        this.isLoading = false;
-      });
-  }
-
-
-  private startPeriodicDataLoading() {
-    interval(10000)
-      .pipe(
-        switchMap(() => this.energyResourcesService.getEnergyResourceData()),
-        takeUntil(this.destroy$),
-        catchError((error) => {
-          console.error('Ошибка при периодической загрузке данных:', error);
-          return of({});
+          return of({}); // При ошибке возвращаем пустой объект
         })
       )
       .subscribe((data) => {
         this.energyResources = data;
+        this.mpaKeys = this.orderedKeys.filter(
+          (item) => item.key.startsWith('de') || item.key.startsWith('dd97')
+        );
+        this.isLoading = false;
       });
   }
 

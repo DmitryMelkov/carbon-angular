@@ -2,12 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MillsService } from '../../../common/services/mills/mills.service';
 import { MillData } from '../../../common/types/mills-data';
 import { CommonModule } from '@angular/common';
-import { interval, Subject, of } from 'rxjs';
-import { takeUntil, catchError, switchMap, delay } from 'rxjs/operators';
+import { interval, Subject, of, forkJoin } from 'rxjs';
+import { takeUntil, catchError, switchMap, startWith } from 'rxjs/operators';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-mills-current',
@@ -25,20 +24,116 @@ export class MillsCurrentComponent implements OnInit, OnDestroy {
   isDataLoaded: boolean = false;
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private millsService: MillsService,
-    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
-  ) {}
+  constructor(private millsService: MillsService) {}
 
   ngOnInit() {
-    this.loadData();
+    this.initialLoad();
     this.startPeriodicDataLoading();
   }
 
   ngOnDestroy() {
-    this.dataLoadingService.stopPeriodicLoading();
+    // Отменяем все подписки
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
+  }
+
+  /**
+   * Первичная загрузка всех данных одновременно.
+   */
+  private initialLoad(): void {
+    forkJoin({
+      mill1: this.millsService.getMill1Data().pipe(
+        catchError((error) => {
+          console.error('Ошибка при загрузке данных Mill 1:', error);
+          return of(null);
+        })
+      ),
+      mill2: this.millsService.getMill2Data().pipe(
+        catchError((error) => {
+          console.error('Ошибка при загрузке данных Mill 2:', error);
+          return of(null);
+        })
+      ),
+      mill10b: this.millsService.getMill10bData().pipe(
+        catchError((error) => {
+          console.error('Ошибка при загрузке данных Mill 10b:', error);
+          return of(null);
+        })
+      )
+    })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      this.mill1Data = data.mill1;
+      this.mill2Data = data.mill2;
+      this.mill10bData = data.mill10b;
+      this.isLoading = false;
+      this.isDataLoaded = true;
+    });
+  }
+
+  /**
+   * Периодическая загрузка данных для каждого объекта.
+   */
+  private startPeriodicDataLoading(): void {
+    // Обновление данных для Mill 1 каждые 10 секунд
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.millsService.getMill1Data().pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных Mill 1:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.mill1Data = data;
+        }
+      });
+
+    // Обновление данных для Mill 2 каждые 10 секунд
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.millsService.getMill2Data().pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных Mill 2:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.mill2Data = data;
+        }
+      });
+
+    // Обновление данных для Mill 10b каждые 10 секунд
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.millsService.getMill10bData().pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных Mill 10b:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.mill10bData = data;
+        }
+      });
   }
 
   getMill10bValue(key: string): string | number {
@@ -51,88 +146,5 @@ export class MillsCurrentComponent implements OnInit, OnDestroy {
 
   getMill2Value(key: string): string | number {
     return this.mill2Data?.data?.[key] || '—';
-  }
-
-  private loadData() {
-    this.isLoading = true;
-
-    // Загрузка данных для Mill 1
-    this.dataLoadingService.loadData(
-      () => this.millsService.getMill1Data(),
-      (data) => {
-        this.mill1Data = data;
-        this.checkDataLoaded();
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных Mill 1:', error);
-        this.checkDataLoaded();
-      }
-    );
-
-    // Загрузка данных для Mill 2
-    this.dataLoadingService.loadData(
-      () => this.millsService.getMill2Data(),
-      (data) => {
-        this.mill2Data = data;
-        this.checkDataLoaded();
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных Mill 2:', error);
-        this.checkDataLoaded();
-      }
-    );
-
-    // Загрузка данных для Mill 10b
-    this.dataLoadingService.loadData(
-      () => this.millsService.getMill10bData(),
-      (data) => {
-        this.mill10bData = data;
-        this.checkDataLoaded();
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных Mill 10b:', error);
-        this.checkDataLoaded();
-      }
-    );
-  }
-
-  private startPeriodicDataLoading() {
-    // Периодическая загрузка данных для Mill 1
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.millsService.getMill1Data(),
-      10000,
-      (data) => {
-        if (data) this.mill1Data = data;
-      }
-    );
-
-    // Периодическая загрузка данных для Mill 2
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.millsService.getMill2Data(),
-      10000,
-      (data) => {
-        if (data) this.mill2Data = data;
-      }
-    );
-
-    // Периодическая загрузка данных для Mill 10b
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.millsService.getMill10bData(),
-      10000,
-      (data) => {
-        if (data) this.mill10bData = data;
-      }
-    );
-  }
-
-  private checkDataLoaded() {
-    if (this.mill1Data && this.mill2Data && this.mill10bData) {
-      this.isLoading = false;
-      this.isDataLoaded = true;
-    }
-  }
-
-  onLoadingComplete(): void {
-    this.isLoading = false;
   }
 }

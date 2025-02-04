@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, of, Subject } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { forkJoin, Subject, interval } from 'rxjs';
+import { takeUntil, startWith } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -15,7 +15,6 @@ import {
   recommendedTemperatures,
   recommendedVacuums,
 } from '../../../common/constans/vr-recomended-values';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 import { fadeInAnimation } from '../../../common/animations/animations';
 import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
@@ -52,77 +51,81 @@ export class VrComponent implements OnInit, OnDestroy {
     private vrService: VrService,
     private route: ActivatedRoute,
     private valueCheckService: ValueCheckService,
-    private dataLoadingService: DataLoadingService,
     private modeVrService: ModeVrService,
     private notisVrService: NotisVrService
   ) {}
 
   ngOnInit(): void {
+    // Если id не передан через Input, пытаемся получить его из маршрута
     if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') ?? '';
     }
-
     if (!this.id) {
       console.error('ID VR не указан!');
       return;
     }
 
+    // Однократная начальная загрузка
     this.loadData();
-    this.startPeriodicDataLoading();
+
+    // Периодическая загрузка данных: выполняется сразу и затем каждые 10 секунд.
+    interval(10000)
+      .pipe(
+        startWith(0),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        forkJoin({
+          vrData: this.vrService.getVrData(this.id),
+          notisData: this.notisVrService.getNotisData(this.id),
+        }).subscribe({
+          next: (response) => {
+            this.data = response.vrData;
+            this.notisData = response.notisData;
+            this.updateMode();
+            this.checkValues();
+          },
+          error: (error) => {
+            console.error('Ошибка при загрузке данных:', error);
+          }
+        });
+      });
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading();
+    // Завершаем все подписки
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   private loadData(): void {
     this.isLoading = true;
-
-    this.dataLoadingService.loadData(
-      () =>
-        forkJoin({
-          vrData: this.vrService.getVrData(this.id),
-          notisData: this.notisVrService.getNotisData(this.id),
-        }),
-      (response) => {
-        this.data = response.vrData;
-        this.notisData = response.notisData;
-        this.updateMode();
-        this.checkValues();
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        this.isLoading = false;
-      }
-    );
-  }
-
-  private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(
-      () =>
-        forkJoin({
-          vrData: this.vrService.getVrData(this.id),
-          notisData: this.notisVrService.getNotisData(this.id),
-        }),
-      10000,
-      (response) => {
-        this.data = response.vrData;
-        this.notisData = response.notisData;
-        this.updateMode();
-        this.checkValues();
-      }
-    );
+    forkJoin({
+      vrData: this.vrService.getVrData(this.id),
+      notisData: this.notisVrService.getNotisData(this.id),
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.data = response.vrData;
+          this.notisData = response.notisData;
+          this.updateMode();
+          this.checkValues();
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          this.isLoading = false;
+        },
+      });
   }
 
   private updateMode(): void {
-    this.mode = this.modeVrService.determineMode(this.data); // Определяем режим
+    this.mode = this.modeVrService.determineMode(this.data);
     this.modeVrService.updateRecommendedTemperatures(
       this.mode,
       this.recommendedTemperatures
-    ); // Обновляем рекомендуемые значения
+    );
   }
 
   getHighlightedKeys(): Set<string> {
@@ -130,7 +133,7 @@ export class VrComponent implements OnInit, OnDestroy {
   }
 
   private checkValues(): void {
-    if (!this.data || this.mode === 'Печь не работает') return; // Не проверяем значения, если печь не работает
+    if (!this.data || this.mode === 'Печь не работает') return;
 
     // Очищаем предыдущие значения
     this.highlightedKeys.clear();
@@ -174,15 +177,15 @@ export class VrComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Проверяем разрежения
+    // Проверяем разрежения (вакуумы)
     for (const key in this.data.vacuums) {
-      const value = this.data.vacuums[key];
-      const isOut = this.valueCheckService.isOutOfRange(
-        key,
-        value,
-        this.recommendedVacuums
-      );
-      if (isOut) {
+      if (
+        this.valueCheckService.isOutOfRange(
+          key,
+          this.data.vacuums[key],
+          this.recommendedVacuums
+        )
+      ) {
         this.highlightedKeys.add(key);
       }
     }

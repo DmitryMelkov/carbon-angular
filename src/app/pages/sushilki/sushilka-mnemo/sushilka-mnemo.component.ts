@@ -8,7 +8,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SushilkiData } from '../../../common/types/sushilki-data';
-import { Subject} from 'rxjs';
+import { Subject, interval, of } from 'rxjs';
+import { takeUntil, catchError, switchMap, startWith, delay } from 'rxjs/operators';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
@@ -17,11 +18,11 @@ import { ControlButtonComponent } from '../../../components/control-button/contr
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 import { SushilkiDocumentationModalComponent } from './sushilki-documentation-modal/sushilki-documentation-modal.component';
 
 @Component({
   selector: 'app-sushilka-mnemo',
+  standalone: true,
   imports: [
     CommonModule,
     HeaderCurrentParamsComponent,
@@ -31,7 +32,6 @@ import { SushilkiDocumentationModalComponent } from './sushilki-documentation-mo
     ControlButtonComponent,
     LoaderComponent,
   ],
-  standalone: true,
   templateUrl: './sushilka-mnemo.component.html',
   styleUrls: ['./sushilka-mnemo.component.scss'],
   animations: [fadeInAnimation],
@@ -40,16 +40,15 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   data: SushilkiData | null = null;
   @Input() id!: string;
   sushilkaNumber!: string; // Номер сушилки
-  isLoading: boolean = true; // Управление прелоудером
+  isLoading: boolean = true; // Флаг прелоадера
   isTooltipsEnabled: boolean = true;
-  private destroy$ = new Subject<void>(); // Поток для завершения подписок
   isImageLoaded: boolean = false;
+  private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   constructor(
     private sushilkiService: SushilkiService,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
+    private dialog: MatDialog
   ) {}
 
   getDynamicKey(baseKey: string): string {
@@ -57,58 +56,76 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Если id не передан через @Input(), получаем его из маршрута
+    // Если id не передан через @Input, пытаемся получить его из маршрута
     if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') || '';
     }
 
-    // Убедитесь, что id правильно передан
     if (!this.id) {
       console.error('ID сушилки не указан!');
       return;
     }
 
-    this.sushilkaNumber = this.id.replace('sushilka', ''); // Извлекаем номер сушилки
-    this.loadData(); // Загружаем данные
+    // Извлекаем номер сушилки (удаляем префикс "sushilka")
+    this.sushilkaNumber = this.id.replace('sushilka', '');
+    this.loadData(); // Выполняем первичную загрузку данных
+    this.startPeriodicDataLoading(); // Запускаем периодический опрос
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['id'] && this.id) {
-      this.sushilkaNumber = this.id.replace('sushilka', ''); // Извлекаем номер сушилки
-      this.loadData(); // Загружаем данные при изменении id
+      this.sushilkaNumber = this.id.replace('sushilka', '');
+      this.loadData(); // Перезагружаем данные при изменении id
     }
   }
 
-  loadData(): void {
+  /**
+   * Выполняет первичную загрузку данных с небольшим delay (если требуется имитация загрузки).
+   */
+  private loadData(): void {
     this.isLoading = true;
-
-    // Используем DataLoadingService для загрузки данных
-    this.dataLoadingService.loadData(
-      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
-      (response) => {
+    this.sushilkiService
+      .getSushilkaData(this.id)
+      .pipe(
+        delay(1000), // Задержка для демонстрации прелоадера (опционально)
+        catchError((error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          return of(null);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response: SushilkiData | null) => {
         this.updateData(response);
-        this.onLoadingComplete(); // Вызываем, когда данные загружены
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        this.isLoading = false;
-      }
-    );
+        this.onLoadingComplete();
+      });
+  }
 
-    // Периодическая загрузка данных через DataLoadingService
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
-      10000, // Интервал 10 секунд
-      (response) => {
+  /**
+   * Запускает периодическую загрузку данных каждые 10 секунд.
+   */
+  private startPeriodicDataLoading(): void {
+    interval(10000)
+      .pipe(
+        startWith(0), // Выполнить запрос сразу при подписке
+        switchMap(() =>
+          this.sushilkiService.getSushilkaData(this.id).pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response: SushilkiData | null) => {
         this.updateData(response);
-      }
-    );
+      });
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+    // Отменяем все подписки при уничтожении компонента
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
   // Переключает режим всплывающих подсказок
@@ -119,19 +136,14 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   // Подсказки для параметров
   kameraSmeshenia: string =
     'Прибор: Термопара (1000мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
-
   topkaTemper: string =
     'Прибор: Термопара (1000мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
-
   topkaDavl: string =
     'Прибор: ПД-1.ТН1\nДиапазон: -0,125...+0,125 кПа\nГрадуировка: 4-20 мА';
-
   vosduhNaRazbavl: string =
     'Прибор: ПД-1.Н1\nДиапазон: 0...5 кПа\nГрадуировка: 4-20 мА';
-
   kameraVigruzki: string =
     'Прибор: ПД-1Т\nДиапазон: 0...-200 Па\nГрадуировка: 4-20 мА';
-
   temperUhodyashihGazov: string =
     'Прибор: Термопара (320мм)\nДиапазон: -40...+1000°C\nГрадуировка: ХА (К)';
 
@@ -144,12 +156,16 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Обновляет данные компонента.
+   * Если ответ не получен, создаётся объект с данными по умолчанию.
+   */
   private updateData(response: SushilkiData | null): void {
     if (response) {
       this.data = response;
     } else {
-      // Создаем объект по умолчанию, который соответствует типу SushilkiData
-      const suffix = this.sushilkaNumber; // Получаем номер сушилки
+      // Если данных нет, создаем объект по умолчанию
+      const suffix = this.sushilkaNumber;
       this.data = {
         temperatures: {
           'Температура в топке': NaN,
@@ -165,13 +181,13 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
           [`Мощность горелки №${suffix}`]: NaN,
           [`Сигнал от регулятора №${suffix}`]: NaN,
           [`Задание температуры №${suffix}`]: NaN,
-        } as { [key: string]: number }, // Приводим к типу с динамическими ключами
+        },
         im: {
           'Индикация паротушения': false,
           'Индикация сбрасыватель': false,
         },
         lastUpdated: '—',
-      } as SushilkiData; // Приводим объект к типу SushilkiData
+      } as SushilkiData;
     }
   }
 
@@ -180,6 +196,6 @@ export class SushilkaMnemoComponent implements OnInit, OnDestroy {
   }
 
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false; // Прячем прелоадер после загрузки данных
   }
 }

@@ -5,8 +5,8 @@ import {
   Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, of } from 'rxjs';
-import { catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
+import { Subject, interval, of } from 'rxjs';
+import { switchMap, catchError, takeUntil, delay, startWith } from 'rxjs/operators';
 import { ReactorData } from '../../../common/types/reactors-data';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -17,7 +17,6 @@ import { DocumentationModalComponent } from './documentation-modal/documentation
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-reactors-mnemo',
@@ -38,80 +37,83 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
   @Input() contentType!: string; // Тип контента
 
   data: ReactorData | null = null;
-  isLoading: boolean = true; // Управление прелоудером
+  isLoading: boolean = true; // Флаг прелоудера
   isTooltipsEnabled: boolean = true;
-  isDataLoaded: boolean = false; // Управление анимацией
-  private destroy$ = new Subject<void>(); // Поток для завершения подписок
+  isDataLoaded: boolean = false; // Флаг для анимации появления данных
   isImageLoaded: boolean = false;
+  private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   constructor(
     private reactorService: ReactorService,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    // Первичная загрузка данных
     this.loadData();
+    // Запуск периодического опроса данных каждые 10 секунд
     this.startPeriodicDataLoading();
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+    // Завершаем все подписки
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
+  /**
+   * Первичная загрузка данных с небольшой задержкой (если требуется показать прелоадер).
+   */
   private loadData(): void {
     this.isLoading = true;
-    this.dataLoadingService.loadData<ReactorData>(
-      () => this.reactorService.getReactorK296Data(),
-      (response) => {
+    this.reactorService.getReactorK296Data()
+      .pipe(
+        // Опционально: задержка для демонстрации прелоадера
+        delay(1000),
+        catchError((error) => {
+          console.error('Ошибка при первичной загрузке данных:', error);
+          return of(null);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response: ReactorData | null) => {
         this.updateData(response);
-        this.onLoadingComplete(); // Вызываем, когда данные загружены
-      },
-      (error) => {
-        console.error('Ошибка при первичной загрузке данных:', error);
-        this.isLoading = false;
-      }
-    );
+        this.onLoadingComplete();
+      });
   }
 
+  /**
+   * Периодическая загрузка данных каждые 10 секунд.
+   */
   private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading<ReactorData>(
-      () => this.reactorService.getReactorK296Data(), // Функция для загрузки данных
-      10000, // Интервал 10 секунд
-      (response) => {
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.reactorService.getReactorK296Data().pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response: ReactorData | null) => {
         this.updateData(response);
-      }
-    );
+      });
   }
 
-  // Переключает режим всплывающих подсказок
-  toggleTooltips(): void {
-    this.isTooltipsEnabled = !this.isTooltipsEnabled;
-  }
-
-  // Подсказки для параметров
-  tooltipTemper: string =
-    'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4-20 мА';
-
-  tooltipUroven: string =
-    'Прибор: Метран-55-ЛМК331\nДиапазон: 0...25 кПа\nТоковый выход: 4-20 мА\n';
-
-  // Открывает модальное окно с документацией
-  openDocumentation(): void {
-    this.dialog.open(DocumentationModalComponent, {
-      minWidth: '300px',
-      maxWidth: '90vw',
-      data: { content: 'Это тестовый контент для документации объекта.' },
-    });
-  }
-
+  /**
+   * Обновляет данные компонента.
+   * Если ответа нет, создаётся объект по умолчанию.
+   */
   private updateData(response: ReactorData | null): void {
     if (response) {
       this.data = response;
     } else {
+      // Создаем объект по умолчанию, если данные не получены
       this.data = {
         temperatures: {
           'Температура реактора 45/1': NaN,
@@ -128,13 +130,38 @@ export class ReactorMnemoComponent implements OnInit, OnDestroy {
         lastUpdated: '—',
       } as ReactorData;
     }
+    this.isDataLoaded = true;
   }
 
   onImageLoad(): void {
     this.isImageLoaded = true;
   }
 
+  /**
+   * Отключает прелоадер после завершения загрузки данных.
+   */
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false;
   }
+
+  // Открытие модального окна с документацией
+  openDocumentation(): void {
+    this.dialog.open(DocumentationModalComponent, {
+      minWidth: '300px',
+      maxWidth: '90vw',
+      data: { content: 'Это тестовый контент для документации объекта.' },
+    });
+  }
+
+  // Переключение режима всплывающих подсказок
+  toggleTooltips(): void {
+    this.isTooltipsEnabled = !this.isTooltipsEnabled;
+  }
+
+  // Пример текстовых подсказок для параметров
+  tooltipTemper: string =
+    'Прибор: ТСМ-50М\nДиапазон: -50...+180°C\nТоковый выход: 4-20 мА';
+
+  tooltipUroven: string =
+    'Прибор: Метран-55-ЛМК331\nДиапазон: 0...25 кПа\nТоковый выход: 4-20 мА';
 }

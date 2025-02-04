@@ -5,17 +5,16 @@ import {
   Input,
   SimpleChanges,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subject, of } from 'rxjs';
-import { switchMap, catchError, takeUntil, delay } from 'rxjs/operators'; // Добавляем delay
+import { switchMap, catchError, takeUntil, delay, startWith } from 'rxjs/operators';
 import { SushilkiData } from '../../../common/types/sushilki-data';
 import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import { CommonModule } from '@angular/common';
 import { SushilkiService } from '../../../common/services/sushilki/sushilka.service';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-sushilka',
@@ -35,18 +34,17 @@ export class SushilkaComponent implements OnInit, OnDestroy {
   @Input() contentType!: string; // Тип контента
 
   data: SushilkiData | null = null;
-  isLoading: boolean = true; // Управление прелоудером
-  isDataLoaded: boolean = false; // Управление анимацией
+  isLoading: boolean = true; // Флаг для управления прелоудером
+  isDataLoaded: boolean = false; // Флаг для управления анимацией появления данных
   private destroy$ = new Subject<void>(); // Поток для завершения подписок
 
   constructor(
     private sushilkiService: SushilkiService,
-    private route: ActivatedRoute,
-    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // Если ID не передан через route, используем входное свойство
+    // Если id не передан через @Input, получаем его из маршрута
     if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') ?? '';
     }
@@ -56,54 +54,77 @@ export class SushilkaComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Первичная загрузка данных
     this.loadData();
+    // Запускаем периодическую загрузку данных каждые 10 секунд
     this.startPeriodicDataLoading();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Проверяем, изменился ли id или contentType
+    // Если изменился id или contentType, повторно загружаем данные
     if (changes['id'] || changes['contentType']) {
-      this.loadData(); // Загружаем данные при изменении id или contentType
+      this.loadData();
     }
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+    // Завершаем все подписки
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
+  /**
+   * Первичная загрузка данных с небольшой задержкой (для демонстрации прелоадера).
+   */
   private loadData(): void {
     this.isLoading = true;
-
-    this.dataLoadingService.loadData(
-      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
-      (response) => {
+    this.sushilkiService
+      .getSushilkaData(this.id)
+      .pipe(
+        // Задержка 1 секунда (опционально)
+        delay(1000),
+        catchError((error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          return of(null);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response: SushilkiData | null) => {
         this.updateData(response);
-        this.onLoadingComplete(); // Вызываем, когда данные загружены
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        this.isLoading = false;
-      }
-    );
+        this.onLoadingComplete();
+      });
   }
 
+  /**
+   * Периодическая загрузка данных каждые 10 секунд.
+   */
   private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.sushilkiService.getSushilkaData(this.id), // Функция для загрузки данных
-      10000, // Интервал 10 секунд
-      (response) => {
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.sushilkiService.getSushilkaData(this.id).pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response: SushilkiData | null) => {
         this.updateData(response);
-      }
-    );
+      });
   }
 
+  /**
+   * Обновляет данные компонента. Если ответ отсутствует, создаёт объект с данными по умолчанию.
+   */
   private updateData(response: SushilkiData | null): void {
     if (response) {
       this.data = response;
     } else {
-      // Создаем объект по умолчанию, который соответствует типу SushilkiData
+      // Если данных нет, создаем объект по умолчанию
       const suffix = this.id.replace('sushilka', '');
       this.data = {
         temperatures: {
@@ -131,7 +152,10 @@ export class SushilkaComponent implements OnInit, OnDestroy {
     this.isDataLoaded = true; // Данные загружены, включаем анимацию
   }
 
+  /**
+   * Выключает прелоадер после завершения загрузки данных.
+   */
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false;
   }
 }

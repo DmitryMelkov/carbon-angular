@@ -3,10 +3,9 @@ import { EnergyResourcesService } from '../../../common/services/energy-resource
 import { EnergyResourceData } from '../../../common/types/energy-resources-data';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
-import { Subject, of } from 'rxjs';
-import { takeUntil, catchError, delay } from 'rxjs/operators';
+import { Subject, interval, of } from 'rxjs';
+import { takeUntil, catchError, startWith, switchMap, delay } from 'rxjs/operators';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 import { fadeInAnimation } from '../../../common/animations/animations';
 
 @Component({
@@ -37,56 +36,65 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
   mpaKeys: { key: string; typeSize: string }[] = []; // Массив для МПА
   otherKeys: { key: string; typeSize: string }[] = []; // Массив для остальных
 
-  constructor(
-    private energyResourcesService: EnergyResourcesService,
-    private dataLoadingService: DataLoadingService
-  ) {}
+  constructor(private energyResourcesService: EnergyResourcesService) {}
 
-  ngOnInit() {
-    this.loadData(); // Загружаем данные при инициализации
-    this.startPeriodicDataLoading(); // Запускаем периодическую загрузку данных
+  ngOnInit(): void {
+    // Первичная загрузка данных
+    this.loadData();
+
+    // Периодический опрос данных каждые 10 секунд (с немедленным запуском)
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.energyResourcesService.getEnergyResourceData().pipe(
+            // При ошибке выводим сообщение и возвращаем пустой объект, чтобы поток не прерывался
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных:', error);
+              return of({});
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+        this.energyResources = data;
+      });
   }
 
-  ngOnDestroy() {
-    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+  ngOnDestroy(): void {
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
-  private loadData() {
-    this.isLoading = true; // Устанавливаем флаг загрузки
+  /**
+   * Первичная загрузка данных с небольшой задержкой (если требуется имитация загрузки).
+   */
+  private loadData(): void {
+    this.isLoading = true;
+    this.energyResourcesService.getEnergyResourceData()
+      .pipe(
+        // Если нужно добавить задержку для отображения прелоадера, можно использовать delay
+        delay(1000),
+        catchError((error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          return of({});
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+        this.energyResources = data;
+        this.isLoading = false;
+        this.isDataLoaded = true;
 
-    // Используем DataLoadingService для загрузки данных
-    this.dataLoadingService.loadData<Record<string, EnergyResourceData>>(
-      () => this.energyResourcesService.getEnergyResourceData(), // Функция для загрузки данных
-      (data) => {
-        this.energyResources = data; // Сохраняем полученные данные
-        this.isLoading = false; // Убираем флаг загрузки
-        this.isDataLoaded = true; // Включаем анимацию
-
-        // Фильтруем данные на МПА и остальные
+        // Фильтруем данные на МПА и остальные по порядку ключей
         this.mpaKeys = this.orderedKeys.filter(
           (item) => item.key.startsWith('de') || item.key.startsWith('dd97')
         );
         this.otherKeys = this.orderedKeys.filter(
           (item) => !this.mpaKeys.includes(item)
         );
-      },
-      (error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        this.isLoading = false; // Убираем флаг загрузки
-      }
-    );
-  }
-
-  private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading<Record<string, EnergyResourceData>>(
-      () => this.energyResourcesService.getEnergyResourceData(), // Функция для загрузки данных
-      10000, // Интервал 10 секунд
-      (data) => {
-        this.energyResources = data; // Обновляем данные
-      }
-    );
+      });
   }
 
   getKeys(obj: Record<string, any>): string[] {
@@ -110,11 +118,11 @@ export class EnergyResourcesCurrentComponent implements OnInit, OnDestroy {
       case 'dd973':
         return 'МПА №4';
       default:
-        return key; // Возвращаем оригинальный ключ, если нет замены
+        return key;
     }
   }
 
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false;
   }
 }

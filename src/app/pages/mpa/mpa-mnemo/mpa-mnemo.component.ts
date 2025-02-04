@@ -8,7 +8,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MpaData } from '../../../common/types/mpa-data';
-import { Subject} from 'rxjs';
+import { Subject, interval, forkJoin } from 'rxjs';
+import { takeUntil, startWith } from 'rxjs/operators';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentationModalComponent } from './documentation-modal/documentation-modal.component';
@@ -18,7 +19,6 @@ import { MpaService } from '../../../common/services/mpa/mpa.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { MpaTable } from './table/table.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-mpa-mnemo',
@@ -39,17 +39,18 @@ import { DataLoadingService } from '../../../common/services/data-loading.servic
 export class MpaMnemoComponent implements OnInit, OnDestroy {
   data: MpaData | null = null;
   @Input() id!: string;
-  mpaNumber!: string; // Номер мпа
+  mpaNumber!: string; // Номер МПА
   isLoading: boolean = true; // Управление прелоудером
   isTooltipsEnabled: boolean = true;
-  private destroy$ = new Subject<void>(); // Поток для завершения подписок
   isImageLoaded: boolean = false;
+
+  // Subject для отмены всех подписок при уничтожении компонента
+  private destroy$ = new Subject<void>();
 
   constructor(
     private mpaService: MpaService,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private dataLoadingService: DataLoadingService
+    private dialog: MatDialog
   ) {}
 
   getDynamicKey(baseKey: string): string {
@@ -62,51 +63,62 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
       this.id = this.route.snapshot.paramMap.get('id') || '';
     }
 
-    // Убедитесь, что id правильно передан
+    // Проверяем, что id указан
     if (!this.id) {
       console.error('ID МПА не указан!');
       return;
     }
 
-    this.mpaNumber = this.id.replace('mpa', ''); // Извлекаем номер мпа
-    this.loadData(); // Загружаем данные
+    this.mpaNumber = this.id.replace('mpa', ''); // Извлекаем номер МПА
+    this.loadData(); // Загружаем данные один раз
+
+    // Запускаем периодический опрос каждые 10 секунд, начиная сразу
+    interval(10000)
+      .pipe(
+        startWith(0),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.mpaService.getMpaData(this.id).subscribe({
+          next: (response) => {
+            this.updateData(response);
+          },
+          error: (error) => {
+            console.error('Ошибка при периодической загрузке данных:', error);
+          }
+        });
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['id'] && this.id) {
-      this.mpaNumber = this.id.replace('mpa', ''); // Извлекаем номер мпа
+      this.mpaNumber = this.id.replace('mpa', ''); // Извлекаем номер МПА
       this.loadData(); // Загружаем данные при изменении id
     }
   }
 
   private loadData(): void {
     this.isLoading = true;
-    this.dataLoadingService.loadData<MpaData>(
-      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
-      (response) => {
-        this.updateData(response);
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Ошибка первичной загрузки данных:', error);
-        this.isLoading = false;
-      }
-    );
-
-    // Периодическая загрузка данных через DataLoadingService
-    this.dataLoadingService.startPeriodicLoading(
-      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
-      10000, // Интервал 10 секунд
-      (response) => {
-        this.updateData(response);
-      }
-    );
+    forkJoin({
+      mpaData: this.mpaService.getMpaData(this.id),
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.updateData(response.mpaData);
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Ошибка первичной загрузки данных:', error);
+          this.isLoading = false;
+        },
+      });
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+    // Завершаем все подписки
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
   // Переключает режим всплывающих подсказок
@@ -117,9 +129,7 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
   // Подсказки для параметров
   tooltipTemper: string =
     'Прибор: Термопара (1000мм)\nДиапазон: 0...+1300°C\nГрадуировка: ХА (К)';
-
   tooltipDavlenie: string = 'Прибор: ПРОМА-ИДМ\nТоковый выход: 4-20 мА\n';
-
   tooltipDB: string =
     'Прибор: ПД-1.Т1\nДиапазон: 0...-250 Па\nТоковый выход: 4-20 мА';
 
@@ -134,14 +144,14 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
 
   private updateData(response: MpaData | null): void {
     if (response) {
-      // Используем данные как есть, без преобразования ключей
+      // Используем полученные данные как есть
       this.data = {
         temperatures: response.temperatures,
         pressures: response.pressures,
         lastUpdated: response.lastUpdated,
       };
     } else {
-      // Создаем объект по умолчанию
+      // Если данных нет, создаём объект по умолчанию
       const suffix = this.id.replace('mpa', '');
       const defaultTemperatures = {
         [`Температура Верх регенератора левый МПА${suffix}`]: NaN,
@@ -176,7 +186,6 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
         [`Давление верх дальний правый МПА${suffix}`]: '—',
       };
 
-      // Используем данные по умолчанию как есть
       this.data = {
         temperatures: defaultTemperatures,
         pressures: defaultPressures,

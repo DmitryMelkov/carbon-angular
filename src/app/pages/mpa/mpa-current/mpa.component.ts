@@ -1,12 +1,7 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject} from 'rxjs';
+import { Subject, interval, of } from 'rxjs';
+import { takeUntil, catchError, switchMap, startWith } from 'rxjs/operators';
 import { MpaData } from '../../../common/types/mpa-data';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
@@ -14,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { MpaService } from '../../../common/services/mpa/mpa.service';
 import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
 
 @Component({
   selector: 'app-mpa',
@@ -30,93 +24,100 @@ import { DataLoadingService } from '../../../common/services/data-loading.servic
   animations: [fadeInAnimation],
 })
 export class MpaComponent implements OnInit, OnDestroy {
-  @Input() id!: string; // ID Мпа
+  @Input() id!: string; // ID МПА
   @Input() contentType!: string; // Тип контента
 
   data: MpaData | null = null;
   isLoading: boolean = true; // Управление прелоудером
-  isDataLoaded: boolean = false; // Управление анимацией
-  private destroy$ = new Subject<void>(); // Поток для завершения подписок
+  isDataLoaded: boolean = false; // Управление анимацией (например, для появления данных)
+
+  // Subject для завершения подписок при уничтожении компонента
+  private destroy$ = new Subject<void>();
 
   constructor(
     private mpaService: MpaService,
-    private route: ActivatedRoute,
-    private dataLoadingService: DataLoadingService // Добавляем DataLoadingService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // Если ID не передан через route, используем входное свойство
+    // Если id не передан через @Input, пытаемся получить его из маршрута
     if (!this.id) {
       this.id = this.route.snapshot.paramMap.get('id') ?? '';
     }
-
     if (!this.id) {
       console.error('ID МПА не указан!');
       return;
     }
 
+    // Первичная загрузка данных
     this.loadData();
-    this.startPeriodicDataLoading();
+
+    // Периодическая загрузка данных каждые 10 секунд (с немедленным запуском)
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          this.mpaService.getMpaData(this.id).pipe(
+            catchError((error) => {
+              console.error('Ошибка при периодической загрузке данных:', error);
+              return of(null);
+            })
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.updateData(response);
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Проверяем, изменился ли id или contentType
+    // Если изменился id или contentType – выполняем повторную загрузку данных
     if (changes['id'] || changes['contentType']) {
-      this.loadData(); // Загружаем данные при изменении id или contentType
+      this.loadData();
     }
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading(); // Останавливаем периодическую загрузку
+    // Завершаем все подписки
     this.destroy$.next();
-    this.destroy$.complete(); // Завершаем поток
+    this.destroy$.complete();
   }
 
   private loadData(): void {
     this.isLoading = true;
-    this.dataLoadingService.loadData<MpaData>(
-      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
-      (response) => {
-        this.updateData(response);
-        this.onLoadingComplete(); // Вызываем, когда данные загружены
-      },
-      (error) => {
-        console.error('Ошибка при первичной загрузке данных:', error);
-        this.isLoading = false;
-      }
-    );
-  }
-
-  private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading<MpaData>(
-      () => this.mpaService.getMpaData(this.id), // Функция для загрузки данных
-      10000, // Интервал 10 секунд
-      (response) => {
-        this.updateData(response);
-      }
-    );
+    this.mpaService.getMpaData(this.id)
+      .pipe(
+        catchError((error) => {
+          console.error('Ошибка при первичной загрузке данных:', error);
+          return of(null);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.updateData(response);
+        }
+        this.onLoadingComplete();
+      });
   }
 
   private updateData(response: MpaData | null): void {
     if (response) {
       // Преобразуем ключи для temperatures и pressures
-      const transformedTemperatures = this.transformKeys(
-        response.temperatures,
-        'Температура '
-      );
-      const transformedPressures = this.transformKeys(
-        response.pressures,
-        'Давление '
-      );
+      const transformedTemperatures = this.transformKeys(response.temperatures, 'Температура ');
+      const transformedPressures = this.transformKeys(response.pressures, 'Давление ');
 
-      // Обновляем данные с новыми ключами
+      // Обновляем данные
       this.data = {
         temperatures: transformedTemperatures,
         pressures: transformedPressures,
         lastUpdated: response.lastUpdated,
       };
     } else {
-      // Создаем объект по умолчанию
+      // Создаем объект по умолчанию, если ответа нет
       const suffix = this.id.replace('mpa', '');
       const defaultTemperatures = {
         [`Температура Верх регенератора левый МПА${suffix}`]: NaN,
@@ -141,25 +142,17 @@ export class MpaComponent implements OnInit, OnDestroy {
         [`Разрежение дымовой боров МПА${suffix}`]: '—',
         [`Давление воздух левый МПА${suffix}`]: '—',
         [`Давление воздух правый МПА${suffix}`]: '—',
-        [`Давление низ ближний левый МПА${suffix}`]: '—',
+        [`Давление низ ближний МПА${suffix}`]: '—',
         [`Давление низ ближний правый МПА${suffix}`]: '—',
-        [`Давление середина ближняя левый МПА${suffix}`]: '—',
+        [`Давление середина ближняя МПА${suffix}`]: '—',
         [`Давление середина ближняя правый МПА${suffix}`]: '—',
-        [`Давление середина дальняя левый МПА${suffix}`]: '—',
-        [`Давление середина дальняя правый МПА${suffix}`]: '—',
+        [`Давление середина дальняя МПА${suffix}`]: '—',
         [`Давление верх дальний левый МПА${suffix}`]: '—',
         [`Давление верх дальний правый МПА${suffix}`]: '—',
       };
 
-      // Преобразуем ключи для температур и давлений
-      const transformedTemperatures = this.transformKeys(
-        defaultTemperatures,
-        'Температура '
-      );
-      const transformedPressures = this.transformKeys(
-        defaultPressures,
-        'Давление '
-      );
+      const transformedTemperatures = this.transformKeys(defaultTemperatures, 'Температура ');
+      const transformedPressures = this.transformKeys(defaultPressures, 'Давление ');
 
       this.data = {
         temperatures: transformedTemperatures,
@@ -167,26 +160,18 @@ export class MpaComponent implements OnInit, OnDestroy {
         lastUpdated: '—',
       } as MpaData;
     }
-    this.isDataLoaded = true; // Данные загружены, включаем анимацию
+    this.isDataLoaded = true;
   }
 
-  private transformKeys(
-    obj: Record<string, any>,
-    prefix: string
-  ): Record<string, any> {
+  private transformKeys(obj: Record<string, any>, prefix: string): Record<string, any> {
     const transformed: Record<string, any> = {};
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
-        // Удаляем префикс
+        // Удаляем заданный префикс и окончание вида "МПА<number>"
         let newKey = key.replace(prefix, '');
-
-        // Удаляем "МПА" и суффикс (например, "МПА1")
         newKey = newKey.replace(/МПА\d*$/, '').trim();
-
-        // Преобразуем первую букву оставшейся строки в верхний регистр
+        // Делаем первую букву заглавной
         const capitalizedKey = newKey.charAt(0).toUpperCase() + newKey.slice(1);
-
-        // Сохраняем значение
         transformed[capitalizedKey] = obj[key];
       }
     }
@@ -194,6 +179,6 @@ export class MpaComponent implements OnInit, OnDestroy {
   }
 
   onLoadingComplete(): void {
-    this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+    this.isLoading = false;
   }
 }

@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Subject, Subscription } from 'rxjs';
+import { forkJoin, Subject, Subscription, interval } from 'rxjs';
+import { switchMap, startWith, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { VrData } from '../../../common/types/vr-data';
 import { VrService } from '../../../common/services/vr/vr.service';
-import { DataLoadingService } from '../../../common/services/data-loading.service';
-import { fadeInAnimation } from '../../../common/animations/animations';
 import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
 import { NotisData } from '../../../common/types/notis-data';
 import { MnemoKranComponent } from '../../../components/mnemo-kran/mnemo-kran.component';
@@ -23,6 +22,7 @@ import { LabModalComponent } from './lab-modal/lab-modal.component';
 import { AlarmTableComponent } from './alarm-table/alarm-table.component';
 import { AlarmService } from '../../../common/services/vr/alarm.service';
 import { SirenComponent } from './siren/siren.component';
+import { fadeInAnimation } from '../../../common/animations/animations';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -53,12 +53,14 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   isTooltipsEnabled: boolean = true;
   mode: string | null = null;
-  private destroy$ = new Subject<void>();
   isImageLoaded: boolean = false;
 
   // Переменная для определения состояния тревоги
   isAlarmActive: boolean = false;
   private alarmSubscription!: Subscription;
+
+  // RxJS Subject для остановки всех подписок
+  private destroy$ = new Subject<void>();
 
   // Текстовые константы для описания приборов
   termopara1000: string =
@@ -81,11 +83,10 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   constructor(
     private vrService: VrService,
     private route: ActivatedRoute,
-    private dataLoadingService: DataLoadingService,
     private notisVrService: NotisVrService,
     private dialog: MatDialog,
     private modeVrService: ModeVrService,
-    private alarmService: AlarmService // Используем сервис тревог
+    private alarmService: AlarmService
   ) {}
 
   ngOnInit(): void {
@@ -97,8 +98,36 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       console.error('ID VR не указан!');
       return;
     }
+
+    // Загрузка данных сразу при инициализации
     this.loadData();
-    this.startPeriodicDataLoading();
+
+    // Запуск поллинга с использованием RxJS.
+    // При уничтожении компонента подписка завершится благодаря takeUntil(this.destroy$)
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          forkJoin({
+            vrData: this.vrService.getVrData(this.id),
+            notisData: this.notisVrService.getNotisData(this.id),
+          })
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (response) => {
+          this.data = response.vrData;
+          this.notisData = response.notisData;
+          this.updateMode();
+          // Если ранее стоял флаг загрузки, его можно сбросить
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Ошибка при загрузке данных:', error);
+          this.isLoading = false;
+        }
+      });
 
     // Подписка на изменения тревог из AlarmService
     this.alarmSubscription = this.alarmService.alarms$.subscribe((alarms) => {
@@ -107,47 +136,32 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dataLoadingService.stopPeriodicLoading();
+    // Отправляем сигнал для завершения подписок
     this.destroy$.next();
     this.destroy$.complete();
+
+    // Отписываемся от подписки тревог
     this.alarmSubscription?.unsubscribe();
   }
 
   private loadData(): void {
+    // Загрузка данных единожды (если требуется сразу показать данные до начала поллинга)
     this.isLoading = true;
-    this.dataLoadingService.loadData(
-      () =>
-        forkJoin({
-          vrData: this.vrService.getVrData(this.id),
-          notisData: this.notisVrService.getNotisData(this.id),
-        }),
-      (response) => {
+    forkJoin({
+      vrData: this.vrService.getVrData(this.id),
+      notisData: this.notisVrService.getNotisData(this.id),
+    }).subscribe({
+      next: (response) => {
         this.data = response.vrData;
         this.notisData = response.notisData;
         this.updateMode();
         this.isLoading = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Ошибка при загрузке данных:', error);
         this.isLoading = false;
       }
-    );
-  }
-
-  private startPeriodicDataLoading(): void {
-    this.dataLoadingService.startPeriodicLoading(
-      () =>
-        forkJoin({
-          vrData: this.vrService.getVrData(this.id),
-          notisData: this.notisVrService.getNotisData(this.id),
-        }),
-      10000,
-      (response) => {
-        this.data = response.vrData;
-        this.notisData = response.notisData;
-        this.updateMode();
-      }
-    );
+    });
   }
 
   private updateMode(): void {
