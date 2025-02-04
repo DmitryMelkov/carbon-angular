@@ -14,7 +14,7 @@ export class ControlButtonComponent {
   @Input() isDisabled: boolean = false;
   @Output() onClick = new EventEmitter<Event>();
   @Input() borderRadius: string = '0px'; // Свойство для радиуса
-  @Input() iconName: string = 'info '; // Имя материал-иконки
+  @Input() iconName: string = ''; // Имя материал-иконки
   @Input() iconHeight: string = '24px'; // Высота иконки
   @Input() iconWidth: string = '24px'; // Ширина иконки
   @Input() paddingTop: string = '2px'; // Верхний отступ

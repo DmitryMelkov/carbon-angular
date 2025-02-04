@@ -32,14 +32,14 @@ import { UniversalGraphService } from '../common/services/universal-graph.servic
           </div>
         </div>
         <div class="dynamic-graph__btns">
-          <app-control-button (click)="goBack()"> Назад </app-control-button>
-          <app-control-button (click)="goForward()">
+          <app-control-button (click)="goBack()" iconName="arrow_back "> Назад </app-control-button>
+          <app-control-button (click)="goForward()" iconName="arrow_forward ">
             Вперёд
           </app-control-button>
-          <app-control-button (click)="resetToCurrentTime()">
+          <app-control-button (click)="resetToCurrentTime()" iconName="refresh ">
             Вернуться к текущим значениям
           </app-control-button>
-          <app-control-button (click)="toggleLinesVisibility()">
+          <app-control-button (click)="toggleLinesVisibility()" iconName="visibility ">
             Скрыть/Показать все
           </app-control-button>
         </div>

@@ -13,6 +13,7 @@
     border-collapse: collapse;
     border: 2px solid green;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
 
     &-head {
       background: linear-gradient(135deg, green, #81c784);
@@ -36,26 +37,24 @@
           background-color: white;
         }
 
-        &--size {
-          background: linear-gradient(135deg, yellow, rgba(255, 255, 0, 0.466));
-          font-weight: 600;
-          text-transform: uppercase;
-        }
       }
     }
-
     &-cell {
       padding: 5px;
       border: 1px solid #e0e0e0;
       text-align: center;
+      font-weight: 600;
     }
   }
 }
 
-/* loader.component.scss */
+.value {
+  color:green;
+}
+
 .loader {
   width: 358px;
-  height: 121px;
+  height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;

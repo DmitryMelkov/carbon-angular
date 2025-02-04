@@ -26,7 +26,7 @@
     <!-- Теплота, Гкал/час -->
     <tr class="mpa-resources__table-row">
       <td class="mpa-resources__table-cell">Теплота, Гкал/час</td>
-      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell value">
         {{ getDataValue(mpa.key, "Гкал/ч") }}
       </td>
     </tr>
@@ -34,7 +34,7 @@
     <!-- Объем, м3/час -->
     <tr class="mpa-resources__table-row">
       <td class="mpa-resources__table-cell">Объем, м3/час</td>
-      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell value">
         {{ getDataValue(mpa.key, "Куб/ч") }}
       </td>
     </tr>
@@ -42,7 +42,7 @@
     <!-- Масса, т/час -->
     <tr class="mpa-resources__table-row">
       <td class="mpa-resources__table-cell">Масса, т/час</td>
-      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell value">
         {{ getDataValue(mpa.key, "Тонн/ч") }}
       </td>
     </tr>
@@ -50,7 +50,7 @@
     <!-- Давление, МПа -->
     <tr class="mpa-resources__table-row">
       <td class="mpa-resources__table-cell">Давление, МПа</td>
-      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell value">
         {{ getDataValue(mpa.key, "Давление") }}
       </td>
     </tr>
@@ -58,7 +58,7 @@
     <!-- Температура -->
     <tr class="mpa-resources__table-row">
       <td class="mpa-resources__table-cell">Температура</td>
-      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell value">
         {{ getDataValue(mpa.key, "Температура") }}
       </td>
     </tr>

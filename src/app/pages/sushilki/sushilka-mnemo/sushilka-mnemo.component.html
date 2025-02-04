@@ -5,11 +5,11 @@
 
   <div class="mnemo">
     <div class="mnemo__param-box--btns">
-      <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()">
+      <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()" iconName="visibility ">
         {{ isTooltipsEnabled ? 'Выкл. всплывающие подсказки' : 'Вкл. всплывающие подсказки' }}
       </app-control-button>
 
-      <app-control-button (onClick)="openDocumentation()">
+      <app-control-button (onClick)="openDocumentation()" iconName="map ">
         Документация объекта
       </app-control-button>
     </div>

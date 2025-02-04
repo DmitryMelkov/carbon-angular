@@ -33,6 +33,13 @@
   }
 }
 
+.mnemo__param-box--btns
+  ::ng-deep
+  app-control-button:first-child
+  .control-button {
+  border-right: 1px solid transparent !important;
+}
+
 .reactors {
   padding-top: 10px;
   padding-left: 15px;
