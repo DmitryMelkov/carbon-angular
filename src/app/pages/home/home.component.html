@@ -13,6 +13,7 @@
             class="home__button"
             [isActive]="activeView === 'parameters' && selectedObjectId === object.id"
             (onClick)="showParameters(object.id)"
+            iconName="tune "
           >
             Текущие параметры
           </app-control-button>
@@ -20,6 +21,7 @@
             class="home__button"
             [isActive]="activeView === 'mnemo' && selectedObjectId === object.id"
             (onClick)="showMnemo(object.id)"
+            iconName="construction "
           >
             Мнемосхема
           </app-control-button>
@@ -30,6 +32,7 @@
             *ngIf="object.type === 'mpa'"
             [isActive]="activeView === 'graph-mpa-general' && selectedObjectId === object.id"
             (onClick)="showGraphMpaGeneral(object.id)"
+            iconName="bar_chart "
           >
             Графики
           </app-control-button>
@@ -40,6 +43,7 @@
             *ngIf="object.type === 'sushilka'"
             [isActive]="activeView === 'graph-tempers-general' && selectedObjectId === object.id"
             (onClick)="showGraphTemper(object.id)"
+            iconName="bar_chart "
           >
             Графики температур
           </app-control-button>
@@ -48,6 +52,7 @@
             *ngIf="object.type === 'sushilka'"
             [isActive]="activeView === 'graph-vacuums-general' && selectedObjectId === object.id"
             (onClick)="showGraphPressure(object.id)"
+            iconName="bar_chart "
           >
             Графики давления
           </app-control-button>
@@ -90,6 +95,7 @@
             class="home__button"
             [isActive]="activeView === 'mills-current'"
             (onClick)="showMillsCurrent()"
+            iconName="tune "
           >
             Текущие параметры
           </app-control-button>
@@ -98,6 +104,7 @@
             class="home__button"
             [isActive]="activeView === 'mill1-graph'"
             (onClick)="showMill1Graph()"
+            iconName="bar_chart "
           >
             График мельницы №1
           </app-control-button>
@@ -106,6 +113,7 @@
             class="home__button"
             [isActive]="activeView === 'mill2-graph'"
             (onClick)="showMill2Graph()"
+            iconName="bar_chart "
           >
             График мельницы №2
           </app-control-button>
@@ -114,6 +122,7 @@
             class="home__button"
             [isActive]="activeView === 'millsbm3-graph'"
             (onClick)="showMillsbm3Graph()"
+            iconName="bar_chart "
           >
             График ШБМ №3
           </app-control-button>
@@ -122,6 +131,7 @@
             class="home__button"
             [isActive]="activeView === 'millygm9517-graph'"
             (onClick)="showMillygm9517Graph()"
+            iconName="bar_chart "
           >
             График YGM-9517
           </app-control-button>
@@ -130,6 +140,7 @@
             class="home__button"
             [isActive]="activeView === 'millycvok130-graph'"
             (onClick)="showMillycvok130Graph()"
+            iconName="bar_chart "
           >
             График YCVOK-130
           </app-control-button>
@@ -173,6 +184,7 @@
             class="home__button"
             [isActive]="activeView === 'reactors-current'"
             (onClick)="showReactorsCurrent()"
+            iconName="tune "
           >
             Текущие параметры
           </app-control-button>
@@ -181,6 +193,7 @@
             class="home__button"
             [isActive]="activeView === 'reactors-mnemo'"
             (onClick)="showReactorsMnemo()"
+            iconName="construction "
           >
             Мнемосхема
           </app-control-button>
@@ -189,6 +202,7 @@
             class="home__button"
             [isActive]="activeView === 'graph-reactors-general'"
             (onClick)="showReactorsGeneral()"
+            iconName="bar_chart "
           >
             Графики объекта
           </app-control-button>
@@ -220,6 +234,7 @@
             class="home__button"
             [isActive]="activeView === 'energy-resources'"
             (onClick)="showEnergyResources()"
+            iconName="tune "
           >
             Текущие параметры
           </app-control-button>
@@ -227,6 +242,7 @@
             class="home__button"
             [isActive]="activeView === 'daily-report'"
             (onClick)="showDailyReport()"
+            iconName="assignment "
           >
             Суточный отчет
           </app-control-button>
@@ -234,6 +250,7 @@
             class="home__button"
             [isActive]="activeView === 'monthly-report'"
             (onClick)="showMonthlyReport()"
+            iconName="assignment "
           >
             Месячный отчет
           </app-control-button>
@@ -241,6 +258,7 @@
             class="home__button"
             [isActive]="activeView === 'energy-resources-graph-pressure'"
             (onClick)="showEnergyResourcesGraphPressure()"
+            iconName="bar_chart "
           >
             Графики давления
           </app-control-button>
@@ -248,6 +266,7 @@
             class="home__button"
             [isActive]="activeView === 'energy-resources-graph-consumption'"
             (onClick)="showEnergyResourcesGraphConsumption()"
+            iconName="bar_chart "
           >
             Графики расхода
           </app-control-button>

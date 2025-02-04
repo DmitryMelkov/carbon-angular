@@ -19,6 +19,7 @@
       <app-control-button
         [isActive]="isTooltipsEnabled"
         (onClick)="toggleTooltips()"
+        iconName="visibility "
       >
         {{
           isTooltipsEnabled
@@ -27,7 +28,7 @@
         }}
       </app-control-button>
 
-      <app-control-button (onClick)="openDocumentation()">
+      <app-control-button (onClick)="openDocumentation()" iconName="map ">
         Документация объекта
       </app-control-button>
     </div>

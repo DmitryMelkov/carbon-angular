@@ -62,8 +62,8 @@ import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/en
 })
 export class HomeComponent {
   objectData = [
-    { id: 'vr1', name: 'ПК1', type: 'vr' },
-    { id: 'vr2', name: 'ПК2', type: 'vr' },
+    { id: 'vr1', name: 'ПК №1', type: 'vr' },
+    { id: 'vr2', name: 'ПК №2', type: 'vr' },
     { id: 'mpa2', name: 'МПА №2', type: 'mpa' },
     { id: 'mpa3', name: 'МПА №3', type: 'mpa' },
     { id: 'sushilka1', name: 'Сушилка №1', type: 'sushilka' },

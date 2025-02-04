@@ -33,8 +33,6 @@ export interface AlarmModalData {
   ]
 })
 export class AlarmModalComponent {
-
-  // Индекс выбранного пункта, по умолчанию ни один не выбран
   activeItemIndex: number | null = null;
 
   constructor(
@@ -42,14 +40,15 @@ export class AlarmModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: AlarmModalData
   ) {}
 
-  // Метод для закрытия модального окна
   close(): void {
     this.dialogRef.close();
   }
 
-  // Метод, который обрабатывает клик по пункту причины.
-  // Если кликнули по уже выбранному, сбрасываем выбор, иначе выбираем новый пункт.
   toggleItem(index: number): void {
     this.activeItemIndex = this.activeItemIndex === index ? null : index;
+  }
+
+  formatActionText(text: string): string {
+    return text.replace(/\n/g, '<br>');
   }
 }
