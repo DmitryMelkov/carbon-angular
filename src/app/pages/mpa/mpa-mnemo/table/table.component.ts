@@ -11,11 +11,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { LoaderComponent } from '../../../../components/loader/loader.component';
 
 @Component({
   selector: 'app-table-mpa',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   animations: [
@@ -27,6 +28,7 @@ import {
   ],
 })
 export class MpaTable implements OnInit, OnDestroy {
+  isLoading: boolean = true; // Управление прелоудером
   energyResources: Record<string, EnergyResourceData> = {};
   private destroy$ = new Subject<void>();
 
@@ -57,7 +59,7 @@ export class MpaTable implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         catchError((error) => {
           console.error('Ошибка при загрузке данных:', error);
-          return of({});
+          return of({});  // Если произошла ошибка, возвращаем пустой объект
         }),
         delay(1000)
       )
@@ -67,8 +69,10 @@ export class MpaTable implements OnInit, OnDestroy {
         this.mpaKeys = this.orderedKeys.filter(
           (item) => item.key.startsWith('de') || item.key.startsWith('dd97')
         );
+        this.isLoading = false;
       });
   }
+
 
   private startPeriodicDataLoading() {
     interval(10000)

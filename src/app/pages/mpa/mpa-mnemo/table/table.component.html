@@ -1,62 +1,76 @@
-<table class="table">
-  <caption class="table__title">
+<table
+  class="mpa-resources__table"
+  *ngIf="energyResources && !isLoading"
+  @fadeIn
+>
+  <caption class="mpa-resources__title">
     Потребление пара
   </caption>
-  <thead class="table__thead">
-    <tr class="table__tr">
-      <th class="table__th table__left">Параметры</th>
-      <th *ngFor="let mpa of mpaKeys" class="table__th">
+  <thead class="mpa-resources__table-head">
+    <tr class="mpa-resources__table-row">
+      <th class="mpa-resources__table-header">Параметры</th>
+      <th *ngFor="let mpa of mpaKeys" class="mpa-resources__table-header">
         {{ getDeviceName(mpa.key) }}
       </th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="mpa-resources__table-body">
     <!-- Типоразмер -->
-    <tr class="table__tr">
-      <td class="table__td table__left">Типоразмер</td>
-      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+    <tr class="mpa-resources__table-row--size">
+      <td class="mpa-resources__table-cell">Типоразмер</td>
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
         {{ mpa.typeSize }}
       </td>
     </tr>
 
     <!-- Теплота, Гкал/час -->
-    <tr class="table__tr">
-      <td class="table__td table__left">Теплота, Гкал/час</td>
-      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+    <tr class="mpa-resources__table-row">
+      <td class="mpa-resources__table-cell">Теплота, Гкал/час</td>
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
         {{ getDataValue(mpa.key, "Гкал/ч") }}
       </td>
     </tr>
 
     <!-- Объем, м3/час -->
-    <tr class="table__tr">
-      <td class="table__td table__left">Объем, м3/час</td>
-      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+    <tr class="mpa-resources__table-row">
+      <td class="mpa-resources__table-cell">Объем, м3/час</td>
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
         {{ getDataValue(mpa.key, "Куб/ч") }}
       </td>
     </tr>
 
     <!-- Масса, т/час -->
-    <tr class="table__tr">
-      <td class="table__td table__left">Масса, т/час</td>
-      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+    <tr class="mpa-resources__table-row">
+      <td class="mpa-resources__table-cell">Масса, т/час</td>
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
         {{ getDataValue(mpa.key, "Тонн/ч") }}
       </td>
     </tr>
 
     <!-- Давление, МПа -->
-    <tr class="table__tr">
-      <td class="table__td table__left">Давление, МПа</td>
-      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+    <tr class="mpa-resources__table-row">
+      <td class="mpa-resources__table-cell">Давление, МПа</td>
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
         {{ getDataValue(mpa.key, "Давление") }}
       </td>
     </tr>
 
     <!-- Температура -->
-    <tr class="table__tr">
-      <td class="table__td table__left">Температура</td>
-      <td *ngFor="let mpa of mpaKeys" class="table__td table__right">
+    <tr class="mpa-resources__table-row">
+      <td class="mpa-resources__table-cell">Температура</td>
+      <td *ngFor="let mpa of mpaKeys" class="mpa-resources__table-cell">
         {{ getDataValue(mpa.key, "Температура") }}
       </td>
     </tr>
   </tbody>
 </table>
+
+<div class="loader" *ngIf="isLoading">
+  <app-loader
+    [width]="'50px'"
+    [height]="'50px'"
+    [loadingText]="'Загрузка, подождите...'"
+    [textColor]="'blue'"
+  >
+  </app-loader>
+</div>
