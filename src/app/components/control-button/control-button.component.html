@@ -3,6 +3,14 @@
   [ngClass]="buttonClass"
   [disabled]="isDisabled"
   [style.border-radius]="borderRadius"
+  [style.padding-top]="paddingTop"
+  [style.padding-bottom]="paddingBottom"
+  [style.padding-left]="paddingLeft"
+  [style.padding-right]="paddingRight"
   (click)="onClick.emit($event)">
+
+  <!-- Материал Иконка -->
+  <mat-icon *ngIf="iconName" [style.height]="iconHeight" [style.width]="iconWidth">{{ iconName }}</mat-icon>
+
   <ng-content></ng-content>
 </button>

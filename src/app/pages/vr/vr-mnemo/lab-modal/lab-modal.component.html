@@ -65,7 +65,7 @@
           </span>
         </div>
         <app-control-button class="laboratory__form-btn"
-          [isDisabled]="labForm.invalid || isLoading" (onClick)="onSubmit()" [borderRadius]="'4px'">
+          [isDisabled]="labForm.invalid || isLoading" (onClick)="onSubmit()" [borderRadius]="'4px'" iconName="save" paddingLeft="10px" paddingRight="10px">
           {{ isLoading ? 'Отправка...' : 'Принять' }}
         </app-control-button>
       </div>

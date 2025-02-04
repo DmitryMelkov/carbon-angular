@@ -3,6 +3,10 @@
 
 .control-button {
   padding: 2px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   height: 100%;
   @include mixins.text-style(16px, 20px, 600, vars.$hulk);
   border: 1px solid vars.$hulk;
