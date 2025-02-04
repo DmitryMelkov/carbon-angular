@@ -49,11 +49,6 @@
         &:nth-child(even) {
           background-color: white;
         }
-
-        &:hover {
-          background-color: #e8f5e9;
-          cursor: pointer;
-        }
       }
     }
 
@@ -63,15 +58,11 @@
       text-align: center;
     }
   }
-}
-
-
-.lab-last-day {
   &__delete-btn {
     padding: 6px 12px;
     border-radius: 4px;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease-in-out;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -79,6 +70,8 @@
     background-color: #ffebee;
     color: #c62828;
     border: 1px solid #ffcdd2;
+
+    cursor: pointer;
 
     &:hover {
       background-color: #ffcdd2;

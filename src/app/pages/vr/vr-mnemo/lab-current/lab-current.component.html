@@ -10,29 +10,28 @@
     </thead>
     <tbody class="table__tbody">
       <tr class="table__tr">
-        <td class="table__td table__right">Летучие в-ва, %</td>
-        <td class="table__td table__right">{{ labData.value }}</td>
-        <td class="table__td table__right">{{ labData.valueDate }}</td>
-        <td class="table__td table__right">{{ labData.valueTime }}</td>
+        <td class="table__td ">Летучие в-ва, %</td>
+        <td class="table__td ">{{ labData.value }}</td>
+        <td class="table__td ">{{ labData.valueDate }}</td>
+        <td class="table__td ">{{ labData.valueTime }}</td>
       </tr>
       <tr class="table__tr">
-        <td class="table__td table__right">pH</td>
-        <td class="table__td table__right">{{ labData.valuePH }}</td>
-        <td class="table__td table__right">{{ labData.valuePHDate }}</td>
-        <td class="table__td table__right">{{ labData.valuePHTime }}</td>
+        <td class="table__td ">pH</td>
+        <td class="table__td ">{{ labData.valuePH }}</td>
+        <td class="table__td ">{{ labData.valuePHDate }}</td>
+        <td class="table__td ">{{ labData.valuePHTime }}</td>
       </tr>
       <tr class="table__tr">
-        <td class="table__td table__right">Суммарка</td>
-        <td class="table__td table__right">{{ labData.valueSUM }}</td>
-        <td class="table__td table__right">{{ labData.valueSUMDate }}</td>
-        <td class="table__td table__right">{{ labData.valueSUMTime }}</td>
+        <td class="table__td ">Суммарка</td>
+        <td class="table__td ">{{ labData.valueSUM }}</td>
+        <td class="table__td ">{{ labData.valueSUMDate }}</td>
+        <td class="table__td ">{{ labData.valueSUMTime }}</td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <div class="loader" *ngIf="isLoading">
-  <app-loader [width]="'50px'" [height]="'50px'" [loadingText]="'Загрузка, подождите...'"
-    [textColor]="'blue'">
+  <app-loader [width]="'50px'" [height]="'50px'" [loadingText]="'Загрузка, подождите...'" [textColor]="'blue'">
   </app-loader>
 </div>
