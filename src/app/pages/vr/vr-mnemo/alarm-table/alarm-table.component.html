@@ -7,17 +7,11 @@
       </tr>
     </thead>
     <tbody class="alarm__table-body" *ngIf="alarms.length > 0; else noAlarms">
-      <tr class="alarm__table-row" *ngFor="let alarm of alarms">
-        <td
-          class="alarm__table-cell blink-warning"
-          [style.animationDelay]="alarm.animationDelay"
-        >
+      <tr class="alarm__table-row" *ngFor="let alarm of alarms; trackBy: trackByAlarmKey">
+        <td class="alarm__table-cell blink-warning">
           {{ alarm.key }}, {{ alarm.unit }}
         </td>
-        <td
-          class="alarm__table-cell blink-warning"
-          [style.animationDelay]="alarm.animationDelay"
-        >
+        <td class="alarm__table-cell blink-warning">
           {{ alarm.value }}
         </td>
         <td class="alarm__table-cell">
@@ -26,7 +20,7 @@
             (click)="openAlarmModal(alarm)"
             [disabled]="!hasAlarmConfig(alarm)"
           >
-            <mat-icon>info_outline</mat-icon>
+            <mat-icon>error_outline</mat-icon>
           </button>
         </td>
       </tr>

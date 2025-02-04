@@ -13,7 +13,7 @@
   }
 
   &-header {
-    font-size: 13px;
+    font-size: 15px;
     padding: 2px;
     border: 1px solid #e0e0e0;
     color: white;
@@ -21,7 +21,7 @@
   }
 
   &-cell {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     border: 1px solid #e0e0e0;
     text-align: center;
@@ -41,14 +41,6 @@
 }
 
 .alarm-btn {
-  font-size: 13px;
-  color: black;
-  font-weight: 600;
-  transition: color 0.3s ease-in-out;
-  &:hover {
-    color: blue;
-    transition: color 0.3s ease-in-out;
-  }
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -57,8 +49,13 @@
 }
 
 .alarm-btn mat-icon {
-  font-size: 24px; /* или другой размер */
   vertical-align: middle;
+  color: green;
+  transition: color 0.7s ease-in-out;
+  &:hover {
+    color: red;
+    transition: color 0.7s ease-in-out;
+  }
 }
 
 .no-alarms {
@@ -79,4 +76,6 @@
 
 .blink-warning {
   animation: blink 1s infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
