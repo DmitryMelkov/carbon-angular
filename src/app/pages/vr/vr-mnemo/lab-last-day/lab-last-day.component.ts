@@ -87,6 +87,8 @@ export class LabLastDayComponent implements OnInit {
     }
   }
 
+  
+
 
   public deleteRecord(recordId: string): void {
     const dialogRef = this.dialog.open(LabPasswordDialogComponent);

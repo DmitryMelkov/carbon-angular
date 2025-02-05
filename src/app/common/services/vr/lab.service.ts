@@ -12,13 +12,25 @@ import { LabPasswordDialogComponent } from '../../../pages/vr/vr-mnemo/lab-passw
 export class LabService {
   constructor(private http: HttpClient, private dialog: MatDialog) {}
 
+  private normalizeId(id: string): string {
+    return id.toLowerCase().includes('vr') ? id : `vr${id}`;
+  }
+
+  private normalizeIdForDelete(id: string): string {
+    // Если уже есть "vr" в любом регистре, заменяем на "Vr", иначе добавляем "Vr"
+    return id.toLowerCase().includes('vr') ? id.replace(/vr/gi, 'Vr') : `Vr${id}`;
+  }
+
   getLabData(id: string): Observable<LabData> {
-    const url = `${environment.apiUrl}/api/lab/pech${id}/last`;
+    const normalizedId = this.normalizeId(id);
+    const url = `${environment.apiUrl}/api/lab/pech${normalizedId}/last`;
+    console.log(url);
     return this.http.get<LabData>(url);
   }
 
   submitLabData(id: string, formData: any): Observable<any> {
-    const apiUrl = `${environment.apiUrl}/api/lab/pech${id}/submit`;
+    const normalizedId = this.normalizeId(id);
+    const apiUrl = `${environment.apiUrl}/api/lab/pech${normalizedId}/submit`;
     return this.http.post(apiUrl, {
       value: formData.volatileSubstances
         ? formData.volatileSubstances.replace(',', '.')
@@ -29,14 +41,15 @@ export class LabService {
     });
   }
 
-  getLastDayData(vrId: string): Observable<LabLastDay[]> {
-    const url = `${environment.apiUrl}/api/lab/pech${vrId}/last-day`;
+  getLastDayData(id: string): Observable<LabLastDay[]> {
+    const normalizedId = this.normalizeId(id);
+    const url = `${environment.apiUrl}/api/lab/pech${normalizedId}/last-day`;
     return this.http.get<LabLastDay[]>(url);
   }
 
-  deleteLabData(vrId: string, recordId: string): Observable<any> {
-    const normalizedVrId = vrId.replace(/vr/gi, 'Vr');
-    const url = `${environment.apiUrl}/api/lab/delete/pech${normalizedVrId}/${recordId}`;
+  deleteLabData(id: string, recordId: string): Observable<any> {
+    const normalizedId = this.normalizeIdForDelete(id);
+    const url = `${environment.apiUrl}/api/lab/delete/pech${normalizedId}/${recordId}`;
     return this.http.delete(url);
   }
 

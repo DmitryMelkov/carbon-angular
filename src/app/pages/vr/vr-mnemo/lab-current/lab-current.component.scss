@@ -15,7 +15,7 @@
 
 
   &__th {
-    padding: 3px;
+    padding: 5px;
     border: 1px solid #e0e0e0;
     color: white;
     font-weight: 600;
@@ -37,6 +37,7 @@
     }
   }
   &__td {
+    font-weight: 600;
     padding: 3px;
     border: 1px solid #e0e0e0;
     text-align: center;
