@@ -99,16 +99,25 @@
     <div class="mnemo__param-descr second-skolz-text">2-СК</div>
     <div class="mnemo__param-descr third-skolz-text">3-СК</div>
 
-    <div class="mnemo__gif mnemo__gif-1">
+    <div class="mnemo__gif mnemo__gif-1" *ngIf="(data?.gorelka?.['Мощность горелки №' + id.replace('vr', '')] || 0) > 5">
       <img src="/img/fire-gif.gif" alt="img" />
     </div>
 
     <div class="mnemo__gif mnemo__gif-2">
-      <img src="/img/ventilator.png" alt="img" />
+      <img
+      [ngStyle]="{'animation-play-state': (+(data?.vacuums?.['В котле утилизаторе'] || 0)) < 0 ? 'running' : 'paused'}"
+      src="/img/ventilator.png" alt="img">
     </div>
 
-    <div class="mnemo__gif mnemo__gif-3">
+    <div class="mnemo__gif mnemo__gif-3" *ngIf="(+(data?.vacuums?.['В котле утилизаторе'] || 0)) < 0">
       <img src="/img/par.gif" alt="img" />
+    </div>
+
+    <div class="mnemo__gif mnemo__gif-4">
+      <img src="/img/ventilator.png" alt="img">
+    </div>
+    <div class="mnemo__gif mnemo__gif-5">
+      <img src="/img/ventilator.png" alt="img">
     </div>
 
     <div class="mnemo__param first-skolz" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="termopara400"
@@ -250,7 +259,7 @@
         [unit]="'кгс/м²'"></app-param-indicator>
     </div>
 
-    <div class="mnemo__param im5-percent">
+    <div class="mnemo__param im5-percent" >
       <span class="mnemo__param-text">
         {{ data?.im?.['ИМ5 котел-утилизатор'] || '—' }} %
       </span>
@@ -278,7 +287,7 @@
     </div>
 
     <app-level-indicator [value]="data?.levels?.['В барабане котла']?.value" [minLevel]="-200" [maxLevel]="200"
-      [totalRange]="400" [width]="'59px'" [height]="'89px'" [bottom]="'65.8%'" [right]="'46.3%'" [fillColor]="'#57b7f7'"
+      [totalRange]="400" [width]="'57px'" [height]="'89px'" [bottom]="'65.7%'" [right]="'46.4%'" [fillColor]="'#57b7f7'"
       [warningThreshold]="25">
     </app-level-indicator>
 
@@ -296,7 +305,7 @@
       [triangleHeight]="12">
     </app-mnemo-kran>
 
-    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="11" [triangleHeight]="10">
+    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="10" [triangleHeight]="10">
     </app-mnemo-kran>
 
     <app-mnemo-kran class="kran kran-3" [isActive]="!!data?.im?.['ИМ3 аварийный сброс']" [triangleWidth]="15"
