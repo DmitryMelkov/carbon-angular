@@ -100,7 +100,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @Input() dataKeys!: string[];
   @Input() yAxisTitle!: string;
   @Input() title!: string;
-  @Input() yAxisRange!: { min: number; max: number };
+  @Input() yAxisRange!: { min: number; max: number }; // Диапазон оси Y
   @Input() graphId!: string;
   @Input() timeRange: number = 10;
   @Input() animate: boolean = true;
@@ -178,7 +178,6 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-
   private updateChart(labels: Date[], values: (number | null)[][]) {
     const ctx = this.canvasRef.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -189,7 +188,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
         this.title,
         this.animate,
         this.units,
-        this.zones // Передаем зоны в сервис
+        this.zones,
+        this.yAxisRange // Передаём диапазон оси Y
       );
 
       const datasets = this.graphService.createDatasets(

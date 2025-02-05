@@ -115,7 +115,8 @@ export class UniversalGraphService {
     title: string,
     animate: boolean = true,
     units: string | string[] = '',
-    zones: { min: number; max: number; color: string; }[] = [] // Добавлено поле label
+    zones: { min: number; max: number; color: string }[] = [],
+    yAxisRange?: { min: number; max: number } // Новый параметр для диапазона оси Y
   ): ChartOptions {
     const annotations: Record<string, AnnotationOptions> = zones.reduce(
       (acc, zone, index) => {
@@ -153,6 +154,8 @@ export class UniversalGraphService {
         },
         y: {
           beginAtZero: true,
+          // Если задан диапазон, применяем его
+          ...(yAxisRange ? { min: yAxisRange.min, max: yAxisRange.max } : {}),
           title: {
             display: true,
             text: yAxisTitle,
@@ -192,9 +195,9 @@ export class UniversalGraphService {
               const label = tooltipItem.dataset.label || '';
               const value = tooltipItem.raw;
               const unit = Array.isArray(units)
-                ? units[tooltipItem.datasetIndex] || '' // Если units — массив, берем элемент по индексу
-                : units; // Если units — строка, используем её для всех параметров
-              return `${label}: ${value} ${unit}`; // Добавляем единицы измерения в tooltip
+                ? units[tooltipItem.datasetIndex] || ''
+                : units;
+              return `${label}: ${value} ${unit}`;
             },
           },
         },
@@ -217,11 +220,11 @@ export class UniversalGraphService {
 
                     const name = label.text;
                     const unit = Array.isArray(units)
-                      ? units[datasetIndex] || '' // Если units — массив, берем элемент по индексу
-                      : units; // Если units — строка, используем её для всех параметров
+                      ? units[datasetIndex] || ''
+                      : units;
 
                     if (lastValue !== null) {
-                      label.text = `${lastValue} ${unit} | ${name}`; // Используем единицы измерения
+                      label.text = `${lastValue} ${unit} | ${name}`;
                     } else {
                       label.text = `(нет данных) | ${name}`;
                     }
@@ -275,7 +278,10 @@ export class UniversalGraphService {
     colors?: string[] // Опциональный параметр для цветов
   ) {
     return parameterNames.map((name, index) => ({
-      label: customNames && customNames[index] ? customNames[index] : name, // Используем customNames, если они есть
+      label:
+        customNames && customNames[index]
+          ? customNames[index]
+          : name, // Используем customNames, если они есть
       data: values[index],
       borderColor: colors ? colors[index] : this.getColor(index), // Используем переданные цвета или цвета по умолчанию
       fill: false,
