@@ -202,4 +202,5 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     const value = this.data?.im?.['ИМ5 котел-утилизатор'];
     return typeof value === 'number' && value > 5;
   }
+
 }

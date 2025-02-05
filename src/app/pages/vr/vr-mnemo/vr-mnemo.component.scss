@@ -22,8 +22,8 @@
     z-index: 1;
 
     &-1 {
-      top: 63.1%;
-      left: 61%;
+      top: 62.7%;
+      left: 61.2%;
       transform: rotate(180deg);
     }
 
@@ -51,6 +51,33 @@
         transform: rotate(90deg);
       }
     }
+
+    &-4 {
+      top: 4.5%;
+      left: 18.5%;
+    }
+
+    &-5 {
+      top: 14%;
+      left: 18.5%;
+    }
+
+    &-4, &-5 {
+      & img {
+        width: 38px;
+        height: 38px;
+      }
+    }
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }
 
@@ -97,7 +124,6 @@
   }
 }
 
-/* Стили для мигания */
 .blink-warning {
   animation: blink 1s infinite;
 }
@@ -105,10 +131,10 @@
 @keyframes blink {
   0%,
   100% {
-    color: green; /* Исходный цвет */
+    color: green;
   }
   50% {
-    color: red; /* Цвет предупреждения */
+    color: red;
   }
 }
 
@@ -125,22 +151,22 @@
   }
 
   &-2 {
-    bottom: 12.8%;
+    bottom: 12.9%;
     right: 62%;
   }
 
   &-3 {
-    top: 0.8%;
+    top: 0.6%;
     right: 48%;
   }
 
   &-4 {
-    top: 0.8%;
+    top: 0.6%;
     right: 28%;
   }
 
   &-5 {
-    top: 14.8%;
+    top: 14.7%;
     left: 35.5%;
   }
 
@@ -223,6 +249,7 @@
   bottom: 10%;
   right: 15%;
   z-index: 1;
+  background-color: transparent;
 }
 
 .granul-posle-holodil {
@@ -235,6 +262,7 @@
   bottom: 10%;
   right: 26%;
   z-index: 1;
+  background-color: transparent;
 }
 
 .uroven-vody-hvo {
@@ -255,7 +283,7 @@
 
 .p-v-barabane-kotla {
   top: 15%;
-  right: 31%;
+  right: 30.7%;
 }
 
 // Разрежения
