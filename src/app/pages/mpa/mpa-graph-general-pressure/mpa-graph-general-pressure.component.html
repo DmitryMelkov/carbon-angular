@@ -1,0 +1,59 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+      <app-control-button
+        [isActive]="activeButton === 10"
+        (onClick)="setTimeRange(10)"
+        iconName="forward_10 "
+      >
+        10 минут
+      </app-control-button>
+      <app-control-button
+        [isActive]="activeButton === 30"
+        (onClick)="setTimeRange(30)"
+        iconName="forward_30 "
+      >
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График для МПА 2 -->
+    <div class="graph-general__box">
+      <div class="graph-general__content">
+        <app-universal-graph
+          [apiUrls]="mpa2ApiUrls"
+          [parameterNamesList]="mpa2PressureParameterNamesList"
+          [customNames]="mpaPressuresCustomNames"
+          [units]="'кгс/м2'"
+          [dataKeys]="mpa2PressureDataKeys"
+          [yAxisTitle]="'Давление/разрежение'"
+          [title]="'МПА №' + mpa2Number + ': Давление/разрежение'"
+          [yAxisRange]="{ min: -30, max: 180 }"
+          [graphId]="mpa2IdPressure"
+          [timeRange]="timeRange"
+          [animate]="false"
+        ></app-universal-graph>
+      </div>
+    </div>
+
+    <!-- График для МПА 3-->
+    <div class="graph-general__box">
+      <div class="graph-general__content">
+        <app-universal-graph
+          [apiUrls]="mpa3ApiUrls"
+          [parameterNamesList]="mpa3PressureParameterNamesList"
+          [customNames]="mpaPressuresCustomNames"
+          [units]="'кгс/м2'"
+          [dataKeys]="mpa3PressureDataKeys"
+          [yAxisTitle]="'Давление/разрежение'"
+          [title]="'МПА №' + mpa3Number + ': Давление/разрежение'"
+          [yAxisRange]="{ min: -30, max: 180 }"
+          [graphId]="mpa3IdPressure"
+          [timeRange]="timeRange"
+          [animate]="false"
+        ></app-universal-graph>
+      </div>
+    </div>
+  </div>
+</div>

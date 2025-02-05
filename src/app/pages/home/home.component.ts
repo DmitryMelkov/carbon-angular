@@ -25,6 +25,8 @@ import { EnergyResourcesReportDayComponent } from '../energy-resources/energy-re
 import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-resources-report-month/energy-resources-report-month.component';
 import { EnergyResourcesGraphPressureComponent } from '../energy-resources/energy-resources-graph-pressure/energy-resources-graph-pressure.component';
 import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
+import { MpaGraphGeneralTemperComponent } from '../mpa/mpa-graph-general-temper/mpa-graph-general-temper.component';
+import { MpaGraphGeneralPressureComponent } from "../mpa/mpa-graph-general-pressure/mpa-graph-general-pressure.component";
 
 @Component({
   selector: 'app-home',
@@ -56,7 +58,9 @@ import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/en
     EnergyResourcesReportMonthComponent,
     EnergyResourcesGraphPressureComponent,
     EnergyResourcesGraphConsumptionComponent,
-  ],
+    MpaGraphGeneralTemperComponent,
+    MpaGraphGeneralPressureComponent
+],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -90,6 +94,14 @@ export class HomeComponent {
 
   showGraphMpaGeneral(id: string) {
     this.setView('graph-mpa-general', id);
+  }
+
+  showGraphMpaGeneralTemper(id: string) {
+    this.setView('graph-mpa-general-temper', id);
+  }
+
+  showGraphMpaGeneralPressure(id: string) {
+    this.setView('graph-mpa-general-pressure', id);
   }
 
   showGraphPressure(id: string) {

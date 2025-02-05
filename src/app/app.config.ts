@@ -29,6 +29,8 @@ import { ReactorMnemoComponent } from './pages/reactors/reactors-mnemo/reactors-
 import { VrComponent } from './pages/vr/vr-current/vr.component';
 import { VrMnemoComponent } from './pages/vr/vr-mnemo/vr-mnemo.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MpaGraphGeneralPressureComponent } from './pages/mpa/mpa-graph-general-pressure/mpa-graph-general-pressure.component';
+import { MpaGraphGeneralTemperComponent } from './pages/mpa/mpa-graph-general-temper/mpa-graph-general-temper.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -77,6 +79,14 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'mpa/grah-general',
         component: GraphicMpaGeneralComponent,
+      },
+      {
+        path: 'mpa/grah-general-temper',
+        component: MpaGraphGeneralTemperComponent,
+      },
+      {
+        path: 'mpa/grah-general-pressure',
+        component: MpaGraphGeneralPressureComponent,
       },
       {
         path: 'mills/current',

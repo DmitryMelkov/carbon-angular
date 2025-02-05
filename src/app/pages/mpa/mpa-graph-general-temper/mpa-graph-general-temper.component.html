@@ -1,0 +1,59 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+      <app-control-button
+        [isActive]="activeButton === 10"
+        (onClick)="setTimeRange(10)"
+        iconName="forward_10 "
+      >
+        10 минут
+      </app-control-button>
+      <app-control-button
+        [isActive]="activeButton === 30"
+        (onClick)="setTimeRange(30)"
+        iconName="forward_30 "
+      >
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График для МПА 2 -->
+    <div class="graph-general__box">
+      <div class="graph-general__content">
+        <app-universal-graph
+          [apiUrls]="mpa2ApiUrls"
+          [parameterNamesList]="mpa2TemperatureParameterNamesList"
+          [customNames]="mpaTemperatureCustomNames"
+          [units]="'°C'"
+          [dataKeys]="mpa2TemperatureDataKeys"
+          [yAxisTitle]="'Температуры, градусы'"
+          [title]="'МПА №' + mpa2Number + ': Температура'"
+          [yAxisRange]="{ min: 0, max: 1200 }"
+          [graphId]="mpa2IdTemper"
+          [timeRange]="timeRange"
+          [animate]="true"
+        ></app-universal-graph>
+      </div>
+    </div>
+
+    <!-- График для МПА 3-->
+    <div class="graph-general__box">
+      <div class="graph-general__content">
+        <app-universal-graph
+          [apiUrls]="mpa3ApiUrls"
+          [parameterNamesList]="mpa3TemperatureParameterNamesList"
+          [customNames]="mpaTemperatureCustomNames"
+          [units]="'°C'"
+          [dataKeys]="mpa3TemperatureDataKeys"
+          [yAxisTitle]="'Температуры, градусы'"
+          [title]="'МПА №' + mpa3Number + ': Температура'"
+          [yAxisRange]="{ min: 0, max: 1200 }"
+          [graphId]="mpa3IdTemper"
+          [timeRange]="timeRange"
+          [animate]="true"
+        ></app-universal-graph>
+      </div>
+    </div>
+  </div>
+</div>

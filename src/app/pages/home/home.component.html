@@ -34,7 +34,27 @@
             (onClick)="showGraphMpaGeneral(object.id)"
             iconName="bar_chart "
           >
-            Графики
+            Графики общие
+          </app-control-button>
+
+          <app-control-button
+            class="home__button"
+            *ngIf="object.type === 'mpa'"
+            [isActive]="activeView === 'graph-mpa-general-temper' && selectedObjectId === object.id"
+            (onClick)="showGraphMpaGeneralTemper(object.id)"
+            iconName="bar_chart "
+          >
+            Графики температур
+          </app-control-button>
+
+          <app-control-button
+            class="home__button"
+            *ngIf="object.type === 'mpa'"
+            [isActive]="activeView === 'graph-mpa-general-pressure' && selectedObjectId === object.id"
+            (onClick)="showGraphMpaGeneralPressure(object.id)"
+            iconName="bar_chart "
+          >
+            Графики давления/разрежения
           </app-control-button>
 
           <!-- Кнопки для сушилок -->
@@ -61,6 +81,14 @@
         <!-- Контент для графиков МПА -->
         <div *ngIf="activeView === 'graph-mpa-general' && selectedObjectId === object.id && object.type === 'mpa'" class="home__content">
           <app-graphic-mpa-general [id]="object.id"></app-graphic-mpa-general>
+        </div>
+
+        <div *ngIf="activeView === 'graph-mpa-general-temper' && selectedObjectId === object.id && object.type === 'mpa'" class="home__content">
+          <app-mpa-graph-general-temper [id]="object.id"></app-mpa-graph-general-temper>
+        </div>
+
+        <div *ngIf="activeView === 'graph-mpa-general-pressure' && selectedObjectId === object.id && object.type === 'mpa'" class="home__content">
+          <app-mpa-graph-general-pressure [id]="object.id"></app-mpa-graph-general-pressure>
         </div>
 
         <!-- Остальной контент -->
