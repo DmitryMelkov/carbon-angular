@@ -1,0 +1,15 @@
+@use "../../../../../styles/mixins" as mixins;
+@use "../../../../../styles/variables" as vars;
+
+.graph-general {
+  &__container {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+  }
+  &__btns {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+}

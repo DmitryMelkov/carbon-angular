@@ -29,10 +29,10 @@
     background-color: vars.$hulk;
   }
 
-  &:focus {
-    color: vars.$white;
-    background-color: vars.$hulk;
-  }
+  // &:focus {
+  //   color: vars.$white;
+  //   background-color: vars.$hulk;
+  // }
 
   &:disabled {
     opacity: 0.6;

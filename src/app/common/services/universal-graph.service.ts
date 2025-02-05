@@ -9,8 +9,8 @@ import 'chartjs-adapter-date-fns';
 })
 export class UniversalGraphService {
   private readonly defaultColors: string[] = [
-    '#FF6384', // Красный
     '#36A2EB', // Синий
+    '#FF6384', // Красный
     '#FFCE56', // Желтый
     '#4BC0C0', // Бирюзовый
     '#9966FF', // Фиолетовый
@@ -94,8 +94,13 @@ export class UniversalGraphService {
 
       labels.push(currentTime);
       parameterNames.forEach((param, index) => {
-        const value = dataPoint[dataKey][param];
-        values[index].push(value !== null ? parseFloat(value) : null);
+        let rawValue = dataPoint[dataKey][param];
+        // Если значение является объектом и содержит поле value – берем его
+        if (rawValue && typeof rawValue === 'object' && rawValue.value !== undefined) {
+          rawValue = rawValue.value;
+        }
+        const numValue = rawValue !== null ? parseFloat(rawValue) : null;
+        values[index].push(numValue);
       });
 
       previousTime = currentTime;

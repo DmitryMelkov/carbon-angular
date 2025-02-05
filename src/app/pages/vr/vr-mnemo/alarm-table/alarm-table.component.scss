@@ -51,11 +51,18 @@
 .alarm-btn mat-icon {
   vertical-align: middle;
   color: green;
-  transition: color 0.7s ease-in-out;
+  transition: color 0.5s ease-in-out;
+
   &:hover {
     color: red;
-    transition: color 0.7s ease-in-out;
+    transition: color 0.5s ease-in-out;
   }
+}
+
+.alarm-btn:disabled mat-icon:hover {
+  color: green; // Оставляем цвет неизменным
+  transition: none;
+  cursor: not-allowed;
 }
 
 .no-alarms {

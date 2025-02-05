@@ -1,0 +1,45 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+        <app-control-button [isActive]="activeButton === 10" (onClick)="setTimeRange(10)" iconName="forward_10 ">
+        10 минут
+      </app-control-button>
+      <app-control-button [isActive]="activeButton === 30" (onClick)="setTimeRange(30)" iconName="forward_30 ">
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График для ПК 1 -->
+    <div class="graph-general__content">
+      <app-universal-graph
+        [apiUrls]="vr1ApiUrls"
+        [parameterNamesList]="vr1ParameterNamesList"
+        [units]="'°C'"
+        [dataKeys]="vr1DataKeys"
+        [yAxisTitle]="'Температуры, градусы'"
+        [title]="'Печь карбонизации №' + vr1Number + ': Температура'"
+        [yAxisRange]="{ min: 0, max: 1500 }"
+        [graphId]="vr1Id"
+        [timeRange]="timeRange"
+      ></app-universal-graph>
+    </div>
+
+    <!-- График для ПК 2 -->
+    <div class="graph-general__content">
+      <app-universal-graph
+        [apiUrls]="vr2ApiUrls"
+        [parameterNamesList]="vr2ParameterNamesList"
+        [units]="'°C'"
+        [dataKeys]="vr2DataKeys"
+        [yAxisTitle]="'Температуры, градусы'"
+        [title]="'Печь карбонизации №' + vr2Number + ': Температура'"
+        [yAxisRange]="{ min: 0, max: 1500 }"
+        [graphId]="vr2Id"
+        [timeRange]="timeRange"
+      ></app-universal-graph>
+    </div>
+
+  </div>
+</div>

@@ -144,11 +144,12 @@
 }
 
 .table-mpa {
-  @include mixins.position(absolute, 10%, 3%, null, null);
+  @include mixins.position(absolute, 10%, 13%, null, null);
   z-index: 1;
 }
 
 .mnemo__param-box--btns {
+  position: absolute;
   display: flex;
 }
 

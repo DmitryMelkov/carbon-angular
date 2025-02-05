@@ -1,0 +1,47 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+        <app-control-button [isActive]="activeButton === 10" (onClick)="setTimeRange(10)" iconName="forward_10 ">
+        10 минут
+      </app-control-button>
+      <app-control-button [isActive]="activeButton === 30" (onClick)="setTimeRange(30)" iconName="forward_30 ">
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График для ПК 1 -->
+    <div class="graph-general__content">
+      <app-universal-graph
+        [apiUrls]="notis1ApiUrls"
+        [parameterNamesList]="notis1ParameterNamesList"
+        [customNames]="customNames"
+        [units]="'кг/ч'"
+        [dataKeys]="notis1DataKeys"
+        [yAxisTitle]="'Загрузка (кг/ч)'"
+        [title]="'График дозатора НОТИС ПК №' + notis1Number"
+        [yAxisRange]="{ min: 0, max: 1000 }"
+        [graphId]="notis1Id"
+        [timeRange]="timeRange"
+      ></app-universal-graph>
+    </div>
+
+    <!-- График для ПК 2 -->
+    <div class="graph-general__content">
+      <app-universal-graph
+        [apiUrls]="notis2ApiUrls"
+        [parameterNamesList]="notis2ParameterNamesList"
+        [customNames]="customNames"
+        [units]="'кг/ч'"
+        [dataKeys]="notis2DataKeys"
+        [yAxisTitle]="'Загрузка (кг/ч)'"
+        [title]="'График дозатора НОТИС ПК №' + notis2Number"
+        [yAxisRange]="{ min: 0, max: 1000 }"
+        [graphId]="notis2Id"
+        [timeRange]="timeRange"
+      ></app-universal-graph>
+    </div>
+
+  </div>
+</div>

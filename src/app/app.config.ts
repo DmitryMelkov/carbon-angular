@@ -31,6 +31,10 @@ import { VrMnemoComponent } from './pages/vr/vr-mnemo/vr-mnemo.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MpaGraphGeneralPressureComponent } from './pages/mpa/mpa-graph-general-pressure/mpa-graph-general-pressure.component';
 import { MpaGraphGeneralTemperComponent } from './pages/mpa/mpa-graph-general-temper/mpa-graph-general-temper.component';
+import { GraphicLevelsGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-levels-general/graphic-levels-general.component';
+import { GraphicTempersGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-tempers-general/graphic-tempers-general.component';
+import { GraphicVacuumsGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
+import { GraphicNotisGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-notis-general/graphic-notis-general.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -122,6 +126,24 @@ export const appConfig: ApplicationConfig = {
       },
       { path: 'vr/:id/current', component: VrComponent },
       { path: 'vr/:id/mnemo', component: VrMnemoComponent },
+      {
+        path: 'vr/graph-temper-general',
+        component: GraphicTempersGeneralVrComponent,
+      },
+      {
+        path: 'vr/graph-levels-general',
+        component: GraphicLevelsGeneralVrComponent,
+      },
+      {
+        path: 'vr/graph-vacuums-general',
+        component: GraphicVacuumsGeneralVrComponent,
+      },
+      {
+        path: 'vr/graph-notis-general',
+        component: GraphicNotisGeneralVrComponent,
+      },
+
+
     ]),
     provideHttpClient(),
     MatSnackBarModule,

@@ -27,6 +27,10 @@ import { EnergyResourcesGraphPressureComponent } from '../energy-resources/energ
 import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
 import { MpaGraphGeneralTemperComponent } from '../mpa/mpa-graph-general-temper/mpa-graph-general-temper.component';
 import { MpaGraphGeneralPressureComponent } from "../mpa/mpa-graph-general-pressure/mpa-graph-general-pressure.component";
+import { GraphicTempersGeneralVrComponent } from '../vr/vr-graph-general/graphic-tempers-general/graphic-tempers-general.component';
+import { GraphicVacuumsGeneralVrComponent } from '../vr/vr-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
+import { GraphicNotisGeneralVrComponent } from '../vr/vr-graph-general/graphic-notis-general/graphic-notis-general.component';
+import { GraphicLevelsGeneralVrComponent } from '../vr/vr-graph-general/graphic-levels-general/graphic-levels-general.component';
 
 @Component({
   selector: 'app-home',
@@ -59,7 +63,11 @@ import { MpaGraphGeneralPressureComponent } from "../mpa/mpa-graph-general-press
     EnergyResourcesGraphPressureComponent,
     EnergyResourcesGraphConsumptionComponent,
     MpaGraphGeneralTemperComponent,
-    MpaGraphGeneralPressureComponent
+    MpaGraphGeneralPressureComponent,
+    GraphicTempersGeneralVrComponent,
+    GraphicVacuumsGeneralVrComponent,
+    GraphicNotisGeneralVrComponent,
+    GraphicLevelsGeneralVrComponent
 ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -90,6 +98,22 @@ export class HomeComponent {
 
   showMnemo(id: string) {
     this.setView('mnemo', id);
+  }
+
+  showGraphVrGeneralTemper(id: string) {
+    this.setView('graph-vr-general-temper', id);
+  }
+
+  showGraphVrGeneralVacuums(id: string) {
+    this.setView('graph-vr-general-vacuums', id);
+  }
+
+  showGraphVrGeneralLevels(id: string) {
+    this.setView('graph-vr-general-levels', id);
+  }
+
+  showGraphVrGeneralNotis(id: string) {
+    this.setView('graph-vr-general-notis', id);
   }
 
   showGraphMpaGeneral(id: string) {

@@ -1,0 +1,47 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+        <app-control-button [isActive]="activeButton === 10" (onClick)="setTimeRange(10)" iconName="forward_10 ">
+        10 минут
+      </app-control-button>
+      <app-control-button [isActive]="activeButton === 30" (onClick)="setTimeRange(30)" iconName="forward_30 ">
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График для ПК 1 -->
+    <div class="graph-general__content">
+      <app-universal-graph
+        [apiUrls]="vr1ApiUrls"
+        [parameterNamesList]="vr1ParameterNamesList"
+        [customNames]="customNames"
+        [units]="['кгс/см²', 'кгс/см²', 'кгс/м²', 'кгс/м²', 'кгс/м²']"
+        [dataKeys]="vr1DataKeys"
+        [yAxisTitle]="'Давление/разрежение'"
+        [title]="'График давления/разрежения ПК №' + vr1Number "
+        [yAxisRange]="{ min: -20, max: 30 }"
+        [graphId]="vr1Id"
+        [timeRange]="timeRange"
+      ></app-universal-graph>
+    </div>
+
+    <!-- График для ПК 2 -->
+    <div class="graph-general__content">
+      <app-universal-graph
+        [apiUrls]="vr2ApiUrls"
+        [parameterNamesList]="vr2ParameterNamesList"
+        [customNames]="customNames"
+        [units]="['кгс/см²', 'кгс/см²', 'кгс/м²', 'кгс/м²', 'кгс/м²']"
+        [dataKeys]="vr2DataKeys"
+        [yAxisTitle]="'Давление/разрежение'"
+        [title]="'График давления/разрежения ПК №' + vr2Number "
+        [yAxisRange]="{ min: -20, max: 30 }"
+        [graphId]="vr2Id"
+        [timeRange]="timeRange"
+      ></app-universal-graph>
+    </div>
+
+  </div>
+</div>
