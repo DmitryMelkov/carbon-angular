@@ -62,7 +62,8 @@
       left: 18.5%;
     }
 
-    &-4, &-5 {
+    &-4,
+    &-5 {
       & img {
         width: 38px;
         height: 38px;
@@ -461,19 +462,19 @@
 
 .niz-zagr-kam-text {
   text-align: left;
-  max-width: 100px;
+  max-width: 70px;
   left: 7.5%;
   bottom: 31.5%;
 }
 .vniz-kamery-zagruzki-text {
   text-align: left;
-  max-width: 87px;
+  max-width: 70px;
   left: 7.5%;
   bottom: 50%;
 }
 .vverh-kamery-zagruzki-text {
   text-align: left;
-  max-width: 87px;
+  max-width: 70px;
   left: 7.5%;
   bottom: 40%;
 }
@@ -490,4 +491,122 @@
   top: 22.9%;
   left: 7.4%;
   z-index: 2;
+}
+
+@media (max-width: 1280px) {
+  .mnemo {
+    position: relative;
+    width: 976px;
+
+    &-header {
+      max-width: 840px;
+    }
+
+    &__img {
+      width: 976px;
+    }
+  }
+
+  .mnemo__param {
+    &-text {
+      font-size: 12px;
+      line-height: 12px;
+    }
+    &-descr {
+      font-size: 10px;
+      line-height: 10px;
+    }
+  }
+
+  .mnemo__gif {
+    &-1 {
+      top: 62.2%;
+      left: 60%;
+    }
+    &-2 {
+      top: 27.8%;
+      left: 73.8%;
+      & img {
+        width: 40px;
+        height: 37px;
+      }
+    }
+    &-3 {
+      top: 33.3%;
+      right: -55px;
+    }
+    &-4, &-5 {
+      left: 18.2%;
+      & img {
+        width: 31px;
+        height: 28px;
+      }
+    }
+  }
+
+  .lab-current {
+    top: 22.2%;
+    left: 7.5%;
+  }
+
+  .siren-container {
+    top: 300px;
+    left: 450px;
+  }
+
+  .vyhod-dymovyh-gazov-text {
+    top: 32%;
+    right: -7%;
+  }
+  .p-gazov-posle-scrubber {
+    bottom: 53%;
+    right: -4%;
+  }
+  .uroven-v-barabane-kotla {
+    top: 25%;
+    left: 54.1%;
+  }
+  .razr-v-prostranstve-kotla {
+    top: 30.3%;
+    left: 54.1%;
+  }
+  .gazy-kotla-utilizazi {
+    left: 54.1%;
+  }
+
+  .mosh-gorelky {
+    top: 60.5%;
+    right: 39%;
+  }
+
+  .temper-v-topke {
+    right: 39%;
+  }
+
+  .im5-percent {
+    top: 11.6%;
+    left: 35.1%;
+  }
+
+  .kran {
+    &-1 {
+      bottom: 7%;
+    }
+
+    &-2 {
+      bottom: 13%;
+      right: 61%;
+    }
+
+    &-5 {
+      top: 14.7%;
+      left: 35%;
+    }
+
+    &-6 {
+      top: 15%;
+      left: 35.65%;
+    }
+  }
+
 }

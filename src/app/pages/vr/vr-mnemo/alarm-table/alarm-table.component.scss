@@ -18,6 +18,7 @@
     border: 1px solid #e0e0e0;
     color: white;
     font-weight: 600;
+    text-transform: uppercase;
   }
 
   &-cell {
@@ -85,4 +86,24 @@
   animation: blink 1s infinite;
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+
+@media (max-width: 1280px) {
+  .alarm__table {
+    min-width: 300px;
+
+    &-header {
+      font-size: 12px;
+      padding: 1px;
+    }
+
+    &-cell {
+      font-size: 11px;
+    }
+  }
+
+  .no-alarms {
+    font-size: 12px;
+  }
 }

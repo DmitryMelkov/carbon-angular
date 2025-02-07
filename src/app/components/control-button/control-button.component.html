@@ -9,8 +9,8 @@
   [style.padding-right]="paddingRight"
   (click)="onClick.emit($event)">
 
-  <!-- Материал Иконка -->
-  <mat-icon *ngIf="iconName" [style.height]="iconHeight" [style.width]="iconWidth">{{ iconName }}</mat-icon>
+  <!-- Материал Иконка с дополнительным классом -->
+  <mat-icon *ngIf="iconName" class="control-icon">{{ iconName }}</mat-icon>
 
   <ng-content></ng-content>
 </button>

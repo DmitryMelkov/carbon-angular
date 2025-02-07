@@ -61,3 +61,22 @@
   font-weight: 600;
   color: green;
 }
+
+@media (max-width: 1280px) {
+  .table {
+    &__th {
+      font-size: 12px;
+      padding: 2px;
+    }
+
+    &__td {
+      font-size: 11px;
+      padding: 1px;
+    }
+  }
+  .loader {
+    width: 290px;
+    height: 100px;
+  }
+
+}

@@ -17,8 +17,7 @@
 
 
     <div class="mnemo__param-box--btns">
-      <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()" iconName="visibility "
-         paddingTop="5px" paddingBottom="5px">
+      <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()" iconName="visibility ">
         {{
         isTooltipsEnabled
         ? "Выкл. всплывающие подсказки"
@@ -26,15 +25,13 @@
         }}
       </app-control-button>
 
-      <app-control-button (onClick)="openLab()" iconName="science "
-        paddingTop="5px" paddingBottom="5px">
+      <app-control-button (onClick)="openLab()" iconName="science ">
         Для лаборатории
       </app-control-button>
     </div>
 
     <div class="mnemo__param-box--btn-lab">
-      <app-control-button (onClick)="openDocumentation()" iconName="map "
-        paddingTop="5px" paddingBottom="5px">
+      <app-control-button (onClick)="openDocumentation()" iconName="map ">
         Документация объекта
       </app-control-button>
     </div>
@@ -287,36 +284,36 @@
     </div>
 
     <app-level-indicator [value]="data?.levels?.['В барабане котла']?.value" [minLevel]="-200" [maxLevel]="200"
-      [totalRange]="400" [width]="'57px'" [height]="'89px'" [bottom]="'65.7%'" [right]="'46.4%'" [fillColor]="'#57b7f7'"
+      [totalRange]="400" [width]="'57px'" [height]="'89px'" [bottom]="'65.7%'" [right]="'46.4%'" [fillColor]="'#57b7f7'" [adaptiveWidth]="'42px'" [adaptiveHeight]="'64px'"
       [warningThreshold]="25">
     </app-level-indicator>
 
     <app-level-indicator [value]="data?.levels?.['В емкости ХВО']?.value" [minLevel]="0" [maxLevel]="6000"
-      [totalRange]="6000" [width]="'41px'" [height]="'40px'" [bottom]="'14.5%'" [right]="'56.7%'"
+      [totalRange]="6000" [width]="'41px'" [height]="'40px'" [bottom]="'14.5%'" [right]="'56.7%'" [adaptiveWidth]="'28px'" [adaptiveHeight]="'30px'" [adaptiveRight]="'56.9%'"
       [fillColor]="'#57b7f7'" [warningThreshold]="25">
     </app-level-indicator>
 
     <app-level-indicator [value]="data?.levels?.['В ванне скруббера']?.value" [minLevel]="0" [maxLevel]="1000"
-      [totalRange]="1000" [width]="'292px'" [height]="'139px'" [bottom]="'2.7%'" [right]="'12%'" [fillColor]="'#57b7f7'"
+      [totalRange]="1000" [width]="'292px'" [height]="'139px'" [bottom]="'2.7%'" [right]="'12%'" [fillColor]="'#57b7f7'" [adaptiveWidth]="'217px'" [adaptiveHeight]="'105px'" [adaptiveBottom]="'3%'"
       [warningThreshold]="25">
     </app-level-indicator>
 
     <app-mnemo-kran class="kran kran-1" [isActive]="!!data?.im?.['ИМ1 скруббер']" [triangleWidth]="15"
-      [triangleHeight]="12">
+      [triangleHeight]="12"  [triangleWidthSmall]="12"  [triangleHeightSmall]="10" >
     </app-mnemo-kran>
 
-    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="10" [triangleHeight]="10">
+    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="10" [triangleHeight]="10" [triangleWidthSmall]="8"  [triangleHeightSmall]="8">
     </app-mnemo-kran>
 
     <app-mnemo-kran class="kran kran-3" [isActive]="!!data?.im?.['ИМ3 аварийный сброс']" [triangleWidth]="15"
-      [triangleHeight]="12">
+      [triangleHeight]="12" [triangleWidthSmall]="12"  [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
     <app-mnemo-kran class="kran kran-4" [isActive]="!!data?.im?.['ИМ4 пар в отделение активации']" [triangleWidth]="15"
-      [triangleHeight]="12">
+      [triangleHeight]="12" [triangleWidthSmall]="12"  [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
-    <app-mnemo-kran class="kran kran-5" [isActive]="isKran5Active()" [triangleWidth]="15" [triangleHeight]="12">
+    <app-mnemo-kran class="kran kran-5" [isActive]="isKran5Active()" [triangleWidth]="15" [triangleHeight]="12" [triangleWidthSmall]="12"  [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
     <div class="lab-current">

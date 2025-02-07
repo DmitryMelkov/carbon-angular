@@ -49,6 +49,32 @@ export class AlarmModalComponent {
   }
 
   formatActionText(text: string): string {
+    // Если маркер "\\l" присутствует
+    if (text.includes('\\l')) {
+      // Находим индекс первого вхождения маркера
+      const firstMarkerIndex = text.indexOf('\\l');
+
+      // Префикс — текст до маркера (оставляем как обычный текст)
+      const prefix = text.substring(0, firstMarkerIndex).trim();
+
+      // Остальная часть — текст, начиная с первого маркера
+      const listPart = text.substring(firstMarkerIndex);
+
+      // Разбиваем listPart по маркеру и убираем пустые строки
+      const listItems = listPart.split('\\l').filter(item => item.trim() !== '');
+
+      // Формируем HTML:
+      // 1. Если есть префикс, заменяем символы новой строки на <br>
+      // 2. Формируем список <ul> с элементами <li>
+      let formatted = '';
+      if (prefix) {
+        formatted += prefix.replace(/\n/g, '<br>') + '<br>';
+      }
+      formatted += `<ul>${listItems.map(item => `<li>${item.trim()}</li>`).join('')}</ul>`;
+      return formatted;
+    }
+    // Если маркер не найден, заменяем переводы строк на <br>
     return text.replace(/\n/g, '<br>');
   }
+  
 }

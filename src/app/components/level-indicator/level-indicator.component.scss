@@ -23,3 +23,9 @@
     color: black; /* Цвет текста */
   }
 }
+
+@media (max-width: 1280px) {
+ .mnemo__level-percentage {
+  font-size: 12px; /* Размер текста */
+ }
+}
