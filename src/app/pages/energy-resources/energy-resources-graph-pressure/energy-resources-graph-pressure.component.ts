@@ -42,6 +42,6 @@ export class EnergyResourcesGraphPressureComponent {
   dataKeys: string[] = ['data', 'data', 'data', 'data', 'data', 'data', 'data']; // Ключи для данных из API
   yAxisTitle: string = 'Давление, кгс/см²';
   title: string = 'График давления узлов учета';
-  yAxisRange: { min: number; max: number } = { min: 0, max: 500 };
+  yAxisRange: { min: number; max: number } = { min: 0, max: 0.5 };
   timeRange: number = 30;
 }
