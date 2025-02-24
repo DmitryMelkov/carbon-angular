@@ -1,0 +1,10 @@
+<div class="lab-instruction-modal">
+  <div class="lab-instruction-modal__header">
+    <app-modal-header [title]="'Инструкция для пользователя лаборатория'" (close)="close()"></app-modal-header>
+  </div>
+  <div class="lab-instruction-modal__body">
+    <video controls class="lab-instruction-modal__video">
+      <source src="/video/lab-instruction.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>

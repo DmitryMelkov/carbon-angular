@@ -23,6 +23,7 @@ import { AlarmTableComponent } from './alarm-table/alarm-table.component';
 import { AlarmService } from '../../../common/services/vr/alarm.service';
 import { SirenComponent } from './siren/siren.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
+import { LabInstructionModalComponent } from './lab-instruction-modal/lab-instruction-modal.component';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -191,6 +192,15 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       maxWidth: '90vw',
       maxHeight: '80vh',
       data: { content: 'Это тестовый контент для документации объекта.', vrId: this.id },
+    });
+  }
+
+  openLabInstruction(): void {
+    this.dialog.open(LabInstructionModalComponent, {
+      minWidth: '600px',
+      maxWidth: '90vw',
+      maxHeight: '80vh',
+      data: { content: 'Это тестовый контент для документации объекта.' },
     });
   }
 

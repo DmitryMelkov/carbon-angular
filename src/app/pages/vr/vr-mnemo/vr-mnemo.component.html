@@ -30,9 +30,15 @@
       </app-control-button>
     </div>
 
-    <div class="mnemo__param-box--btn-lab">
+    <div class="mnemo__param-box--btn-doc">
       <app-control-button (onClick)="openDocumentation()" iconName="map ">
         Документация объекта
+      </app-control-button>
+    </div>
+
+    <div class="mnemo__param-box--btn-lab">
+      <app-control-button (onClick)="openLabInstruction()" iconName="help_outline ">
+        Инструкция для пользователя лаборатория
       </app-control-button>
     </div>
 
@@ -96,14 +102,15 @@
     <div class="mnemo__param-descr second-skolz-text">2-СК</div>
     <div class="mnemo__param-descr third-skolz-text">3-СК</div>
 
-    <div class="mnemo__gif mnemo__gif-1" *ngIf="(data?.gorelka?.['Мощность горелки №' + id.replace('vr', '')] || 0) > 5">
+    <div class="mnemo__gif mnemo__gif-1"
+      *ngIf="(data?.gorelka?.['Мощность горелки №' + id.replace('vr', '')] || 0) > 5">
       <img src="/img/fire-gif.gif" alt="img" />
     </div>
 
     <div class="mnemo__gif mnemo__gif-2">
       <img
-      [ngStyle]="{'animation-play-state': (+(data?.vacuums?.['В котле утилизаторе'] || 0)) < 0 ? 'running' : 'paused'}"
-      src="/img/ventilator.png" alt="img">
+        [ngStyle]="{'animation-play-state': (+(data?.vacuums?.['В котле утилизаторе'] || 0)) < 0 ? 'running' : 'paused'}"
+        src="/img/ventilator.png" alt="img">
     </div>
 
     <div class="mnemo__gif mnemo__gif-3" *ngIf="(+(data?.vacuums?.['В котле утилизаторе'] || 0)) < 0">
@@ -256,7 +263,7 @@
         [unit]="'кгс/м²'"></app-param-indicator>
     </div>
 
-    <div class="mnemo__param im5-percent" >
+    <div class="mnemo__param im5-percent">
       <span class="mnemo__param-text">
         {{ data?.im?.['ИМ5 котел-утилизатор'] || '—' }} %
       </span>
@@ -284,36 +291,39 @@
     </div>
 
     <app-level-indicator [value]="data?.levels?.['В барабане котла']?.value" [minLevel]="-200" [maxLevel]="200"
-      [totalRange]="400" [width]="'57px'" [height]="'89px'" [bottom]="'65.7%'" [right]="'46.4%'" [fillColor]="'#57b7f7'" [adaptiveWidth]="'42px'" [adaptiveHeight]="'64px'"
-      [warningThreshold]="25">
+      [totalRange]="400" [width]="'57px'" [height]="'89px'" [bottom]="'65.7%'" [right]="'46.4%'" [fillColor]="'#57b7f7'"
+      [adaptiveWidth]="'42px'" [adaptiveHeight]="'64px'" [warningThreshold]="25">
     </app-level-indicator>
 
     <app-level-indicator [value]="data?.levels?.['В емкости ХВО']?.value" [minLevel]="0" [maxLevel]="6000"
-      [totalRange]="6000" [width]="'41px'" [height]="'40px'" [bottom]="'14.5%'" [right]="'56.7%'" [adaptiveWidth]="'28px'" [adaptiveHeight]="'30px'" [adaptiveRight]="'56.9%'"
-      [fillColor]="'#57b7f7'" [warningThreshold]="25">
-    </app-level-indicator>
-
-    <app-level-indicator [value]="data?.levels?.['В ванне скруббера']?.value" [minLevel]="0" [maxLevel]="1000"
-      [totalRange]="1000" [width]="'292px'" [height]="'139px'" [bottom]="'2.7%'" [right]="'12%'" [fillColor]="'#57b7f7'" [adaptiveWidth]="'217px'" [adaptiveHeight]="'105px'" [adaptiveBottom]="'3%'"
+      [totalRange]="6000" [width]="'41px'" [height]="'40px'" [bottom]="'14.5%'" [right]="'56.7%'"
+      [adaptiveWidth]="'28px'" [adaptiveHeight]="'30px'" [adaptiveRight]="'56.9%'" [fillColor]="'#57b7f7'"
       [warningThreshold]="25">
     </app-level-indicator>
 
+    <app-level-indicator [value]="data?.levels?.['В ванне скруббера']?.value" [minLevel]="0" [maxLevel]="1000"
+      [totalRange]="1000" [width]="'292px'" [height]="'139px'" [bottom]="'2.7%'" [right]="'12%'" [fillColor]="'#57b7f7'"
+      [adaptiveWidth]="'217px'" [adaptiveHeight]="'105px'" [adaptiveBottom]="'3%'" [warningThreshold]="25">
+    </app-level-indicator>
+
     <app-mnemo-kran class="kran kran-1" [isActive]="!!data?.im?.['ИМ1 скруббер']" [triangleWidth]="15"
-      [triangleHeight]="12"  [triangleWidthSmall]="12"  [triangleHeightSmall]="10" >
+      [triangleHeight]="12" [triangleWidthSmall]="12" [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
-    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="10" [triangleHeight]="10" [triangleWidthSmall]="8"  [triangleHeightSmall]="8">
+    <app-mnemo-kran class="kran kran-2" [isActive]="!!data?.im?.['ИМ2 ХВО']" [triangleWidth]="10" [triangleHeight]="10"
+      [triangleWidthSmall]="8" [triangleHeightSmall]="8">
     </app-mnemo-kran>
 
     <app-mnemo-kran class="kran kran-3" [isActive]="!!data?.im?.['ИМ3 аварийный сброс']" [triangleWidth]="15"
-      [triangleHeight]="12" [triangleWidthSmall]="12"  [triangleHeightSmall]="10">
+      [triangleHeight]="12" [triangleWidthSmall]="12" [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
     <app-mnemo-kran class="kran kran-4" [isActive]="!!data?.im?.['ИМ4 пар в отделение активации']" [triangleWidth]="15"
-      [triangleHeight]="12" [triangleWidthSmall]="12"  [triangleHeightSmall]="10">
+      [triangleHeight]="12" [triangleWidthSmall]="12" [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
-    <app-mnemo-kran class="kran kran-5" [isActive]="isKran5Active()" [triangleWidth]="15" [triangleHeight]="12" [triangleWidthSmall]="12"  [triangleHeightSmall]="10">
+    <app-mnemo-kran class="kran kran-5" [isActive]="isKran5Active()" [triangleWidth]="15" [triangleHeight]="12"
+      [triangleWidthSmall]="12" [triangleHeightSmall]="10">
     </app-mnemo-kran>
 
     <div class="lab-current">

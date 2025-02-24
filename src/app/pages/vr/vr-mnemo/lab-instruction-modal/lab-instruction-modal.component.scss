@@ -1,0 +1,18 @@
+.lab-instruction-modal {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  &__header {
+    margin-bottom: 20px;
+  }
+  &__body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__video {
+    max-width: 900px;
+    border-radius: 8px;
+  }
+}
