@@ -31,7 +31,7 @@ export class GraphicVacuumsGeneralVrComponent {
   vr1DataKeys: string[] = ['pressures', 'vacuums']; // Ключи для данных из API
 
   // Массивы для ПК 2
-  vr2ApiUrls: string[] = [`${environment.apiUrl}/api/${this.vr1Id}/data`, `${environment.apiUrl}/api/${this.vr1Id}/data`];
+  vr2ApiUrls: string[] = [`${environment.apiUrl}/api/${this.vr2Id}/data`, `${environment.apiUrl}/api/${this.vr2Id}/data`];
   vr2ParameterNamesList: string[][] = [
     ['Давление газов после скруббера', 'Пара в барабане котла'],
     ['В топке печи', 'В котле утилизаторе', 'Низ загрузочной камеры'],
