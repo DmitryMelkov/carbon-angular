@@ -23,7 +23,8 @@ export const recommendedLevels: Record<string, string> = {
 };
 
 export const recommendedPressures: Record<string, string> = {
-  'Давление газов после скруббера': 'не более 20 кгс/см²',
+  'Давление газов после скруббера': 'не более 20 кгс/м²',
+  'Давление пара в барабане котла': 'не более 5 кгс/cм²',
 };
 
 export const recommendedVacuums: Record<string, string> = {
