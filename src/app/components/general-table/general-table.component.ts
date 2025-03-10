@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { KeyValuePipe } from '@angular/common';
+import { CommonModule, KeyValue, KeyValuePipe } from '@angular/common';
 import { blinkAnimation } from '../../common/animations/animations';
 
 @Component({
@@ -9,7 +8,7 @@ import { blinkAnimation } from '../../common/animations/animations';
   imports: [CommonModule, KeyValuePipe],
   templateUrl: './general-table.component.html',
   styleUrls: ['./general-table.component.scss'],
-  animations: [blinkAnimation], // Добавляем анимацию
+  animations: [blinkAnimation],
 })
 export class GeneralTableComponent implements OnChanges {
   @Input() title: string = ''; // Заголовок таблицы
@@ -17,6 +16,10 @@ export class GeneralTableComponent implements OnChanges {
   @Input() unit: string = ''; // Единицы измерения (опционально)
   @Input() recommendedValues: Record<string, any> | null = null; // Рекомендуемые значения (опционально)
   @Input() highlightedKeys: Set<string> = new Set(); // Ключи для выделения
+
+  // Новый входной параметр для отключения сортировки.
+  // Если true – сортировка отключается, иначе применяется дефолтная сортировка по ключу.
+  @Input() disableSorting: boolean = false;
 
   preparedData: Record<string, any> = {};
 
@@ -58,5 +61,11 @@ export class GeneralTableComponent implements OnChanges {
   // Метод для проверки, нужно ли выделять значение
   shouldHighlight(key: string): boolean {
     return this.highlightedKeys.has(key);
+  }
+
+  // Функция-сравнения для отключения сортировки.
+  // Если возвращать 0 для любых двух элементов, порядок исходного объекта сохраняется.
+  noSort(a: KeyValue<string, any>, b: KeyValue<string, any>): number {
+    return 0;
   }
 }

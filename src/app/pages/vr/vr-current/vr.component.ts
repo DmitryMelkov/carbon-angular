@@ -40,6 +40,8 @@ export class VrComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   mode: string | null = null;
   highlightedKeys: Set<string> = new Set();
+  sortedTemperatures: { [key: string]: number } = {};
+  sortedVacuums: { [key: string]: string } = {};
   private destroy$ = new Subject<void>();
 
   recommendedTemperatures = recommendedTemperatures;
@@ -65,15 +67,12 @@ export class VrComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Однократная начальная загрузка
+    // Однократная первичная загрузка данных
     this.loadData();
 
-    // Периодическая загрузка данных: выполняется сразу и затем каждые 10 секунд.
+    // Периодическая загрузка данных: сразу и затем каждые 10 секунд
     interval(10000)
-      .pipe(
-        startWith(0),
-        takeUntil(this.destroy$)
-      )
+      .pipe(startWith(0), takeUntil(this.destroy$))
       .subscribe(() => {
         forkJoin({
           vrData: this.vrService.getVrData(this.id),
@@ -84,16 +83,17 @@ export class VrComponent implements OnInit, OnDestroy {
             this.notisData = response.notisData;
             this.updateMode();
             this.checkValues();
+            this.sortTemperatures();
+            this.sortVacuums();
           },
           error: (error) => {
             console.error('Ошибка при загрузке данных:', error);
-          }
+          },
         });
       });
   }
 
   ngOnDestroy(): void {
-    // Завершаем все подписки
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -111,6 +111,8 @@ export class VrComponent implements OnInit, OnDestroy {
           this.notisData = response.notisData;
           this.updateMode();
           this.checkValues();
+          this.sortTemperatures();
+          this.sortVacuums();
           this.isLoading = false;
         },
         error: (error) => {
@@ -135,7 +137,7 @@ export class VrComponent implements OnInit, OnDestroy {
   private checkValues(): void {
     if (!this.data || this.mode === 'Печь не работает') return;
 
-    // Очищаем предыдущие значения
+    // Очищаем предыдущие выделения
     this.highlightedKeys.clear();
 
     // Проверяем температуры
@@ -189,5 +191,76 @@ export class VrComponent implements OnInit, OnDestroy {
         this.highlightedKeys.add(key);
       }
     }
+  }
+
+  private sortTemperatures(): void {
+    if (!this.data || !this.data.temperatures) {
+      return;
+    }
+    // Задаем нужный порядок ключей
+    const order = [
+      'В топке',
+      'Камеры выгрузки',
+      '1-СК',
+      '2-СК',
+      '3-СК',
+      'Вверху камеры загрузки',
+      'Внизу камеры загрузки',
+      'На входе печи дожига',
+      'На выходе печи дожига',
+      'Дымовых газов котла',
+      'Газов до скруббера',
+      'Газов после скруббера',
+      'Воды в ванне скруббера',
+      'Гранул после холод-ка',
+    ];
+
+    const sorted: { [key: string]: number } = {};
+
+    // Сначала добавляем ключи согласно заданному порядку
+    order.forEach((key) => {
+      if (this.data!.temperatures[key] !== undefined) {
+        sorted[key] = this.data!.temperatures[key];
+      }
+    });
+
+    // Затем добавляем оставшиеся ключи, если таковые имеются
+    Object.keys(this.data.temperatures).forEach((key) => {
+      if (!(key in sorted)) {
+        sorted[key] = this.data!.temperatures[key];
+      }
+    });
+
+    this.sortedTemperatures = sorted;
+  }
+
+  private sortVacuums(): void {
+    if (!this.data || !this.data.vacuums) {
+      return;
+    }
+    // Определите нужный порядок ключей для вакуумов
+    const order = [
+      'В топке печи',
+      'Низ загрузочной камеры',
+      'В котле утилизаторе',
+    ];
+
+    const sorted: { [key: string]: string } = {};
+
+    // Сначала добавляем ключи согласно заданному порядку
+    order.forEach((key) => {
+      if (this.data!.vacuums[key] !== undefined) {
+        sorted[key] = this.data!.vacuums[key];
+      }
+    });
+
+    // Затем добавляем оставшиеся ключи, если они есть
+    Object.keys(this.data.vacuums).forEach((key) => {
+      if (!(key in sorted)) {
+        sorted[key] = this.data!.vacuums[key];
+      }
+    });
+
+    this.sortedVacuums = sorted;
   }
 }

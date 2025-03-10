@@ -14,10 +14,11 @@
   <div class="tables">
     <app-general-table
       [title]="'Текущие параметры (температура)'"
-      [data]="data?.temperatures || {}"
+      [data]="sortedTemperatures || {}"
       [unit]="'°C'"
       [recommendedValues]="recommendedTemperatures"
       [highlightedKeys]="getHighlightedKeys()"
+      [disableSorting]="true"
     ></app-general-table>
     <app-general-table
       [title]="'Текущие параметры (уровни)'"
@@ -35,10 +36,11 @@
     ></app-general-table>
     <app-general-table
       [title]="'Текущие параметры (разрежения)'"
-      [data]="data?.vacuums || {}"
+      [data]="sortedVacuums || {}"
       [unit]="' кгс/м²'"
       [recommendedValues]="recommendedVacuums"
       [highlightedKeys]="getHighlightedKeys()"
+      [disableSorting]="true"
     ></app-general-table>
     <app-general-table
       [title]="'Текущие параметры (IM)'"

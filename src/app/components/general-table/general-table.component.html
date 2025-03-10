@@ -8,7 +8,10 @@
     </tr>
   </thead>
   <tbody class="table__body">
-    <tr *ngFor="let item of preparedData | keyvalue" class="table__tr">
+    <tr
+      *ngFor="let item of preparedData | keyvalue: (disableSorting ? noSort : undefined)"
+      class="table__tr"
+    >
       <td class="table__td table__left">{{ item.key }}</td>
       <td
         class="table__td table__right"
