@@ -26,7 +26,7 @@ export class GraphicVacuumsGeneralVrComponent {
   vr1ApiUrls: string[] = [`${environment.apiUrl}/api/${this.vr1Id}/data`, `${environment.apiUrl}/api/${this.vr1Id}/data`];
   vr1ParameterNamesList: string[][] = [
     ['Давление газов после скруббера', 'Пара в барабане котла'],
-    ['В топке печи', 'В котле утилизаторе', 'Низ загрузочной камеры'],
+    ['В топке печи', 'Низ загрузочной камеры', 'В котле утилизаторе'],
   ];
   vr1DataKeys: string[] = ['pressures', 'vacuums']; // Ключи для данных из API
 
@@ -34,13 +34,13 @@ export class GraphicVacuumsGeneralVrComponent {
   vr2ApiUrls: string[] = [`${environment.apiUrl}/api/${this.vr2Id}/data`, `${environment.apiUrl}/api/${this.vr2Id}/data`];
   vr2ParameterNamesList: string[][] = [
     ['Давление газов после скруббера', 'Пара в барабане котла'],
-    ['В топке печи', 'В котле утилизаторе', 'Низ загрузочной камеры'],
+    ['В топке печи', 'Низ загрузочной камеры', 'В котле утилизаторе'],
   ];
   vr2DataKeys: string[] = ['pressures', 'vacuums']; // Ключи для данных из API
 
   customNames: string[][] = [
     ['Давление газов после скруббера', 'Давление пара в барабане котла'],
-    ['Разрежение в топке печи', 'Разрежение в котле утилизаторе', 'Разрежение внизу камеры загрузки'],
+    ['Разрежение в топке печи', 'Разрежение внизу камеры загрузки', 'Разрежение в котле утилизаторе', ],
   ];
 
   // Установка временного диапазона
