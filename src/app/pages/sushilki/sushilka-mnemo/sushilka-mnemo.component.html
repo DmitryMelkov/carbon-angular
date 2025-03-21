@@ -30,11 +30,11 @@
         src="/img/ventilator.png" alt="img">
     </div>
 
-    <div class="mnemo__gif mnemo__gif-4">
+    <!-- <div class="mnemo__gif mnemo__gif-4">
       <img
         [ngStyle]="{'animation-play-state': (data?.temperatures?.['Температура уходящих газов'] || 0) > 30 ? 'running' : 'paused'}"
         src="/img/ventilator.png" alt="img">
-    </div>
+    </div> -->
 
     <div class="mnemo__gif mnemo__gif-5" *ngIf="(data?.gorelka?.[getDynamicKey('Мощность горелки')] || 0) > 5">
       <img src="/img/pipeline_top_coal.gif" alt="img">
@@ -56,7 +56,7 @@
     <div class="mnemo__param-descr gaz-text">Газ природный</div>
     <div class="mnemo__param-descr mosh-gorelki-text">Мощность <br> горелки</div>
     <div class="mnemo__param-descr zadanie-temper-text">Задание <br> температуры</div>
-    <div class="mnemo__param-descr vosduh-na-razbavl-text">Воздух на <br> разбавление</div>
+    <!-- <div class="mnemo__param-descr vosduh-na-razbavl-text">Воздух на <br> разбавление</div> -->
     <div class="mnemo__param-descr liniya-parotush-text">Линия паротушения</div>
     <div class="mnemo__param-descr baraban-text">Барабан</div>
     <div class="mnemo__param-descr kamera-vigruzki-text">Выгрузочная <br> камера</div>
@@ -98,12 +98,12 @@
       </span>
     </div>
 
-    <div class="mnemo__param vosduh-na-razbavl" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="vosduhNaRazbavl"
+    <!-- <div class="mnemo__param vosduh-na-razbavl" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="vosduhNaRazbavl"
       matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
       <span class="mnemo__param-text">
         {{ data?.vacuums?.['Разрежение воздуха на разбавление'] || '—' }}кг/см²
       </span>
-    </div>
+    </div> -->
 
     <div class="mnemo__param kamera-vigruzki" [class.enabled-hover]="isTooltipsEnabled" [matTooltip]="kameraVigruzki"
       matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="!isTooltipsEnabled">
