@@ -17,6 +17,29 @@
     width: 1316px;
   }
 
+  &__vr-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 52%;
+    left: 43%;
+    z-index: 1;
+  }
+  &__vr-time-title {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 600;
+    color: blue;
+  }
+  &__vr-time-value {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 600;
+    color: black;
+  }
+
   &__gif {
     position: absolute;
     z-index: 1;

@@ -15,4 +15,9 @@
     Статус нотиса:
     <span class="current-param__subtitle-span"> {{ getNotisStatusText(notisStatus) }}</span>
   </div>
+  <!-- Добавляем блок с временем работы VR -->
+  <div *ngIf="vrTime" class="current-param__subtitle">
+    Время работы печи:
+    <span class="current-param__subtitle-span"> {{ vrTime }}</span>
+  </div>
 </div>

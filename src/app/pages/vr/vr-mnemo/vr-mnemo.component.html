@@ -15,6 +15,11 @@
       <app-siren></app-siren>
     </div>
 
+    <div *ngIf="timeData" class="mnemo__vr-time">
+      <span class="mnemo__vr-time-title title-reset">Время работы печи:</span>
+      <span class="mnemo__vr-time-value">{{ timeData.currentTime }}</span>
+    </div>
+
 
     <div class="mnemo__param-box--btns">
       <app-control-button [isActive]="isTooltipsEnabled" (onClick)="toggleTooltips()" iconName="visibility ">

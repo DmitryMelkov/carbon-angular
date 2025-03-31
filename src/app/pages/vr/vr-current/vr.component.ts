@@ -5,7 +5,7 @@ import { takeUntil, startWith } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import { VrData } from '../../../common/types/vr-data';
+import { VrData, VrTime } from '../../../common/types/vr-data';
 import { VrService } from '../../../common/services/vr/vr.service';
 import { GeneralTableComponent } from '../../../components/general-table/general-table.component';
 import { ValueCheckService } from '../../../common/services/vr/value-check.service';
@@ -19,6 +19,7 @@ import { fadeInAnimation } from '../../../common/animations/animations';
 import { ModeVrService } from '../../../common/services/vr/mode-vr.service';
 import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
 import { NotisData } from '../../../common/types/notis-data';
+import { VrTimeService } from '../../../common/services/vr/vr-time.service';
 
 @Component({
   selector: 'app-vr',
@@ -36,6 +37,7 @@ import { NotisData } from '../../../common/types/notis-data';
 export class VrComponent implements OnInit, OnDestroy {
   @Input() id!: string;
   data: VrData | null = null;
+  timeData: VrTime | null = null;
   notisData: NotisData | null = null;
   isLoading: boolean = true;
   mode: string | null = null;
@@ -54,7 +56,8 @@ export class VrComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private valueCheckService: ValueCheckService,
     private modeVrService: ModeVrService,
-    private notisVrService: NotisVrService
+    private notisVrService: NotisVrService,
+    private vrTimeService: VrTimeService
   ) {}
 
   ngOnInit(): void {
@@ -76,10 +79,12 @@ export class VrComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         forkJoin({
           vrData: this.vrService.getVrData(this.id),
+          timeData: this.vrTimeService.getVrTime(this.id),
           notisData: this.notisVrService.getNotisData(this.id),
         }).subscribe({
           next: (response) => {
             this.data = response.vrData;
+            this.timeData = response.timeData;
             this.notisData = response.notisData;
             this.updateMode();
             this.checkValues();
@@ -103,12 +108,14 @@ export class VrComponent implements OnInit, OnDestroy {
     forkJoin({
       vrData: this.vrService.getVrData(this.id),
       notisData: this.notisVrService.getNotisData(this.id),
+      timeData: this.vrTimeService.getVrTime(this.id)
     })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           this.data = response.vrData;
           this.notisData = response.notisData;
+          this.timeData = response.timeData;
           this.updateMode();
           this.checkValues();
           this.sortTemperatures();

@@ -12,6 +12,7 @@ export class HeaderCurrentParamsComponent implements OnInit, OnDestroy {
   @Input() title: string = ''; // Заголовок сушилки
   @Input() mode: string | null = null; // Режим работы (опционально)
   @Input() notisStatus: string | null = null; // Статус нотиса
+  @Input() vrTime: string | null = null; // Время работы VR (новый необязательный пропс)
   currentDate: string = ''; // Текущая дата
   currentTime: string = ''; // Текущее время
   private timer: any; // Переменная для хранения интервала

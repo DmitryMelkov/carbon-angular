@@ -25,6 +25,11 @@ export interface Gorelka {
   [key: string]: number;
 }
 
+export interface VrTime {
+  currentTime: string;
+  lastUpdated: string;
+}
+
 export interface VrData {
   temperatures: Temperatures;
   levels: Levels;

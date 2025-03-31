@@ -5,7 +5,7 @@ import { switchMap, startWith, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { HeaderCurrentParamsComponent } from '../../../components/header-current-params/header-current-params.component';
 import { LoaderComponent } from '../../../components/loader/loader.component';
-import { VrData } from '../../../common/types/vr-data';
+import { VrData, VrTime } from '../../../common/types/vr-data';
 import { VrService } from '../../../common/services/vr/vr.service';
 import { NotisVrService } from '../../../common/services/vr/notis-vr.service';
 import { NotisData } from '../../../common/types/notis-data';
@@ -24,6 +24,7 @@ import { AlarmService } from '../../../common/services/vr/alarm.service';
 import { SirenComponent } from './siren/siren.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
 import { LabInstructionModalComponent } from './lab-instruction-modal/lab-instruction-modal.component';
+import { VrTimeService } from '../../../common/services/vr/vr-time.service';
 
 @Component({
   selector: 'app-vr-mnemo',
@@ -41,7 +42,7 @@ import { LabInstructionModalComponent } from './lab-instruction-modal/lab-instru
     ParamIndicatorComponent,
     LabCurrentComponent,
     AlarmTableComponent,
-    SirenComponent // Подключаем компонент сирены
+    SirenComponent, // Подключаем компонент сирены
   ],
   templateUrl: './vr-mnemo.component.html',
   styleUrls: ['./vr-mnemo.component.scss'],
@@ -51,6 +52,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
   @Input() id!: string;
   data: VrData | null = null;
   notisData: NotisData | null = null;
+  timeData: VrTime | null = null;
   isLoading: boolean = true;
   isTooltipsEnabled: boolean = true;
   mode: string | null = null;
@@ -83,6 +85,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
 
   constructor(
     private vrService: VrService,
+    private vrTimeService: VrTimeService,
     private route: ActivatedRoute,
     private notisVrService: NotisVrService,
     private dialog: MatDialog,
@@ -112,6 +115,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
           forkJoin({
             vrData: this.vrService.getVrData(this.id),
             notisData: this.notisVrService.getNotisData(this.id),
+            timeData: this.vrTimeService.getVrTime(this.id),
           })
         ),
         takeUntil(this.destroy$)
@@ -119,6 +123,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.data = response.vrData;
+          this.timeData = response.timeData;
           this.notisData = response.notisData;
           this.updateMode();
           // Если ранее стоял флаг загрузки, его можно сбросить
@@ -127,7 +132,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Ошибка при загрузке данных:', error);
           this.isLoading = false;
-        }
+        },
       });
 
     // Подписка на изменения тревог из AlarmService
@@ -151,9 +156,11 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     forkJoin({
       vrData: this.vrService.getVrData(this.id),
       notisData: this.notisVrService.getNotisData(this.id),
+      timeData: this.vrTimeService.getVrTime(this.id),
     }).subscribe({
       next: (response) => {
         this.data = response.vrData;
+        this.timeData = response.timeData;
         this.notisData = response.notisData;
         this.updateMode();
         this.isLoading = false;
@@ -161,7 +168,7 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Ошибка при загрузке данных:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -191,7 +198,10 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
       minWidth: '600px',
       maxWidth: '90vw',
       maxHeight: '80vh',
-      data: { content: 'Это тестовый контент для документации объекта.', vrId: this.id },
+      data: {
+        content: 'Это тестовый контент для документации объекта.',
+        vrId: this.id,
+      },
     });
   }
 
@@ -212,5 +222,4 @@ export class VrMnemoComponent implements OnInit, OnDestroy {
     const value = this.data?.im?.['ИМ5 котел-утилизатор'];
     return typeof value === 'number' && value > 5;
   }
-
 }
