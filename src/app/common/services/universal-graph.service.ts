@@ -53,7 +53,8 @@ export class UniversalGraphService {
   processData(
     data: any[],
     parameterNames: string[],
-    dataKey: string
+    dataKey: string,
+    subKey?: string // Новый параметр для выбора подключа (value, percent и т.д.)
   ): { labels: Date[]; values: (number | null)[][] } {
     if (!data || data.length === 0) {
       console.warn('Нет данных для отображения');
@@ -95,10 +96,23 @@ export class UniversalGraphService {
       labels.push(currentTime);
       parameterNames.forEach((param, index) => {
         let rawValue = dataPoint[dataKey][param];
-        // Если значение является объектом и содержит поле value – берем его
-        if (rawValue && typeof rawValue === 'object' && rawValue.value !== undefined) {
-          rawValue = rawValue.value;
+
+        // Если значение является объектом - выбираем нужное поле
+        if (rawValue && typeof rawValue === 'object') {
+          // Если указан subKey - берем его, иначе пробуем value или percent
+          if (subKey) {
+            rawValue = rawValue[subKey];
+          } else {
+            // Автоматически выбираем value или percent, если они есть
+            rawValue =
+              rawValue.value !== undefined
+                ? rawValue.value
+                : rawValue.percent !== undefined
+                ? rawValue.percent
+                : null;
+          }
         }
+
         const numValue = rawValue !== null ? parseFloat(rawValue) : null;
         values[index].push(numValue);
       });
@@ -278,10 +292,7 @@ export class UniversalGraphService {
     colors?: string[] // Опциональный параметр для цветов
   ) {
     return parameterNames.map((name, index) => ({
-      label:
-        customNames && customNames[index]
-          ? customNames[index]
-          : name, // Используем customNames, если они есть
+      label: customNames && customNames[index] ? customNames[index] : name, // Используем customNames, если они есть
       data: values[index],
       borderColor: colors ? colors[index] : this.getColor(index), // Используем переданные цвета или цвета по умолчанию
       fill: false,

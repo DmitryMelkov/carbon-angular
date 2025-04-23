@@ -106,6 +106,7 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
   @Input() animate: boolean = true;
   @Input() zones: { min: number; max: number; color: string }[] = [];
   @Input() units: string | string[] = ''; // Может быть строкой или массивом строк
+  @Input() subKeys?: string[]; // Массив подключей для каждого набора параметров
 
   private chart!: Chart<keyof ChartTypeRegistry>;
   private intervalId?: any;
@@ -157,7 +158,8 @@ export class UniversalGraphComponent implements OnInit, OnDestroy, OnChanges {
         const { labels, values } = this.graphService.processData(
           data,
           this.parameterNamesList[index],
-          this.dataKeys[index]
+          this.dataKeys[index],
+          this.subKeys ? this.subKeys[index] : undefined // Передаем subKey если он есть
         );
 
         allLabels.push(...labels);
