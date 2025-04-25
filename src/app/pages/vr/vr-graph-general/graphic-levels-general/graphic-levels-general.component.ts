@@ -47,14 +47,14 @@ export class GraphicLevelsGeneralVrComponent {
   vr2ParameterNamesList: string[][] = [
     ['В барабане котла'],
     ['ИМ5 котел-утилизатор'],
-    ['В емкости ХВО'] 
+    ['В емкости ХВО']
   ];
   vr2DataKeys: string[] = ['levels', 'im', 'levels']; // Ключи для данных из API
 
   customNames: string[][] = [
-    ['Уровень в барабане котла'],
+    ['Уровень в барабане котла (-200..200 мм)'],
     ['Процент открытия ИМ'],
-    ['Уровень в емкости ХВО']
+    ['Уровень в емкости ХВО (0...6000 мм)']
   ];
 
   setTimeRange(minutes: number) {
