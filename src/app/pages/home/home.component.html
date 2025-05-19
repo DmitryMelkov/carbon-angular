@@ -148,6 +148,26 @@
           >
             Графики НОТИС
           </app-control-button>
+
+          <!-- кнопки для пресса -->
+          <app-control-button
+            class="home__button"
+            *ngIf="object.type === 'press'"
+            [isActive]="activeView === 'press-chart-temper-general' && selectedObjectId === object.id"
+            (onClick)="showGraphPressGeneralTemper(object.id)"
+            iconName="bar_chart "
+          >
+            График температуры масла
+          </app-control-button>
+          <app-control-button
+            class="home__button"
+            *ngIf="object.type === 'press'"
+            [isActive]="activeView === 'press-chart-pressure-general' && selectedObjectId === object.id"
+            (onClick)="showGraphPressGeneralPressure(object.id)"
+            iconName="bar_chart "
+          >
+            График давления масла
+        </app-control-button>
         </div>
 
         <!-- Контент для графиков ПК -->
@@ -241,6 +261,29 @@
           ></app-mpa-graph-general-pressure>
         </div>
 
+        <!-- контент для press -->
+        <div
+          *ngIf="
+            activeView === 'press-chart-temper-general' &&
+            selectedObjectId === object.id &&
+            object.type === 'press'
+          "
+          class="home__content"
+        >
+          <app-press-chart-temper-general [id]="object.id"></app-press-chart-temper-general>
+        </div>
+
+        <div
+          *ngIf="
+            activeView === 'press-chart-pressure-general' &&
+            selectedObjectId === object.id &&
+            object.type === 'press'
+          "
+          class="home__content"
+        >
+          <app-press-chart-pressure-general [id]="object.id"></app-press-chart-pressure-general>
+        </div>
+
         <!-- Остальной контент -->
         <div
           *ngIf="activeView === 'parameters' && selectedObjectId === object.id"
@@ -252,6 +295,7 @@
           ></app-sushilka>
           <app-mpa *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa>
           <app-vr *ngIf="object.type === 'vr'" [id]="object.id"></app-vr>
+          <app-press-current *ngIf="object.type === 'press'" [id]="object.id"></app-press-current>
         </div>
         <div
           *ngIf="activeView === 'mnemo' && selectedObjectId === object.id"
@@ -269,6 +313,7 @@
             *ngIf="object.type === 'vr'"
             [id]="object.id"
           ></app-vr-mnemo>
+          <app-press-mnemo *ngIf="object.type === 'press'" [id]="object.id"></app-press-mnemo>
         </div>
         <div
           *ngIf="

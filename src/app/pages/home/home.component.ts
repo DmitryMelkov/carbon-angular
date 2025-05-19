@@ -31,6 +31,10 @@ import { GraphicTempersGeneralVrComponent } from '../vr/vr-graph-general/graphic
 import { GraphicVacuumsGeneralVrComponent } from '../vr/vr-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicNotisGeneralVrComponent } from '../vr/vr-graph-general/graphic-notis-general/graphic-notis-general.component';
 import { GraphicLevelsGeneralVrComponent } from '../vr/vr-graph-general/graphic-levels-general/graphic-levels-general.component';
+import { PressCurrentComponent } from '../press/press-current/press-current.component';
+import { PressMnemoComponent } from '../press/press-mnemo/press-mnemo.component';
+import { PressChartTemperGeneralComponent } from '../press/press-chart-temper-general/press-chart-temper-general.component';
+import { PressChartPressureGeneralComponent } from '../press/press-chart-pressure-general/press-chart-pressure-general.component';
 
 @Component({
   selector: 'app-home',
@@ -67,7 +71,11 @@ import { GraphicLevelsGeneralVrComponent } from '../vr/vr-graph-general/graphic-
     GraphicTempersGeneralVrComponent,
     GraphicVacuumsGeneralVrComponent,
     GraphicNotisGeneralVrComponent,
-    GraphicLevelsGeneralVrComponent
+    GraphicLevelsGeneralVrComponent,
+    PressCurrentComponent,
+    PressMnemoComponent,
+    PressChartTemperGeneralComponent,
+    PressChartPressureGeneralComponent
 ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -80,6 +88,7 @@ export class HomeComponent {
     { id: 'mpa3', name: 'МПА №3', type: 'mpa' },
     { id: 'sushilka1', name: 'Сушилка №1', type: 'sushilka' },
     { id: 'sushilka2', name: 'Сушилка №2', type: 'sushilka' },
+    { id: 'press3', name: 'Пресс №3', type: 'press' }
   ];
 
   selectedObjectId: string = this.objectData[0].id;
@@ -190,5 +199,21 @@ export class HomeComponent {
 
   showMillycvok130Graph() {
     this.setView('millycvok130-graph');
+  }
+
+  showPressParameters(id: string) {
+    this.setView('press-parameters', id);
+  }
+
+  showPressMnemo(id: string) {
+    this.setView('press-mnemo', id);
+  }
+
+  showGraphPressGeneralTemper(id: string) {
+    this.setView('press-chart-temper-general', id);
+  }
+
+  showGraphPressGeneralPressure(id: string) {
+    this.setView('press-chart-pressure-general', id);
   }
 }

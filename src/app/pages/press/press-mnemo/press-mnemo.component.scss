@@ -1,0 +1,16 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
+.mnemo {
+  position: relative;
+  width: 1616px;
+  margin: 0 auto;
+  margin-top: 10px;
+  
+  &-container {
+    position: relative;
+    max-width: 1450px;
+    padding-left: 10px;
+  }
+
+}

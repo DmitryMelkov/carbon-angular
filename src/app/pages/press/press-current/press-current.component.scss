@@ -1,0 +1,8 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/variables" as vars;
+
+.tables {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}

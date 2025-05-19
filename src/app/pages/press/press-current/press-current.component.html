@@ -1,0 +1,13 @@
+<!-- src/app/pages/press/press-current/press-current.component.html -->
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"
+  (loadingComplete)="onLoadingComplete()"></app-loader>
+
+<div class="current-container" *ngIf="!isLoading" [@fadeIn]="isDataLoaded ? '*' : 'void'">
+  <app-header-current-params [title]="'Пресс №' + id.replace('press', '')"></app-header-current-params>
+
+  <div class="tables">
+    <app-general-table [title]="'Данные контроллера'"   [unit]="'°C'" [data]="data?.controllerData || {}"></app-general-table>
+    <app-general-table [title]="'Данные термодатчика'"   [unit]="'МПа'" [data]="data?.termodatData || {}">
+    </app-general-table>
+  </div>
+</div>
