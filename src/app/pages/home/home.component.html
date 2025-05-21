@@ -1,565 +1,103 @@
 <div class="home">
   <div class="home__container">
-    <mat-tab-group
-      class="home__tab-group"
-      (selectedTabChange)="selectedObjectId = $event.tab.textLabel"
-    >
-      <!-- Сушилки и МПА -->
-      <mat-tab *ngFor="let object of objectData" class="home__tab">
+    <mat-tab-group class="home__tab-group" (selectedTabChange)="selectedObjectId = $event.tab.textLabel">
+      <!-- Все объекты -->
+      <mat-tab *ngFor="let object of objectData; trackBy: trackById" class="home__tab">
         <ng-template mat-tab-label>
           <button mat-button class="home__tab-button btn-reset">
             {{ object.name }}
           </button>
         </ng-template>
+        <!-- Кнопки управления -->
         <div class="home__button-group">
-          <app-control-button
-            class="home__button"
-            [isActive]="
-              activeView === 'parameters' && selectedObjectId === object.id
-            "
-            (onClick)="showParameters(object.id)"
-            iconName="tune "
-          >
-            Текущие параметры
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            [isActive]="
-              activeView === 'mnemo' && selectedObjectId === object.id
-            "
-            (onClick)="showMnemo(object.id)"
-            iconName="construction "
-          >
-            Мнемосхема
-          </app-control-button>
-
-          <!-- Кнопка для графиков МПА -->
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'mpa'"
-            [isActive]="
-              activeView === 'graph-mpa-general' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphMpaGeneral(object.id)"
-            iconName="bar_chart "
-          >
-            Графики общие
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'mpa'"
-            [isActive]="
-              activeView === 'graph-mpa-general-temper' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphMpaGeneralTemper(object.id)"
-            iconName="bar_chart "
-          >
-            Графики температур
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'mpa'"
-            [isActive]="
-              activeView === 'graph-mpa-general-pressure' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphMpaGeneralPressure(object.id)"
-            iconName="bar_chart "
-          >
-            Графики давления/разрежения
-          </app-control-button>
-
-          <!-- Кнопки для сушилок -->
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'sushilka'"
-            [isActive]="
-              activeView === 'graph-tempers-general' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphTemper(object.id)"
-            iconName="bar_chart "
-          >
-            Графики температур
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'sushilka'"
-            [isActive]="
-              activeView === 'graph-vacuums-general' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphPressure(object.id)"
-            iconName="bar_chart "
-          >
-            Графики давления
-          </app-control-button>
-
-          <!-- Кнопки для ПК -->
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'vr'"
-            [isActive]="
-              activeView === 'graph-vr-general-temper' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphVrGeneralTemper(object.id)"
-            iconName="bar_chart "
-          >
-            Графики температур
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'vr'"
-            [isActive]="
-              activeView === 'graph-vr-genera-vacuums' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphVrGeneralVacuums(object.id)"
-            iconName="bar_chart "
-          >
-            Графики давления
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'vr'"
-            [isActive]="
-              activeView === 'graph-vr-general-levels' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphVrGeneralLevels(object.id)"
-            iconName="bar_chart "
-          >
-            Графики уровня
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'vr'"
-            [isActive]="
-              activeView === 'graph-vr-general-notis' &&
-              selectedObjectId === object.id
-            "
-            (onClick)="showGraphVrGeneralNotis(object.id)"
-            iconName="bar_chart "
-          >
-            Графики НОТИС
-          </app-control-button>
-
-          <!-- кнопки для пресса -->
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'press'"
-            [isActive]="activeView === 'press-chart-temper-general' && selectedObjectId === object.id"
-            (onClick)="showGraphPressGeneralTemper(object.id)"
-            iconName="bar_chart "
-          >
-            График температуры масла
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            *ngIf="object.type === 'press'"
-            [isActive]="activeView === 'press-chart-pressure-general' && selectedObjectId === object.id"
-            (onClick)="showGraphPressGeneralPressure(object.id)"
-            iconName="bar_chart "
-          >
-            График давления масла
-        </app-control-button>
+          <!-- Динамические кнопки по типу объекта -->
+          <ng-container *ngTemplateOutlet="controlButtons; context: { $implicit: object }"></ng-container>
         </div>
+        <!-- Контент -->
+        <div class="home__content">
+          <ng-container [ngSwitch]="true">
+            <!-- Текущие параметры -->
+            <ng-container *ngSwitchCase="activeView === 'parameters' && selectedObjectId === object.id">
+              <app-sushilka *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka>
+              <app-mpa *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa>
+              <app-vr *ngIf="object.type === 'vr'" [id]="object.id"></app-vr>
+              <app-press-current *ngIf="object.type === 'press'" [id]="object.id"></app-press-current>
+              <app-mills-current *ngIf="object.type === 'mills'"></app-mills-current>
+              <app-reactors *ngIf="object.type === 'reactors'"></app-reactors>
+              <app-energy-resources-current *ngIf="object.type === 'energy'"></app-energy-resources-current>
+            </ng-container>
 
-        <!-- Контент для графиков ПК -->
-        <div
-          *ngIf="
-            activeView === 'graph-vr-general-temper' &&
-            selectedObjectId === object.id &&
-            object.type === 'vr'
-          "
-          class="home__content"
-        >
-          <app-graphic-tempers-general-vr
-            [id]="object.id"
-          ></app-graphic-tempers-general-vr>
-        </div>
+            <!-- Мнемосхема -->
+            <ng-container *ngSwitchCase="activeView === 'mnemo' && selectedObjectId === object.id">
+              <app-sushilka-mnemo *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka-mnemo>
+              <app-mpa-mnemo *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa-mnemo>
+              <app-vr-mnemo *ngIf="object.type === 'vr'" [id]="object.id"></app-vr-mnemo>
+              <app-press-mnemo *ngIf="object.type === 'press'" [id]="object.id"></app-press-mnemo>
+              <app-reactors-mnemo *ngIf="object.type === 'reactors'"></app-reactors-mnemo>
+            </ng-container>
 
-        <div
-          *ngIf="
-            activeView === 'graph-vr-general-vacuums' &&
-            selectedObjectId === object.id &&
-            object.type === 'vr'
-          "
-          class="home__content"
-        >
-          <app-graphic-vacuums-general-vr
-            [id]="object.id"
-          ></app-graphic-vacuums-general-vr>
-        </div>
+            <!-- Графики и отчеты -->
+            <ng-container *ngSwitchCase="selectedObjectId === object.id">
+              <!-- Графики для VR -->
+              <app-graphic-tempers-general-vr *ngIf="activeView === 'graph-vr-general-temper' && object.type === 'vr'"
+                [id]="object.id"></app-graphic-tempers-general-vr>
+              <app-graphic-vacuums-general-vr *ngIf="activeView === 'graph-vr-general-vacuums' && object.type === 'vr'"
+                [id]="object.id"></app-graphic-vacuums-general-vr>
+              <app-graphic-levels-general-vr *ngIf="activeView === 'graph-vr-general-levels' && object.type === 'vr'"
+                [id]="object.id"></app-graphic-levels-general-vr>
+              <app-graphic-notis-general-vr *ngIf="activeView === 'graph-vr-general-notis' && object.type === 'vr'"
+                [id]="object.id"></app-graphic-notis-general-vr>
 
-        <div
-          *ngIf="
-            activeView === 'graph-vr-general-levels' &&
-            selectedObjectId === object.id &&
-            object.type === 'vr'
-          "
-          class="home__content"
-        >
-          <app-graphic-levels-general-vr
-            [id]="object.id"
-          ></app-graphic-levels-general-vr>
-        </div>
+              <!-- Графики для MPA -->
+              <app-graphic-mpa-general *ngIf="activeView === 'graph-mpa-general' && object.type === 'mpa'"
+                [id]="object.id"></app-graphic-mpa-general>
+              <app-mpa-graph-general-temper *ngIf="activeView === 'graph-mpa-general-temper' && object.type === 'mpa'"
+                [id]="object.id"></app-mpa-graph-general-temper>
+              <app-mpa-graph-general-pressure *ngIf="activeView === 'graph-mpa-general-pressure' && object.type === 'mpa'"
+                [id]="object.id"></app-mpa-graph-general-pressure>
 
-        <div
-          *ngIf="
-            activeView === 'graph-vr-general-notis' &&
-            selectedObjectId === object.id &&
-            object.type === 'vr'
-          "
-          class="home__content"
-        >
-          <app-graphic-notis-general-vr
-            [id]="object.id"
-          ></app-graphic-notis-general-vr>
-        </div>
+              <!-- Графики для прессов -->
+              <app-press-chart-temper-general *ngIf="activeView === 'press-chart-temper-general' && object.type === 'press'"
+                [id]="object.id"></app-press-chart-temper-general>
+              <app-press-chart-pressure-general *ngIf="activeView === 'press-chart-pressure-general' && object.type === 'press'"
+                [id]="object.id"></app-press-chart-pressure-general>
 
-        <!-- Контент для графиков МПА -->
-        <div
-          *ngIf="
-            activeView === 'graph-mpa-general' &&
-            selectedObjectId === object.id &&
-            object.type === 'mpa'
-          "
-          class="home__content"
-        >
-          <app-graphic-mpa-general [id]="object.id"></app-graphic-mpa-general>
-        </div>
+              <!-- Графики для сушилок -->
+              <app-graphic-tempers-general *ngIf="activeView === 'graph-tempers-general' && object.type === 'sushilka'"
+                [id]="object.id"></app-graphic-tempers-general>
+              <app-graphic-vacuums-general *ngIf="activeView === 'graph-vacuums-general' && object.type === 'sushilka'"
+                [id]="object.id"></app-graphic-vacuums-general>
 
-        <div
-          *ngIf="
-            activeView === 'graph-mpa-general-temper' &&
-            selectedObjectId === object.id &&
-            object.type === 'mpa'
-          "
-          class="home__content"
-        >
-          <app-mpa-graph-general-temper
-            [id]="object.id"
-          ></app-mpa-graph-general-temper>
-        </div>
+              <!-- Графики для мельниц -->
+              <app-mill1-graph *ngIf="activeView === 'mill1-graph' && object.type === 'mills'"></app-mill1-graph>
+              <app-mill2-graph *ngIf="activeView === 'mill2-graph' && object.type === 'mills'"></app-mill2-graph>
+              <app-mill-sbm3 *ngIf="activeView === 'millsbm3-graph' && object.type === 'mills'"></app-mill-sbm3>
+              <app-mill-ygm9517 *ngIf="activeView === 'millygm9517-graph' && object.type === 'mills'"></app-mill-ygm9517>
+              <app-mill-ycvok130 *ngIf="activeView === 'millycvok130-graph' && object.type === 'mills'"></app-mill-ycvok130>
 
-        <div
-          *ngIf="
-            activeView === 'graph-mpa-general-pressure' &&
-            selectedObjectId === object.id &&
-            object.type === 'mpa'
-          "
-          class="home__content"
-        >
-          <app-mpa-graph-general-pressure
-            [id]="object.id"
-          ></app-mpa-graph-general-pressure>
-        </div>
+              <!-- Графики для корпуса 296 -->
+              <app-graphic-reactors-general *ngIf="activeView === 'graph-reactors-general' && object.type === 'reactors'"></app-graphic-reactors-general>
 
-        <!-- контент для press -->
-        <div
-          *ngIf="
-            activeView === 'press-chart-temper-general' &&
-            selectedObjectId === object.id &&
-            object.type === 'press'
-          "
-          class="home__content"
-        >
-          <app-press-chart-temper-general [id]="object.id"></app-press-chart-temper-general>
-        </div>
-
-        <div
-          *ngIf="
-            activeView === 'press-chart-pressure-general' &&
-            selectedObjectId === object.id &&
-            object.type === 'press'
-          "
-          class="home__content"
-        >
-          <app-press-chart-pressure-general [id]="object.id"></app-press-chart-pressure-general>
-        </div>
-
-        <!-- Остальной контент -->
-        <div
-          *ngIf="activeView === 'parameters' && selectedObjectId === object.id"
-          class="home__content"
-        >
-          <app-sushilka
-            *ngIf="object.type === 'sushilka'"
-            [id]="object.id"
-          ></app-sushilka>
-          <app-mpa *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa>
-          <app-vr *ngIf="object.type === 'vr'" [id]="object.id"></app-vr>
-          <app-press-current *ngIf="object.type === 'press'" [id]="object.id"></app-press-current>
-        </div>
-        <div
-          *ngIf="activeView === 'mnemo' && selectedObjectId === object.id"
-          class="home__content"
-        >
-          <app-sushilka-mnemo
-            *ngIf="object.type === 'sushilka'"
-            [id]="object.id"
-          ></app-sushilka-mnemo>
-          <app-mpa-mnemo
-            *ngIf="object.type === 'mpa'"
-            [id]="object.id"
-          ></app-mpa-mnemo>
-          <app-vr-mnemo
-            *ngIf="object.type === 'vr'"
-            [id]="object.id"
-          ></app-vr-mnemo>
-          <app-press-mnemo *ngIf="object.type === 'press'" [id]="object.id"></app-press-mnemo>
-        </div>
-        <div
-          *ngIf="
-            activeView === 'graph-tempers-general' &&
-            selectedObjectId === object.id &&
-            object.type === 'sushilka'
-          "
-          class="home__content"
-        >
-          <app-graphic-tempers-general
-            [id]="object.id"
-          ></app-graphic-tempers-general>
-        </div>
-        <div
-          *ngIf="
-            activeView === 'graph-vacuums-general' &&
-            selectedObjectId === object.id &&
-            object.type === 'sushilka'
-          "
-          class="home__content"
-        >
-          <app-graphic-vacuums-general
-            [id]="object.id"
-          ></app-graphic-vacuums-general>
+              <!-- Отчеты и графики для энергоресурсов -->
+              <app-energy-resources-report-day *ngIf="activeView === 'daily-report' && object.type === 'energy'"></app-energy-resources-report-day>
+              <app-energy-resources-report-month *ngIf="activeView === 'monthly-report' && object.type === 'energy'"></app-energy-resources-report-month>
+              <app-energy-resources-graph-pressure *ngIf="activeView === 'energy-resources-graph-pressure' && object.type === 'energy'"></app-energy-resources-graph-pressure>
+              <app-energy-resources-graph-consumption *ngIf="activeView === 'energy-resources-graph-consumption' && object.type === 'energy'"></app-energy-resources-graph-consumption>
+            </ng-container>
+          </ng-container>
         </div>
       </mat-tab>
 
-      <!-- Мельницы -->
-      <mat-tab class="home__tab">
-        <ng-template mat-tab-label>
-          <button mat-button class="home__tab-button btn-reset">
-            Мельницы
-          </button>
-        </ng-template>
-
-        <div class="home__button-group">
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'mills-current'"
-            (onClick)="showMillsCurrent()"
-            iconName="tune "
-          >
-            Текущие параметры
+      <!-- Шаблон кнопок для разных типов объектов -->
+      <ng-template #controlButtons let-object>
+        <ng-container *ngFor="let button of getButtonsByType(object.type)">
+          <app-control-button class="home__button"
+            [isActive]="activeView === button.view && selectedObjectId === object.id"
+            (onClick)="setActiveView(button.view, object.id)" iconName="bar_chart">
+            {{ button.label }}
           </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'mill1-graph'"
-            (onClick)="showMill1Graph()"
-            iconName="bar_chart "
-          >
-            График мельницы №1
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'mill2-graph'"
-            (onClick)="showMill2Graph()"
-            iconName="bar_chart "
-          >
-            График мельницы №2
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'millsbm3-graph'"
-            (onClick)="showMillsbm3Graph()"
-            iconName="bar_chart "
-          >
-            График ШБМ №3
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'millygm9517-graph'"
-            (onClick)="showMillygm9517Graph()"
-            iconName="bar_chart "
-          >
-            График YGM-9517
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'millycvok130-graph'"
-            (onClick)="showMillycvok130Graph()"
-            iconName="bar_chart "
-          >
-            График YCVOK-130
-          </app-control-button>
-        </div>
-
-        <div *ngIf="activeView === 'mills-current'" class="home__content">
-          <app-mills-current></app-mills-current>
-        </div>
-
-        <div *ngIf="activeView === 'mill1-graph'" class="home__content">
-          <app-mill1-graph></app-mill1-graph>
-        </div>
-
-        <div *ngIf="activeView === 'mill2-graph'" class="home__content">
-          <app-mill2-graph></app-mill2-graph>
-        </div>
-
-        <div *ngIf="activeView === 'millsbm3-graph'" class="home__content">
-          <app-mill-sbm3></app-mill-sbm3>
-        </div>
-
-        <div *ngIf="activeView === 'millygm9517-graph'" class="home__content">
-          <app-mill-ygm9517></app-mill-ygm9517>
-        </div>
-
-        <div *ngIf="activeView === 'millycvok130-graph'" class="home__content">
-          <app-mill-ycvok130></app-mill-ycvok130>
-        </div>
-      </mat-tab>
-
-      <!-- Корпус 296  -->
-      <mat-tab class="home__tab">
-        <ng-template mat-tab-label>
-          <button mat-button class="home__tab-button btn-reset">
-            Корпус 296
-          </button>
-        </ng-template>
-
-        <div class="home__button-group">
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'reactors-current'"
-            (onClick)="showReactorsCurrent()"
-            iconName="tune "
-          >
-            Текущие параметры
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'reactors-mnemo'"
-            (onClick)="showReactorsMnemo()"
-            iconName="construction "
-          >
-            Мнемосхема
-          </app-control-button>
-
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'graph-reactors-general'"
-            (onClick)="showReactorsGeneral()"
-            iconName="bar_chart "
-          >
-            Графики объекта
-          </app-control-button>
-        </div>
-
-        <div *ngIf="activeView === 'reactors-current'" class="home__content">
-          <app-reactors></app-reactors>
-        </div>
-
-        <div *ngIf="activeView === 'reactors-mnemo'" class="home__content">
-          <app-reactors-mnemo></app-reactors-mnemo>
-        </div>
-
-        <div
-          *ngIf="activeView === 'graph-reactors-general'"
-          class="home__content"
-        >
-          <app-graphic-reactors-general></app-graphic-reactors-general>
-        </div>
-      </mat-tab>
-
-      <!-- Энергоресурсы -->
-      <mat-tab class="home__tab">
-        <ng-template mat-tab-label>
-          <button mat-button class="home__tab-button btn-reset">
-            Энергоресурсы
-          </button>
-        </ng-template>
-
-        <div class="home__button-group">
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'energy-resources'"
-            (onClick)="showEnergyResources()"
-            iconName="tune "
-          >
-            Текущие параметры
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'daily-report'"
-            (onClick)="showDailyReport()"
-            iconName="assignment "
-          >
-            Суточный отчет
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'monthly-report'"
-            (onClick)="showMonthlyReport()"
-            iconName="assignment "
-          >
-            Месячный отчет
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'energy-resources-graph-pressure'"
-            (onClick)="showEnergyResourcesGraphPressure()"
-            iconName="bar_chart "
-          >
-            Графики давления
-          </app-control-button>
-          <app-control-button
-            class="home__button"
-            [isActive]="activeView === 'energy-resources-graph-consumption'"
-            (onClick)="showEnergyResourcesGraphConsumption()"
-            iconName="bar_chart "
-          >
-            Графики расхода
-          </app-control-button>
-        </div>
-
-        <div *ngIf="activeView === 'energy-resources'" class="home__content">
-          <app-energy-resources-current></app-energy-resources-current>
-        </div>
-
-        <div *ngIf="activeView === 'daily-report'" class="home__content">
-          <app-energy-resources-report-day></app-energy-resources-report-day>
-        </div>
-
-        <div *ngIf="activeView === 'monthly-report'" class="home__content">
-          <app-energy-resources-report-month></app-energy-resources-report-month>
-        </div>
-
-        <div
-          *ngIf="activeView === 'energy-resources-graph-pressure'"
-          class="home__content"
-        >
-          <app-energy-resources-graph-pressure></app-energy-resources-graph-pressure>
-        </div>
-
-        <div
-          *ngIf="activeView === 'energy-resources-graph-consumption'"
-          class="home__content"
-        >
-          <app-energy-resources-graph-consumption></app-energy-resources-graph-consumption>
-        </div>
-      </mat-tab>
+        </ng-container>
+      </ng-template>
     </mat-tab-group>
   </div>
 </div>

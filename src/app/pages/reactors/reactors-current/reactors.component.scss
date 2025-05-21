@@ -5,4 +5,74 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 15px;
+}
+
+.table {
+  margin-top: 30px;
+  min-width: 410px;
+  max-width: 600px;
+  text-align: left;
+  border-collapse: collapse;
+  box-shadow: 0 0 5px 0 black;
+  border: 2px solid green;
+
+  &__thead {
+    background: linear-gradient(135deg, green, #81c784);
+  }
+
+  &__title {
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 700;
+    color: green;
+  }
+
+  &__tr {
+    height: 30px;
+  }
+  &__th {
+    padding: 5px;
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 600;
+    color: white;
+    border: 1px solid #e0e0e0;
+  }
+
+  &__td {
+    letter-spacing: 1px;
+    text-align: center;
+    font-family: "Bitter", sans-serif;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+  }
+
+  &__left {
+    padding: 10px;
+  }
+
+  &__right {
+    font-weight: 600;
+    color: green;
+  }
+
+  &__body {
+    .table__tr {
+      &:nth-child(odd) {
+        background-color: #f5f5f5;
+      }
+
+      &:nth-child(even) {
+        background-color: white;
+      }
+    }
+  }
 }

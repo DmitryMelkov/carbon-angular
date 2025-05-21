@@ -26,7 +26,7 @@ import { EnergyResourcesReportMonthComponent } from '../energy-resources/energy-
 import { EnergyResourcesGraphPressureComponent } from '../energy-resources/energy-resources-graph-pressure/energy-resources-graph-pressure.component';
 import { EnergyResourcesGraphConsumptionComponent } from '../energy-resources/energy-resources-graph-consumption/energy-resources-graph-consumption.component';
 import { MpaGraphGeneralTemperComponent } from '../mpa/mpa-graph-general-temper/mpa-graph-general-temper.component';
-import { MpaGraphGeneralPressureComponent } from "../mpa/mpa-graph-general-pressure/mpa-graph-general-pressure.component";
+import { MpaGraphGeneralPressureComponent } from '../mpa/mpa-graph-general-pressure/mpa-graph-general-pressure.component';
 import { GraphicTempersGeneralVrComponent } from '../vr/vr-graph-general/graphic-tempers-general/graphic-tempers-general.component';
 import { GraphicVacuumsGeneralVrComponent } from '../vr/vr-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicNotisGeneralVrComponent } from '../vr/vr-graph-general/graphic-notis-general/graphic-notis-general.component';
@@ -35,6 +35,13 @@ import { PressCurrentComponent } from '../press/press-current/press-current.comp
 import { PressMnemoComponent } from '../press/press-mnemo/press-mnemo.component';
 import { PressChartTemperGeneralComponent } from '../press/press-chart-temper-general/press-chart-temper-general.component';
 import { PressChartPressureGeneralComponent } from '../press/press-chart-pressure-general/press-chart-pressure-general.component';
+import { ButtonConfig, OBJECT_BUTTONS_CONFIG, ObjectType } from '../../common/shared/object-buttons.config';
+
+interface ObjectData {
+  id: string;
+  name: string;
+  type: ObjectType;
+}
 
 @Component({
   selector: 'app-home',
@@ -43,177 +50,81 @@ import { PressChartPressureGeneralComponent } from '../press/press-chart-pressur
     CommonModule,
     MatTabsModule,
     ControlButtonComponent,
+    // Сушилки
     SushilkaComponent,
     SushilkaMnemoComponent,
+    GraphicTempersGeneralComponent,
+    GraphicVacuumsGeneralComponent,
+    // МПА
     MpaComponent,
     MpaMnemoComponent,
+    GraphicMpaGeneralComponent,
+    MpaGraphGeneralTemperComponent,
+    MpaGraphGeneralPressureComponent,
+    // ПК
     VrComponent,
     VrMnemoComponent,
-    GraphicVacuumsGeneralComponent,
-    GraphicTempersGeneralComponent,
-    GraphicMpaGeneralComponent,
+    GraphicTempersGeneralVrComponent,
+    GraphicVacuumsGeneralVrComponent,
+    GraphicLevelsGeneralVrComponent,
+    GraphicNotisGeneralVrComponent,
+    // Пресс
+    PressCurrentComponent,
+    PressMnemoComponent,
+    PressChartTemperGeneralComponent,
+    PressChartPressureGeneralComponent,
+    // Мельницы
     MillsCurrentComponent,
     Mill1GraphComponent,
     Mill2GraphComponent,
     MillSBM3Component,
     MillYGM9517Component,
     MillYCVOK130Component,
+    // Реакторы
     ReactorComponent,
     ReactorMnemoComponent,
     GraphicReactorsGeneralComponent,
+    // Энергоресурсы
     EnergyResourcesCurrentComponent,
     EnergyResourcesReportDayComponent,
     EnergyResourcesReportMonthComponent,
     EnergyResourcesGraphPressureComponent,
     EnergyResourcesGraphConsumptionComponent,
-    MpaGraphGeneralTemperComponent,
-    MpaGraphGeneralPressureComponent,
-    GraphicTempersGeneralVrComponent,
-    GraphicVacuumsGeneralVrComponent,
-    GraphicNotisGeneralVrComponent,
-    GraphicLevelsGeneralVrComponent,
-    PressCurrentComponent,
-    PressMnemoComponent,
-    PressChartTemperGeneralComponent,
-    PressChartPressureGeneralComponent
-],
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  objectData = [
+  objectData: ObjectData[] = [
     { id: 'vr1', name: 'ПК №1', type: 'vr' },
     { id: 'vr2', name: 'ПК №2', type: 'vr' },
     { id: 'mpa2', name: 'МПА №2', type: 'mpa' },
     { id: 'mpa3', name: 'МПА №3', type: 'mpa' },
     { id: 'sushilka1', name: 'Сушилка №1', type: 'sushilka' },
     { id: 'sushilka2', name: 'Сушилка №2', type: 'sushilka' },
-    { id: 'press3', name: 'Пресс №3', type: 'press' }
+    { id: 'press3', name: 'Пресс №3', type: 'press' },
+    { id: 'mills', name: 'Мельницы', type: 'mills' },
+    { id: 'reactors', name: 'Корпус 296', type: 'reactors' },
+    { id: 'energy', name: 'Энергоресурсы', type: 'energy' }
   ];
 
   selectedObjectId: string = this.objectData[0].id;
   activeView: string = 'parameters';
+  buttonsConfig: Record<ObjectType, readonly ButtonConfig[]> = OBJECT_BUTTONS_CONFIG;
 
-  // Общий метод для изменения состояния
-  setView(view: string, objectId: string = '') {
+  getButtonsByType(type: string): readonly ButtonConfig[] {
+    const safeType = type as ObjectType;
+    return this.buttonsConfig[safeType] || [];
+  }
+
+  trackById(index: number, item: ObjectData): string {
+    return item.id;
+  }
+
+  setActiveView(view: string, id?: string) {
     this.activeView = view;
-    this.selectedObjectId = objectId;
-  }
-
-  // Методы для отображения различных видов контента
-  showParameters(id: string) {
-    this.setView('parameters', id);
-  }
-
-  showMnemo(id: string) {
-    this.setView('mnemo', id);
-  }
-
-  showGraphVrGeneralTemper(id: string) {
-    this.setView('graph-vr-general-temper', id);
-  }
-
-  showGraphVrGeneralVacuums(id: string) {
-    this.setView('graph-vr-general-vacuums', id);
-  }
-
-  showGraphVrGeneralLevels(id: string) {
-    this.setView('graph-vr-general-levels', id);
-  }
-
-  showGraphVrGeneralNotis(id: string) {
-    this.setView('graph-vr-general-notis', id);
-  }
-
-  showGraphMpaGeneral(id: string) {
-    this.setView('graph-mpa-general', id);
-  }
-
-  showGraphMpaGeneralTemper(id: string) {
-    this.setView('graph-mpa-general-temper', id);
-  }
-
-  showGraphMpaGeneralPressure(id: string) {
-    this.setView('graph-mpa-general-pressure', id);
-  }
-
-  showGraphPressure(id: string) {
-    this.setView('graph-vacuums-general', id);
-  }
-
-  showGraphTemper(id: string) {
-    this.setView('graph-tempers-general', id);
-  }
-
-  showReactorsCurrent() {
-    this.setView('reactors-current');
-  }
-
-  showReactorsMnemo() {
-    this.setView('reactors-mnemo');
-  }
-
-  showReactorsGeneral() {
-    this.setView('graph-reactors-general');
-  }
-
-  showEnergyResources() {
-    this.setView('energy-resources');
-  }
-
-  showDailyReport() {
-    this.setView('daily-report');
-  }
-
-  showMonthlyReport() {
-    this.setView('monthly-report');
-  }
-
-  showEnergyResourcesGraphPressure() {
-    this.setView('energy-resources-graph-pressure');
-  }
-
-  showEnergyResourcesGraphConsumption() {
-    this.setView('energy-resources-graph-consumption');
-  }
-
-  showMillsCurrent() {
-    this.setView('mills-current');
-  }
-
-  showMill1Graph() {
-    this.setView('mill1-graph');
-  }
-
-  showMill2Graph() {
-    this.setView('mill2-graph');
-  }
-
-  showMillsbm3Graph() {
-    this.setView('millsbm3-graph');
-  }
-
-  showMillygm9517Graph() {
-    this.setView('millygm9517-graph');
-  }
-
-  showMillycvok130Graph() {
-    this.setView('millycvok130-graph');
-  }
-
-  showPressParameters(id: string) {
-    this.setView('press-parameters', id);
-  }
-
-  showPressMnemo(id: string) {
-    this.setView('press-mnemo', id);
-  }
-
-  showGraphPressGeneralTemper(id: string) {
-    this.setView('press-chart-temper-general', id);
-  }
-
-  showGraphPressGeneralPressure(id: string) {
-    this.setView('press-chart-pressure-general', id);
+    if (id) {
+      this.selectedObjectId = id;
+    }
   }
 }

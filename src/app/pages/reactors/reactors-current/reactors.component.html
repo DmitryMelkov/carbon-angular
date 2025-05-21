@@ -1,10 +1,53 @@
-<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'" (loadingComplete)="onLoadingComplete()"></app-loader>
+<app-loader *ngIf="isLoading" [delay]="2000" [loadingText]="'Подождите, идет загрузка данных...'"
+  (loadingComplete)="onLoadingComplete()">
+</app-loader>
 
 <div class="current-container" *ngIf="!isLoading" [@fadeIn]="isDataLoaded ? '*' : 'void'">
   <app-header-current-params [title]="'Корпус 296'"></app-header-current-params>
 
   <div class="tables">
-    <app-general-table [title]="'Текущие параметры (температура)'" [data]="data?.temperatures || {}" [unit]="' °C'"></app-general-table>
-    <app-general-table [title]="'Текущие параметры (уровень)'" [data]="data?.levels || {}" [unit]="' мм'"></app-general-table>
+    <!-- Данные реакторов -->
+    <app-general-table [title]="'Текущие параметры (температура)'" [data]="reactorData?.temperatures || {}"
+      [unit]="' °C'">
+    </app-general-table>
+    <app-general-table [title]="'Текущие параметры (уровень)'" [data]="reactorData?.levels || {}" [unit]="' мм'">
+    </app-general-table>
+
+    <!-- Таблица со всеми прессами -->
+    <table class="table">
+      <caption class="table__title">Параметры прессов</caption>
+      <thead class="table__thead">
+        <tr class="table__tr">
+          <th class="table__th table__left">Параметр</th>
+          <th class="table__th" *ngFor="let id of ['1','2','3','4']">Пресс {{ id }}</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+        <tr class="table__tr">
+          <td class="table__td table__left">Статус работы</td>
+          <td class="table__td table__right" *ngFor="let id of ['1','2','3','4']">
+            {{ pressesData[id].controllerData['Статус работы'] ? 'Вкл' : 'Выкл' }}
+          </td>
+        </tr>
+        <tr class="table__tr">
+          <td class="table__td table__left">Кол-во наработанных часов</td>
+          <td class="table__td table__right" *ngFor="let id of ['1','2','3','4']">
+            {{ pressesData[id].controllerData['Кол-во наработанных часов'] || '—' }}
+          </td>
+        </tr>
+        <tr class="table__tr">
+          <td class="table__td table__left">Температура масла, °C</td>
+          <td class="table__td table__right" *ngFor="let id of ['1','2','3','4']">
+            {{ pressesData[id].termodatData['Температура масла'] || '—' }}
+          </td>
+        </tr>
+        <tr class="table__tr">
+          <td class="table__td table__left">Давление масла, МПа</td>
+          <td class="table__td table__right" *ngFor="let id of ['1','2','3','4']">
+            {{ pressesData[id].termodatData['Давление масла'] || '—' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
