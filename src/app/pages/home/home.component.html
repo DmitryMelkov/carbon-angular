@@ -21,7 +21,6 @@
               <app-sushilka *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka>
               <app-mpa *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa>
               <app-vr *ngIf="object.type === 'vr'" [id]="object.id"></app-vr>
-              <app-press-current *ngIf="object.type === 'press'" [id]="object.id"></app-press-current>
               <app-mills-current *ngIf="object.type === 'mills'"></app-mills-current>
               <app-reactors *ngIf="object.type === 'reactors'"></app-reactors>
               <app-energy-resources-current *ngIf="object.type === 'energy'"></app-energy-resources-current>
@@ -32,7 +31,6 @@
               <app-sushilka-mnemo *ngIf="object.type === 'sushilka'" [id]="object.id"></app-sushilka-mnemo>
               <app-mpa-mnemo *ngIf="object.type === 'mpa'" [id]="object.id"></app-mpa-mnemo>
               <app-vr-mnemo *ngIf="object.type === 'vr'" [id]="object.id"></app-vr-mnemo>
-              <app-press-mnemo *ngIf="object.type === 'press'" [id]="object.id"></app-press-mnemo>
               <app-reactors-mnemo *ngIf="object.type === 'reactors'"></app-reactors-mnemo>
             </ng-container>
 
@@ -56,12 +54,6 @@
               <app-mpa-graph-general-pressure *ngIf="activeView === 'graph-mpa-general-pressure' && object.type === 'mpa'"
                 [id]="object.id"></app-mpa-graph-general-pressure>
 
-              <!-- Графики для прессов -->
-              <app-press-chart-temper-general *ngIf="activeView === 'press-chart-temper-general' && object.type === 'press'"
-                [id]="object.id"></app-press-chart-temper-general>
-              <app-press-chart-pressure-general *ngIf="activeView === 'press-chart-pressure-general' && object.type === 'press'"
-                [id]="object.id"></app-press-chart-pressure-general>
-
               <!-- Графики для сушилок -->
               <app-graphic-tempers-general *ngIf="activeView === 'graph-tempers-general' && object.type === 'sushilka'"
                 [id]="object.id"></app-graphic-tempers-general>
@@ -77,6 +69,8 @@
 
               <!-- Графики для корпуса 296 -->
               <app-graphic-reactors-general *ngIf="activeView === 'graph-reactors-general' && object.type === 'reactors'"></app-graphic-reactors-general>
+              <app-reactors-press-chart-temper-general *ngIf="activeView === 'chart-reactors-press-temper-general' && object.type === 'reactors'"></app-reactors-press-chart-temper-general>
+              <app-reactors-press-chart-pressure-general *ngIf="activeView === 'chart-reactors-press-pressure-general' && object.type === 'reactors'"></app-reactors-press-chart-pressure-general>
 
               <!-- Отчеты и графики для энергоресурсов -->
               <app-energy-resources-report-day *ngIf="activeView === 'daily-report' && object.type === 'energy'"></app-energy-resources-report-day>

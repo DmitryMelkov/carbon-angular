@@ -31,11 +31,9 @@ import { GraphicTempersGeneralVrComponent } from '../vr/vr-graph-general/graphic
 import { GraphicVacuumsGeneralVrComponent } from '../vr/vr-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicNotisGeneralVrComponent } from '../vr/vr-graph-general/graphic-notis-general/graphic-notis-general.component';
 import { GraphicLevelsGeneralVrComponent } from '../vr/vr-graph-general/graphic-levels-general/graphic-levels-general.component';
-import { PressCurrentComponent } from '../press/press-current/press-current.component';
-import { PressMnemoComponent } from '../press/press-mnemo/press-mnemo.component';
-import { PressChartTemperGeneralComponent } from '../press/press-chart-temper-general/press-chart-temper-general.component';
-import { PressChartPressureGeneralComponent } from '../press/press-chart-pressure-general/press-chart-pressure-general.component';
 import { ButtonConfig, OBJECT_BUTTONS_CONFIG, ObjectType } from '../../common/shared/object-buttons.config';
+import { ReactorsPressChartTemperGeneralComponent } from '../reactors/reactors-press-chart-temper-general/reactors-press-chart-temper-general.component';
+import { ReactorsPressChartPressureGeneralComponent } from "../reactors/reactors-press-chart-pressure-general/reactors-press-chart-pressure-general.component";
 
 interface ObjectData {
   id: string;
@@ -68,11 +66,6 @@ interface ObjectData {
     GraphicVacuumsGeneralVrComponent,
     GraphicLevelsGeneralVrComponent,
     GraphicNotisGeneralVrComponent,
-    // Пресс
-    PressCurrentComponent,
-    PressMnemoComponent,
-    PressChartTemperGeneralComponent,
-    PressChartPressureGeneralComponent,
     // Мельницы
     MillsCurrentComponent,
     Mill1GraphComponent,
@@ -84,13 +77,16 @@ interface ObjectData {
     ReactorComponent,
     ReactorMnemoComponent,
     GraphicReactorsGeneralComponent,
+    ReactorsPressChartTemperGeneralComponent,
+    ReactorsPressChartPressureGeneralComponent,
     // Энергоресурсы
     EnergyResourcesCurrentComponent,
     EnergyResourcesReportDayComponent,
     EnergyResourcesReportMonthComponent,
     EnergyResourcesGraphPressureComponent,
     EnergyResourcesGraphConsumptionComponent,
-  ],
+    ReactorsPressChartPressureGeneralComponent
+],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -102,7 +98,6 @@ export class HomeComponent {
     { id: 'mpa3', name: 'МПА №3', type: 'mpa' },
     { id: 'sushilka1', name: 'Сушилка №1', type: 'sushilka' },
     { id: 'sushilka2', name: 'Сушилка №2', type: 'sushilka' },
-    { id: 'press3', name: 'Пресс №3', type: 'press' },
     { id: 'mills', name: 'Мельницы', type: 'mills' },
     { id: 'reactors', name: 'Корпус 296', type: 'reactors' },
     { id: 'energy', name: 'Энергоресурсы', type: 'energy' }

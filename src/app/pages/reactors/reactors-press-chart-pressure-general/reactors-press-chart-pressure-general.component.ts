@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import { ControlButtonComponent } from '../../../components/control-button/control-button.component';
 import { UniversalGraphComponent } from '../../../components/universal-graph.components';
-import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-press-chart-pressure-general',
-  standalone: true,
+  selector: 'app-reactors-press-chart-pressure-general',
   imports: [ControlButtonComponent, UniversalGraphComponent],
-  templateUrl: './press-chart-pressure-general.component.html',
-  styleUrls: ['./press-chart-pressure-general.component.scss']
+  templateUrl: './reactors-press-chart-pressure-general.component.html',
+  styleUrl: './reactors-press-chart-pressure-general.component.scss'
 })
-export class PressChartPressureGeneralComponent {
+export class ReactorsPressChartPressureGeneralComponent {
   timeRange: number = 10; // 10 минут по умолчанию
   activeButton: number = 10; // Активная кнопка по умолчанию
 

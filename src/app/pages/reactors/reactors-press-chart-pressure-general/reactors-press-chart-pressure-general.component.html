@@ -1,0 +1,22 @@
+<div class="graph-general">
+  <div class="graph-general__container">
+
+    <!-- Кнопки для выбора временного диапазона -->
+    <div class="graph-general__btns">
+      <app-control-button [isActive]="activeButton === 10" (onClick)="setTimeRange(10)" iconName="forward_10">
+        10 минут
+      </app-control-button>
+      <app-control-button [isActive]="activeButton === 30" (onClick)="setTimeRange(30)" iconName="forward_30">
+        30 минут
+      </app-control-button>
+    </div>
+
+    <!-- График давления масла Пресса 3 -->
+    <div class="graph-general__content">
+      <app-universal-graph [apiUrls]="pressApiUrls" [parameterNamesList]="pressParameterNamesList" [units]="'МПа'"
+        [dataKeys]="pressDataKeys" [yAxisTitle]="'Давление, МПа'" [title]="'Пресс №3: Давление масла'"
+        [yAxisRange]="{ min: 0, max: 25 }" [graphId]="pressId" [timeRange]="timeRange"></app-universal-graph>
+    </div>
+
+  </div>
+</div>

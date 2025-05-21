@@ -3,7 +3,7 @@ export type ButtonConfig = {
   view: string;
 };
 
-export type ObjectType = 'sushilka' | 'mpa' | 'vr' | 'press' | 'mills' | 'reactors' | 'energy';
+export type ObjectType = 'sushilka' | 'mpa' | 'vr'  | 'mills' | 'reactors' | 'energy';
 
 export const OBJECT_BUTTONS_CONFIG = {
   sushilka: [
@@ -27,12 +27,6 @@ export const OBJECT_BUTTONS_CONFIG = {
     { label: 'Графики уровня', view: 'graph-vr-general-levels' },
     { label: 'Графики НОТИС', view: 'graph-vr-general-notis' }
   ],
-  press: [
-    { label: 'Текущие параметры', view: 'parameters' },
-    { label: 'Мнемосхема', view: 'mnemo' },
-    { label: 'График температуры масла', view: 'press-chart-temper-general' },
-    { label: 'График давления масла', view: 'press-chart-pressure-general' }
-  ],
   mills: [
     { label: 'Текущие параметры', view: 'parameters' },
     { label: 'График мельницы №1', view: 'mill1-graph' },
@@ -44,7 +38,9 @@ export const OBJECT_BUTTONS_CONFIG = {
   reactors: [
     { label: 'Текущие параметры', view: 'parameters' },
     { label: 'Мнемосхема', view: 'mnemo' },
-    { label: 'Графики объекта', view: 'graph-reactors-general' }
+    { label: 'Графики реакторов', view: 'graph-reactors-general' },
+    { label: 'Графики температуры прессов', view: 'chart-reactors-press-temper-general' },
+    { label: 'Графики давления прессов', view: 'chart-reactors-press-pressure-general' }
   ],
   energy: [
     { label: 'Текущие параметры', view: 'parameters' },

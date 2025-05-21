@@ -4,13 +4,13 @@ import { UniversalGraphComponent } from '../../../components/universal-graph.com
 import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-press-chart-pressure-general',
+  selector: 'app-reactors-press-chart-temper-general',
   standalone: true,
   imports: [ControlButtonComponent, UniversalGraphComponent],
-  templateUrl: './press-chart-pressure-general.component.html',
-  styleUrls: ['./press-chart-pressure-general.component.scss']
+  templateUrl: './reactors-press-chart-temper-general.component.html',
+  styleUrl: './reactors-press-chart-temper-general.component.scss'
 })
-export class PressChartPressureGeneralComponent {
+export class ReactorsPressChartTemperGeneralComponent {
   timeRange: number = 10; // 10 минут по умолчанию
   activeButton: number = 10; // Активная кнопка по умолчанию
 
@@ -20,17 +20,18 @@ export class PressChartPressureGeneralComponent {
   // URL API для получения данных
   pressApiUrls: string[] = [`${environment.apiUrl}/api/${this.pressId}/data`];
 
-  // Названия параметров для графика давления
+  // Названия параметров для графика
   pressParameterNamesList: string[][] = [
-    ['Давление масла']
+    ['Температура масла']
   ];
 
   // Ключи для доступа к данным в API ответе
-  pressDataKeys: string[] = ['termodatData', 'Давление масла'];
+  pressDataKeys: string[] = ['termodatData', 'Температура масла'];
 
   // Установка временного диапазона
   setTimeRange(minutes: number) {
     this.timeRange = minutes;
     this.activeButton = minutes;
   }
+
 }

@@ -35,10 +35,9 @@ import { GraphicLevelsGeneralVrComponent } from './pages/vr/vr-graph-general/gra
 import { GraphicTempersGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-tempers-general/graphic-tempers-general.component';
 import { GraphicVacuumsGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-vacuums-general/graphic-vacuums-general.component';
 import { GraphicNotisGeneralVrComponent } from './pages/vr/vr-graph-general/graphic-notis-general/graphic-notis-general.component';
-import { PressCurrentComponent } from './pages/press/press-current/press-current.component';
-import { PressMnemoComponent } from './pages/press/press-mnemo/press-mnemo.component';
-import { PressChartTemperGeneralComponent } from './pages/press/press-chart-temper-general/press-chart-temper-general.component';
-import { PressChartPressureGeneralComponent } from './pages/press/press-chart-pressure-general/press-chart-pressure-general.component';
+import { ReactorsPressChartTemperGeneralComponent } from './pages/reactors/reactors-press-chart-temper-general/reactors-press-chart-temper-general.component';
+import { ReactorsPressChartPressureGeneralComponent } from './pages/reactors/reactors-press-chart-pressure-general/reactors-press-chart-pressure-general.component';
+import { GraphicReactorsGeneralComponent } from './pages/reactors/reactors-graph-general/reactors-graph-general.component';
 
 registerLocaleData(localeRu); // Зарегистрируйте локаль
 
@@ -128,6 +127,18 @@ export const appConfig: ApplicationConfig = {
         path: 'reactors/mnemo',
         component: ReactorMnemoComponent,
       },
+      {
+        path: 'reactors/graph-reactors-general',
+        component: GraphicReactorsGeneralComponent,
+      },
+      {
+        path: 'reactors/reactors-press-chart-temper-general',
+        component: ReactorsPressChartTemperGeneralComponent,
+      },
+      {
+        path: 'reactors/reactors-press-chart-pressure-general',
+        component: ReactorsPressChartPressureGeneralComponent,
+      },
       { path: 'vr/:id/current', component: VrComponent },
       { path: 'vr/:id/mnemo', component: VrMnemoComponent },
       {
@@ -145,16 +156,6 @@ export const appConfig: ApplicationConfig = {
       {
         path: 'vr/graph-notis-general',
         component: GraphicNotisGeneralVrComponent,
-      },
-      { path: 'press/:id/current', component: PressCurrentComponent },
-      { path: 'press/:id/mnemo', component: PressMnemoComponent },
-      {
-        path: 'press/press-chart-temper-general',
-        component: PressChartTemperGeneralComponent,
-      },
-      {
-        path: 'press/press-chart-pressure-general',
-        component: PressChartPressureGeneralComponent,
       },
     ]),
     provideHttpClient(),
