@@ -19,6 +19,8 @@ import { MpaService } from '../../../common/services/mpa/mpa.service';
 import { LoaderComponent } from '../../../components/loader/loader.component';
 import { MpaTable } from './table/table.component';
 import { fadeInAnimation } from '../../../common/animations/animations';
+import {LabCurrentComponent} from '../../../components/laboratory/lab-current/lab-current.component';
+import {LabModalComponent} from '../../../components/laboratory/lab-modal/lab-modal.component';
 
 @Component({
   selector: 'app-mpa-mnemo',
@@ -30,6 +32,7 @@ import { fadeInAnimation } from '../../../common/animations/animations';
     ControlButtonComponent,
     LoaderComponent,
     MpaTable,
+    LabCurrentComponent,
   ],
   standalone: true,
   templateUrl: './mpa-mnemo.component.html',
@@ -204,5 +207,17 @@ export class MpaMnemoComponent implements OnInit, OnDestroy {
 
   onLoadingComplete(): void {
     this.isLoading = false; // Убираем прелоудер, когда загрузка завершена
+  }
+
+  openLab(): void {
+    this.dialog.open(LabModalComponent, {
+      minWidth: '600px',
+      maxWidth: '90vw',
+      maxHeight: '80vh',
+      data: {
+        content: 'Это тестовый контент для документации объекта.',
+        vrId: this.id,
+      },
+    });
   }
 }

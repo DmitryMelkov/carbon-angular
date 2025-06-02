@@ -21,7 +21,7 @@
             от 0 до 30
           </span>
         </div>
-        <div class="laboratory__form-item">
+        <div class="laboratory__form-item" *ngIf="!isMPA">
           <label class="laboratory__form-label" for="value-ph">pH </label>
           <input class="laboratory__form-input" type="text" id="value-ph" formControlName="pH"
             [ngClass]="{'input-error': labForm.get('pH')?.invalid && labForm.get('pH')?.touched}">
@@ -32,7 +32,7 @@
             от 0 до 30
           </span>
         </div>
-        <div class="laboratory__form-item">
+        <div class="laboratory__form-item" *ngIf="!isMPA">
           <label class="laboratory__form-label" for="value-sum">Суммарка </label>
           <input class="laboratory__form-input" type="text" id="value-sum" formControlName="sum"
             [ngClass]="{'input-error': labForm.get('sum')?.invalid && labForm.get('sum')?.touched}">
@@ -71,7 +71,7 @@
       </div>
       <!-- Сообщение об ошибке, если ни одно поле не заполнено -->
       <span *ngIf="labForm.hasError('atLeastOneField') && labForm.touched" class="laboratory__form-error">
-        Заполните хотя бы одно поле (Летучие в-ва, pH или Суммарка)
+        Заполните одно поле
       </span>
     </form>
 

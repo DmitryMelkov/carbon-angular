@@ -13,8 +13,8 @@
         <th class="lab-last-day__table-header">Дата</th>
         <th class="lab-last-day__table-header">Время</th>
         <th class="lab-last-day__table-header">Летучие в-ва, %</th>
-        <th class="lab-last-day__table-header">pH</th>
-        <th class="lab-last-day__table-header">Суммарка</th>
+        <th class="lab-last-day__table-header" *ngIf="!isMPA">pH</th>
+        <th class="lab-last-day__table-header" *ngIf="!isMPA">Суммарка</th>
         <th class="lab-last-day__table-header">Действия</th>
       </tr>
     </thead>
@@ -23,8 +23,8 @@
         <td class="lab-last-day__table-cell">{{ item.recordDate }}</td>
         <td class="lab-last-day__table-cell">{{ item.recordTime }}</td>
         <td class="lab-last-day__table-cell">{{ item.value || '-' }}</td>
-        <td class="lab-last-day__table-cell">{{ item.valuePH || '-' }}</td>
-        <td class="lab-last-day__table-cell">{{ item.valueSUM || '-' }}</td>
+        <td class="lab-last-day__table-cell" *ngIf="!isMPA">{{ item.valuePH || '-' }}</td>
+        <td class="lab-last-day__table-cell" *ngIf="!isMPA">{{ item.valueSUM || '-' }}</td>
         <td class="lab-last-day__table-cell">
           <button
             class="lab-last-day__delete-btn"

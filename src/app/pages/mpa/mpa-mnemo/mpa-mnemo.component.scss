@@ -148,6 +148,13 @@
   z-index: 1;
 }
 
+.lab-current {
+  position: absolute;
+  top: 42%;
+  right: 13%;
+  z-index: 2;
+}
+
 .mnemo__param-box--btns {
   position: absolute;
   display: flex;
@@ -331,7 +338,12 @@
   }
 
   .table-mpa {
-    @include mixins.position(absolute, 10%, 5%, null, null);
+    @include mixins.position(absolute, 0%, 5%, null, null);
+  }
+
+  .lab-current {
+    top: 42%;
+    right: 5%;
   }
 
 }

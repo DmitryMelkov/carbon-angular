@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { LabData } from '../../../../common/types/lab-data';
-import { LabService } from '../../../../common/services/vr/lab.service';
-import { DataLoadingService } from '../../../../common/services/data-loading.service'; // Импортируем сервис
+import { LabData } from '../../../common/types/lab-data';
+import { LabService } from '../../../common/services/vr/lab.service';
+import { DataLoadingService } from '../../../common/services/data-loading.service'; // Импортируем сервис
 import { CommonModule } from '@angular/common';
 import { delay } from 'rxjs';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
-import { fadeInAnimation } from '../../../../common/animations/animations';
+import { LoaderComponent } from '../../loader/loader.component';
+import { fadeInAnimation } from '../../../common/animations/animations';
 
 @Component({
   selector: 'app-lab-current',
@@ -18,6 +18,7 @@ export class LabCurrentComponent implements OnInit, OnDestroy {
   @Input() id: string = ''; // Принимаем ID печи как входной параметр
   labData: LabData | null = null; // Данные лаборатории
   isLoading: boolean = true; // Флаг загрузки
+  isMPA: boolean = false;
 
   constructor(
     private labService: LabService,
@@ -26,6 +27,7 @@ export class LabCurrentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.id) {
+      this.isMPA = this.id.toLowerCase().includes('mpa');
       this.loadLabData(); // Загружаем данные, если ID передан
       this.startPeriodicDataLoading(); // Запускаем периодическую загрузку данных
     }

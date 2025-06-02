@@ -31,6 +31,10 @@
       <app-control-button (onClick)="openDocumentation()" iconName="map ">
         Документация объекта
       </app-control-button>
+
+      <app-control-button (onClick)="openLab()"  iconName="science ">
+        Для лаборатории
+      </app-control-button>
     </div>
 
     <img class="mnemo__img" src="/img/pech-mpa.jpg" (load)="onImageLoad()" />
@@ -494,6 +498,8 @@
     </div>
 
     <app-table-mpa class="table-mpa"></app-table-mpa>
-
+    <div class="lab-current">
+      <app-lab-current [id]="id"></app-lab-current>
+    </div>
   </div>
 </div>

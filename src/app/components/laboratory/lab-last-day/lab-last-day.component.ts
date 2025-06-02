@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LabLastDay } from '../../../../common/types/lab-data';
-import { LabService } from '../../../../common/services/vr/lab.service';
+import { LabLastDay } from '../../../common/types/lab-data';
+import { LabService } from '../../../common/services/vr/lab.service';
 import { CommonModule } from '@angular/common';
-import { DataLoadingService } from '../../../../common/services/data-loading.service';
+import { DataLoadingService } from '../../../common/services/data-loading.service';
 import { delay } from 'rxjs';
-import { LoaderComponent } from '../../../../components/loader/loader.component';
-import { fadeInAnimation } from '../../../../common/animations/animations';
+import { LoaderComponent } from '../../loader/loader.component';
+import { fadeInAnimation } from '../../../common/animations/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIcon } from '@angular/material/icon';
 import { LabPasswordDialogComponent } from '../lab-password-dialog/lab-password-dialog.component';
@@ -22,6 +22,7 @@ export class LabLastDayComponent implements OnInit {
   @Input() vrId!: string;
   labData: LabLastDay[] = [];
   isLoading = true; // Установите isLoading в true при инициализации
+  isMPA: boolean = false;
 
   constructor(
     private labService: LabService,
@@ -31,6 +32,7 @@ export class LabLastDayComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isMPA = this.vrId.toLowerCase().includes('mpa');
     this.loadData(); // Первоначальная загрузка
     this.startPeriodicLoading();
   }
@@ -87,7 +89,7 @@ export class LabLastDayComponent implements OnInit {
     }
   }
 
-  
+
 
 
   public deleteRecord(recordId: string): void {

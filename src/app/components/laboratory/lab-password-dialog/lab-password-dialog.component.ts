@@ -6,8 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ControlButtonComponent } from '../../../../components/control-button/control-button.component';
-import { LabService } from '../../../../common/services/vr/lab.service';
+import { ControlButtonComponent } from '../../control-button/control-button.component';
+import { LabService } from '../../../common/services/vr/lab.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild } from '@angular/core';
-import { ModalHeaderComponent } from '../../../../components/modal-header/modal-header.component';
+import { ModalHeaderComponent } from '../../modal-header/modal-header.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   FormBuilder,
@@ -9,13 +9,13 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ControlButtonComponent } from '../../../../components/control-button/control-button.component';
-import { LabService } from '../../../../common/services/vr/lab.service';
-import { LabFormData } from '../../../../common/types/lab-data';
+import { ControlButtonComponent } from '../../control-button/control-button.component';
+import { LabService } from '../../../common/services/vr/lab.service';
+import { LabFormData } from '../../../common/types/lab-data';
 import {
   atLeastOneFieldValidator,
   numberValidator,
-} from '../../../../common/validators/lab-validators';
+} from '../../../common/validators/lab-validators';
 import { LabLastDayComponent } from '../lab-last-day/lab-last-day.component';
 
 @Component({
@@ -34,6 +34,7 @@ export class LabModalComponent {
   @ViewChild(LabLastDayComponent) labLastDayComponent!: LabLastDayComponent;
   labForm: FormGroup;
   isLoading: boolean = false;
+  isMPA: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +59,10 @@ export class LabModalComponent {
         ]),
       }
     ); // Используем валидатор
+  }
+
+  ngOnInit(): void {
+    this.isMPA = this.data.vrId?.toLowerCase().includes('mpa');
   }
 
   onSubmit(): void {

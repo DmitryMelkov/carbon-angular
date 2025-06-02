@@ -15,13 +15,13 @@
         <td class="table__td ">{{ labData.valueDate }}</td>
         <td class="table__td ">{{ labData.valueTime }}</td>
       </tr>
-      <tr class="table__tr">
+      <tr class="table__tr" *ngIf="!isMPA">
         <td class="table__td ">pH</td>
         <td class="table__td ">{{ labData.valuePH }}</td>
         <td class="table__td ">{{ labData.valuePHDate }}</td>
         <td class="table__td ">{{ labData.valuePHTime }}</td>
       </tr>
-      <tr class="table__tr">
+      <tr class="table__tr" *ngIf="!isMPA">
         <td class="table__td ">Суммарка</td>
         <td class="table__td ">{{ labData.valueSUM }}</td>
         <td class="table__td ">{{ labData.valueSUMDate }}</td>
